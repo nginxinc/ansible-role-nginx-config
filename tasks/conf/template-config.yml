@@ -1,0 +1,88 @@
+---
+- name: "(Setup: All NGINX) Ensure HTML Directory Exists"
+  file:
+    path: "{{ item.value.html_file_location | default('/usr/share/nginx/html') }}"
+    state: directory
+  with_dict: "{{ nginx_config_html_demo_template }}"
+  when: nginx_config_html_demo_template_enable | bool
+
+- name: "(Setup: All NGINX) Dynamically Generate HTML Files"
+  template:
+    src: "{{ item.value.template_file | default('www/index.html.j2') }}"
+    dest: "{{ item.value.html_file_location | default('/usr/share/nginx/html') }}/{{ item.value.html_file_name | default('index.html') }}"
+    backup: yes
+  with_dict: "{{ nginx_config_html_demo_template }}"
+  when: nginx_config_html_demo_template_enable | bool
+
+- name: "(Setup: All NGINX) Ensure NGINX Main Directory Exists"
+  file:
+    path: "{{ nginx_config_main_template.conf_file_location | default('/etc/nginx') }}"
+    state: directory
+  when: nginx_config_main_template_enable | bool
+
+- name: "(Setup: All NGINX) Dynamically Generate NGINX Main Configuration File"
+  template:
+    src: "{{ nginx_config_main_template.template_file | default('nginx.conf.j2') }}"
+    dest: "{{ nginx_config_main_template.conf_file_location | default('/etc/nginx') }}/{{ nginx_config_main_template.conf_file_name | default('nginx.conf') }}"
+    backup: yes
+  when: nginx_config_main_template_enable | bool
+  notify: "(Handler: All OSs) Start NGINX"
+
+- name: "(Setup: All NGINX) Ensure NGINX HTTP Directory Exists"
+  file:
+    path: "{{ item.value.conf_file_location | default('/etc/nginx/conf.d/') }}"
+    state: directory
+  with_dict: "{{ nginx_config_http_template }}"
+  when: nginx_config_http_template_enable | bool
+
+- name: "(Setup: All NGINX) Ensure NGINX Proxy Cache Directories Exist"
+  file:
+    path: "{{ item.1.path }}"
+    state: directory
+    owner: "{{ nginx_config_main_template.user | default('nginx') }}"
+  with_subelements:
+    - "{{ nginx_config_http_template }}"
+    - proxy_cache.proxy_cache_path
+    - skip_missing: true
+  when: nginx_config_http_template_enable | bool
+
+- name: "(Setup: All NGINX) Dynamically Generate NGINX HTTP Configuration Files"
+  template:
+    src: "{{ item.value.template_file | default('http/default.conf.j2') }}"
+    dest: "{{ item.value.conf_file_location | default('/etc/nginx/conf.d/') }}/{{ item.value.conf_file_name | default('default.conf') }}"
+    backup: yes
+  with_dict: "{{ nginx_config_http_template }}"
+  when: nginx_config_http_template_enable | bool
+  notify: "(Handler: All OSs) Start NGINX"
+
+- name: "(Setup: All NGINX) Dynamically Generate NGINX Stub Status Configuration File"
+  template:
+    src: "{{ nginx_config_status_template_file | default('http/status.conf.j2') }}"
+    dest: "{{ nginx_config_status_file_location | default('/etc/nginx/conf.d/status.conf') }}"
+    backup: yes
+  notify: "(Handler: All OSs) Start NGINX"
+  when: nginx_config_status_enable | bool
+
+- name: "(Setup: All NGINX) Dynamically Generate NGINX API Configuration File"
+  template:
+    src: "{{ nginx_config_rest_api_template_file | default('http/api.conf.j2') }}"
+    dest: "{{ nginx_config_rest_api_file_location | default('/etc/nginx/conf.d/api.conf') }}"
+    backup: yes
+  notify: "(Handler: All OSs) Start NGINX"
+  when: nginx_config_rest_api_enable | bool
+
+- name: "(Setup: All NGINX) Ensure NGINX Stream Directory Exists"
+  file:
+    path: "{{ item.value.conf_file_location | default('/etc/nginx/conf.d/stream/') }}"
+    state: directory
+  with_dict: "{{ nginx_config_stream_template }}"
+  when: nginx_config_stream_template_enable | bool
+
+- name: "(Setup: All NGINX) Dynamically Generate NGINX Stream Configuration Files"
+  template:
+    src: "{{ item.value.template_file | default('stream/default.conf.j2') }}"
+    dest: "{{ item.value.conf_file_location | default('/etc/nginx/conf.d/stream/') }}/{{ item.value.conf_file_name | default('default.conf') }}"
+    backup: yes
+  with_dict: "{{ nginx_config_stream_template }}"
+  notify: "(Handler: All OSs) Start NGINX"
+  when: nginx_config_stream_template_enable | bool

@@ -1,0 +1,44 @@
+---
+language: python
+services: docker
+jobs:
+  include:
+    - name: "(Debian/Ubuntu) Test config templates"
+      env:
+        scenario: default
+    - name: "(Alpine) Test config templates"
+      env:
+        scenario: default_alpine
+    - name: "(CentOS) Test config templates"
+      env:
+        scenario: default_centos
+    - name: "(Debian/Ubuntu) Install Modules"
+      env:
+        scenario: module
+    - name: "(Alpine) Install Modules"
+      env:
+        scenario: module_alpine
+    - name: "(CentOS) Install Modules"
+      env:
+        scenario: module_centos
+    - name: "(Debian/Ubuntu) Install Stable Branch and Push Configuration"
+      env:
+        scenario: stable_push
+    - name: "(Alpine) Install Stable Branch and Push Configuration"
+      env:
+        scenario: stable_push_alpine
+    - name: "(CentOS) Install Stable Branch and Push Configuration"
+      env:
+        scenario: stable_push_centos
+before_install: sudo apt-get -qq update
+install:
+  - pip install ansible==2.9.11
+  - pip install molecule==3.0.6
+  - pip install docker==4.2.2
+  - pip install ansible-lint==4.2.0
+script:
+  - molecule --version
+  - ansible --version
+  - travis_wait 50 molecule test -s $scenario
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

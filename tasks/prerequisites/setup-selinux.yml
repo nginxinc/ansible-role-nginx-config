@@ -1,0 +1,86 @@
+---
+- name: "(Setup: SELinux) Install Required CentOS/RHEL 6/7 Dependencies"
+  package:
+    name:
+      - policycoreutils-python
+      - setools
+    state: present
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version != "8"
+
+- name: "(Setup: SELinux) Install Required CentOS/RHEL 8 Dependencies"
+  package:
+    name:
+      - selinux-policy-targeted
+      - libselinux-utils
+      - policycoreutils
+    state: present
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == "8"
+
+- name: "(Setup: SELinux) Check if SELinux is Enabled"
+  debug:
+    msg: "You need to enable selinux, if it was disabled you need to reboot"
+  when: ansible_selinux is undefined
+
+- name: "(Setup: SELinux) Setup Permissive SELinux"
+  selinux:
+    state: permissive
+    policy: targeted
+  changed_when: false
+  when: ansible_selinux.mode == "enforcing"
+
+- name: "(Setup: SELinux) Allow HTTP Network Connection"
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+
+- name: "(Setup: SELinux) Allow HTTP Relay Connection"
+  seboolean:
+    name: httpd_can_network_relay
+    state: yes
+    persistent: yes
+
+- name: "(Setup: SELinux) Allow Status Ports"
+  seport:
+    ports: "{{ nginx_config_status_port }}"
+    proto: tcp
+    setype: http_port_t
+    state: present
+  when: nginx_config_status_port is defined
+
+- name: "(Setup: SELinux) Allow Rest API Ports"
+  seport:
+    ports: "{{ nginx_config_rest_api_port }}"
+    proto: tcp
+    setype: http_port_t
+    state: present
+  when: nginx_config_rest_api_port is defined
+
+- name: "(Setup: SELinux) Allow Specific TCP Ports"
+  seport:
+    ports: "{{ nginx_config_selinux_tcp_ports }}"
+    proto: tcp
+    setype: http_port_t
+    state: present
+  when: nginx_config_selinux_tcp_ports is defined
+
+- name: "(Setup: SELinux) Allow Specific UDP Ports"
+  seport:
+    ports: "{{ nginx_config_selinux_udp_ports }}"
+    proto: udp
+    setype: http_port_t
+    state: present
+  when: nginx_config_selinux_udp_ports is defined
+
+- name: "(Setup: SELinux) Enforce SELinux"
+  selinux:
+    state: enforcing
+    policy: targeted
+  changed_when: false
+  when:
+    - nginx_config_selinux_enforcing
+    - ansible_selinux.mode == "permissive"

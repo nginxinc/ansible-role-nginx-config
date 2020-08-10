@@ -1,0 +1,139 @@
+{{ ansible_managed | comment }}
+
+{% if nginx_config_modules.njs %}
+{% if nginx_config_http_template_enable %}
+load_module modules/ngx_http_js_module.so;
+{% endif %}
+{% if nginx_config_stream_template_enable %}
+load_module modules/ngx_stream_js_module.so;
+{% endif %}
+{% endif %}
+{% if nginx_config_modules.perl %}
+load_module modules/ngx_http_perl_module.so;
+{% endif %}
+{% if nginx_config_modules.geoip %}
+{% if nginx_config_http_template_enable %}
+load_module modules/ngx_http_geoip_module.so;
+{% endif %}
+{% if nginx_config_stream_template_enable %}
+load_module modules/ngx_stream_geoip_module.so;
+{% endif %}
+{% endif %}
+{% if nginx_config_modules.image_filter %}
+load_module modules/ngx_http_image_filter_module.so;
+{% endif %}
+{% if nginx_config_modules.rtmp and nginx_type == "plus" %}
+load_module modules/ngx_rtmp_module.so;
+{% endif %}
+{% if nginx_config_modules.xslt %}
+load_module modules/ngx_http_xslt_filter_module.so;
+{% endif %}
+{% if nginx_config_modules.waf and nginx_type == "plus" %}
+load_module modules/ngx_http_modsecurity_module.so;
+{% endif %}
+user  {{ nginx_config_main_template.user }};
+worker_processes  {{ nginx_config_main_template.worker_processes }};
+
+{% if nginx_config_main_template.worker_rlimit_nofile is defined %}
+worker_rlimit_nofile {{ nginx_config_main_template.worker_rlimit_nofile }};
+{% endif %}
+
+{% if nginx_config_main_template.custom_options is defined and nginx_config_main_template.custom_options | length %}
+{% for inline_option in nginx_config_main_template.custom_options %}
+{{ inline_option }}
+{% endfor %}
+{% endif %}
+
+error_log  {{ nginx_config_main_template.error_log.location | default("/var/log/nginx/error.log") }} {{ nginx_config_main_template.error_log.level | default("warn") }};
+pid        {{ nginx_config_main_template.pid | default("/var/run/nginx.pid") }};
+
+
+events {
+    worker_connections  {{ nginx_config_main_template.worker_connections }};
+{% if nginx_config_main_template.events_custom_options is defined and nginx_config_main_template.events_custom_options | length %}
+{% for inline_option in nginx_config_main_template.events_custom_options %}
+    {{ inline_option }}
+{% endfor %}
+{% endif %}
+}
+
+{% if nginx_config_main_template.http_enable %}
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+{% for access_log in nginx_config_main_template.http_settings.access_log_format %}
+    log_format  {{ access_log.name }}  {{ access_log.format }};
+{% endfor %}
+
+{% for access_log in nginx_config_main_template.http_settings.access_log_location %}
+    access_log  {{ access_log.location }}  {{ access_log.name }};
+{% endfor %}
+
+    sendfile        on;
+
+{% if nginx_config_main_template.http_settings.tcp_nopush is defined and nginx_config_main_template.http_settings.tcp_nopush %}
+    tcp_nopush      on;
+{% endif %}
+{% if nginx_config_main_template.http_settings.tcp_nodelay is defined and nginx_config_main_template.http_settings.tcp_nodelay %}
+    tcp_nodelay     on;
+{% endif %}
+
+{% if nginx_config_main_template.http_settings.server_tokens is defined and nginx_config_main_template.http_settings.server_tokens | length %}
+    server_tokens {{ nginx_config_main_template.http_settings.server_tokens }};
+{% endif %}
+
+    keepalive_timeout  {{ nginx_config_main_template.http_settings.keepalive_timeout }};
+
+    #gzip  on;
+{% if nginx_config_main_template.http_settings.cache %}
+    proxy_cache_path /tmp/cache keys_zone=one:10m;
+{% endif %}
+{% if nginx_config_main_template.http_settings.rate_limit %}
+    limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
+{% endif %}
+{% if nginx_config_main_template.http_settings.keyval %}
+    keyval_zone zone={{nginx_config_main_template.http_settings.keyval.zone}}:32k state=one.keyval;
+    keyval $arg_text $text zone=one;
+{% endif %}
+{% if nginx_config_main_template.http_global_autoindex | default(false) %}
+    autoindex on;
+{% endif %}
+{% if nginx_config_main_template.sub_filter.sub_filters is defined and nginx_config_main_template.sub_filter.sub_filters | length %}
+{% for sub_filter in nginx_config_main_template.sub_filter.sub_filters %}
+    sub_filter {{ sub_filter }};
+{% endfor %}
+{% endif %}
+{% if nginx_config_main_template.sub_filter.last_modified is defined %}
+    sub_filter_last_modified  {{ nginx_config_main_template.sub_filter.last_modified | ternary("on", "off") }};
+{% endif %}
+{% if nginx_config_main_template.sub_filter.once is defined %}
+    sub_filter_once {{ nginx_config_main_template.sub_filter.once | ternary("on", "off") }};
+{% endif %}
+{% if nginx_config_main_template.sub_filter.types is defined and nginx_config_main_template.sub_filter.types %}
+    sub_filter_types {{ nginx_config_main_template.sub_filter.types }};
+{% endif %}
+{% if nginx_config_main_template.http_custom_options is defined and nginx_config_main_template.http_custom_options | length %}
+{% for inline_option in nginx_config_main_template.http_custom_options %}
+    {{ inline_option }}
+{% endfor %}
+{% endif %}
+    include /etc/nginx/conf.d/*.conf;
+{% if nginx_config_main_template.http_custom_includes is defined and nginx_config_main_template.http_custom_includes | length %}
+{% for inline_include in nginx_config_main_template.http_custom_includes %}
+    include {{ inline_include }};
+{% endfor %}
+{% endif %}
+}
+{% endif %}
+
+{% if nginx_config_main_template.stream_enable %}
+stream {
+{% if nginx_config_main_template.stream_custom_options is defined and nginx_config_main_template.stream_custom_options | length %}
+{% for inline_option in nginx_config_main_template.stream_custom_options %}
+    {{ inline_option }}
+{% endfor %}
+{% endif %}
+    include /etc/nginx/conf.d/stream/*.conf;
+}
+{% endif %}
