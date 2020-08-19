@@ -218,6 +218,16 @@ server {
 {% if item.value.servers[server].reverse_proxy.locations[location].auth_basic_user_file is defined and item.value.servers[server].reverse_proxy.locations[location].auth_basic_user_file %}
         auth_basic_user_file {{ item.value.servers[server].reverse_proxy.locations[location].auth_basic_user_file }};
 {% endif %}
+{% if item.value.servers[server].web_server.locations[location].allows is defined %}
+{% for allow in item.value.servers[server].web_server.locations[location].allows %}
+        allow {{ allow }};
+{% endfor %}
+{% endif %}
+{% if item.value.servers[server].web_server.locations[location].denies is defined %}
+{% for deny in item.value.servers[server].web_server.locations[location].denies %}
+        deny {{ deny }};
+{% endfor %}
+{% endif %}
 {% if item.value.servers[server].reverse_proxy.locations[location].returns is defined %}
 {% for code in item.value.servers[server].reverse_proxy.locations[location].returns %}
 {% if item.value.servers[server].reverse_proxy.locations[location].returns[code] is defined %}
