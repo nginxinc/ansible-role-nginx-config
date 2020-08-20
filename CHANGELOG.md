@@ -6,6 +6,7 @@ ENHANCEMENTS:
 
 *   Improve configuration templating capabilities:
     *   Allow setting `access_log`/`access_log_location` to `off`.
+    *   Add IP restriction for web servers
 
 ## 0.1.0 (August 19, 2020)
 
