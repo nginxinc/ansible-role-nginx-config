@@ -94,6 +94,7 @@ nginx_config_http_template:
         include_files: []
         http_error_pages: {}
         error_page: /usr/share/nginx/html
+        # access_log: "off" # Cancels all access_log directives on the current level
         access_log:
           - name: main
             location: /var/log/nginx/access.log
@@ -149,6 +150,10 @@ nginx_config_http_template:
               auth_basic: null
               auth_basic_user_file: null
               try_files: $uri $uri/index.html $uri.html =404
+              # allows:
+              #   - 192.168.1.0/24
+              # denies:
+              #   - all
               # auth_request: /auth
               # auth_request_set:
               #   name: $auth_user

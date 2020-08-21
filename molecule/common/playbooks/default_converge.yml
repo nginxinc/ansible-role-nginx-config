@@ -93,6 +93,9 @@
                 http_error_pages:
                   404: /404.html
                 error_page: /usr/share/nginx/html
+                access_log:
+                  - name: main
+                    location: /var/log/nginx/access.log
                 client_max_body_size: 512k
                 proxy_hide_headers:
                   - X-Powered-By
@@ -271,6 +274,7 @@
                     opts: []
                 server_name: localhost
                 error_page: /usr/share/nginx/html
+                access_log: "off"
                 autoindex: false
                 sub_filter:
                   sub_filters:
@@ -337,6 +341,10 @@
                       html_file_location: /usr/share/nginx/html
                       html_file_name: backend_index.html
                       autoindex: false
+                      allows:
+                        - 192.168.1.0/24
+                      denies:
+                        - all
                     php:
                       location: ~ \.php$
                       html_file_location: /usr/share/nginx/html
