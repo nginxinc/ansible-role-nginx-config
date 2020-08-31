@@ -3,7 +3,7 @@
   file:
     path: "{{ item.value.html_file_location | default('/usr/share/nginx/html') }}"
     state: directory
-    mode: 755
+    mode: 0755
   with_dict: "{{ nginx_config_html_demo_template }}"
   when: nginx_config_html_demo_template_enable | bool
 
