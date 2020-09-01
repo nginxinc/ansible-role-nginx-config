@@ -1,3 +1,4 @@
 ---
 roles:
-  - nginxinc.nginx
+  - name: nginxinc.nginx
+    version: 0.16.0
