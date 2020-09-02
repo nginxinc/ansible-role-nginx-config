@@ -1,9 +1,9 @@
 ---
 galaxy_info:
   author: Alessandro Fael Garcia
-  description: Official Ansible role for NGINX
+  description: Official Ansible role for configuring NGINX
   role_name: nginx_config
-  company: NGINX, Inc.
+  company: F5 Networks, Inc.
 
   license: Apache License, Version 2.0
 
@@ -44,11 +44,11 @@ galaxy_info:
   galaxy_tags:
     - nginx
     - oss
+    - opensource
     - plus
-    - amplify
-    - unit
     - web
     - server
     - development
+    - configuration
 
 dependencies: []
