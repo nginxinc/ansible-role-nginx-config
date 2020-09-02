@@ -17,15 +17,15 @@ nginx_config_modules:
   rtmp: false
   xslt: false
 
-# Remove previously existing NGINX configuration files.
+# Remove previously existing NGINX configuration files (files ending in *.conf).
 # You can specify a list of paths you wish to remove.
 # You can also choose whether to recurse through the paths specified.
 # Alternatively you can specify the list of files you wish to remove.
 # Default is false.
 nginx_config_cleanup: false
-nginx_config_cleanup_paths:
-  - directory:
-      - /etc/nginx/conf.d
-    recurse: false
+# nginx_config_cleanup_paths:
+#   - directory:
+#       - /etc/nginx/conf.d
+#     recurse: false
 # nginx_config_cleanup_files:
 #   - /etc/nginx/conf.d/default.conf
