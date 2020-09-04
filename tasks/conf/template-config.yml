@@ -16,6 +16,17 @@
   with_dict: "{{ nginx_config_html_demo_template }}"
   when: nginx_config_html_demo_template_enable | bool
 
+- name: "(Setup: All NGINX) Configure NGINX Modules"
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    insertbefore: BOF
+    line: "load_module {{ item }};"
+  loop: "{{ nginx_config_modules }}"
+  when:
+    - nginx_config_modules is defined
+    - nginx_config_modules | length > 0
+  notify: "(Handler: All OSs) Start NGINX"
+
 - name: "(Setup: All NGINX) Ensure NGINX Main Directory Exists"
   file:
     path: "{{ nginx_config_main_template.conf_file_location | default('/etc/nginx') }}"

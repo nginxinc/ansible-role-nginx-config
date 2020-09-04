@@ -5,3 +5,12 @@
     - name: Install NGINX
       include_role:
         name: nginxinc.nginx
+      vars:
+        nginx_modules:
+          njs: true
+          perl: false
+          waf: false
+          geoip: false
+          image_filter: false
+          rtmp: false
+          xslt: false

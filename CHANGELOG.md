@@ -1,6 +1,13 @@
 # Changelog
 
-## 0.1.1 (Unreleased)
+## 0.2.0 (Unreleased)
+
+BREAKING CHANGES:
+*   The process to configure modules has changed. Instead of manually setting the modules you want to install to `true` or `false`, you will now have to use either:
+    *   A newly introduced top level list variable, `nginx_config_modules`.
+    *   A newly introduced list variable within your main NGINX config template, `nginx_config_main_template.modules`.
+
+Make sure you only use one variable or the other, since they will overwrite each other. This change will simplify adding future supported modules to this role, and allows you to include any external modules you may wish in your NGINX config.
 
 ENHANCEMENTS:
 

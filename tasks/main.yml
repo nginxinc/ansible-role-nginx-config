@@ -27,6 +27,8 @@
         or nginx_config_http_template_enable | bool
         or nginx_config_stream_template_enable | bool
         or nginx_config_rest_api_enable | bool
+        or nginx_config_html_demo_template_enable | bool
+        or nginx_config_modules is defined and nginx_config_modules | length > 0
   tags: nginx_config_template
 
 - name: "(Config: All OSs) Ensure NGINX is Running"

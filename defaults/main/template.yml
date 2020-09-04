@@ -15,6 +15,8 @@ nginx_config_main_template:
   template_file: nginx.conf.j2
   conf_file_name: nginx.conf
   conf_file_location: /etc/nginx/
+  # modules:  # specify modules as a list following the format in the line below
+  #   - modules/ngx_http_js_module.so
   user: nginx
   worker_processes: auto
   # worker_rlimit_nofile: 1024
