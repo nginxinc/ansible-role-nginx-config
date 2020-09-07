@@ -6,17 +6,6 @@ nginx_config_start: true
 # Print NGINX configuration file to terminal after executing playbook.
 nginx_config_debug_output: false
 
-# Install NGINX JavaScript, Perl, ModSecurity WAF (NGINX Plus only), GeoIP, Image-Filter, RTMP Media Streaming (NGINX Plus only), and/or XSLT modules.
-# Default is false.
-nginx_config_modules:
-  njs: false
-  perl: false
-  waf: false
-  geoip: false
-  image_filter: false
-  rtmp: false
-  xslt: false
-
 # Remove previously existing NGINX configuration files (files ending in *.conf).
 # You can specify a list of paths you wish to remove.
 # You can also choose whether to recurse through the paths specified.
@@ -29,3 +18,8 @@ nginx_config_cleanup: false
 #     recurse: false
 # nginx_config_cleanup_files:
 #   - /etc/nginx/conf.d/default.conf
+
+# Add select modules to the beginning of your `nginx.conf` file. Do not use if
+# you are already setting modules via 'nginx_config_main_template'.
+# nginx_config_modules:
+#   - modules/ngx_http_js_module.so
