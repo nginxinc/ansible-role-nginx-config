@@ -10,6 +10,11 @@ BREAKING CHANGES:
 
 Make sure you only use one variable or the other, since they will overwrite each other. This change will simplify adding future supported modules to this role, and allows you to include any external modules you may wish in your NGINX config.
 
+FEATURES:
+
+*   Add Alpine 3.12 to the list of supported platforms
+*   Remove Alpine 3.8 from the list of supported platforms 
+
 ENHANCEMENTS:
 
 *   Update Ansible to `2.9.13` and Ansible Lint to `4.3.4`.

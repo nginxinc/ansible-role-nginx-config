@@ -3,6 +3,15 @@ language: python
 services: docker
 jobs:
   include:
+    - name: "(Debian/Ubuntu) Cleanup config and try to install modules"
+      env:
+        scenario: cleanup_module
+    - name: "(Alpine) Cleanup config and try to install modules"
+      env:
+        scenario: cleanup_module_alpine
+    - name: "(CentOS) Cleanup config and try to install modules"
+      env:
+        scenario: cleanup_module_centos
     - name: "(Debian/Ubuntu) Test config templates"
       env:
         scenario: default
@@ -12,22 +21,13 @@ jobs:
     - name: "(CentOS) Test config templates"
       env:
         scenario: default_centos
-    - name: "(Debian/Ubuntu) Install Modules"
-      env:
-        scenario: module
-    - name: "(Alpine) Install Modules"
-      env:
-        scenario: module_alpine
-    - name: "(CentOS) Install Modules"
-      env:
-        scenario: module_centos
-    - name: "(Debian/Ubuntu) Install Stable Branch and Push Configuration"
+    - name: "(Debian/Ubuntu) Install stable branch and push a config"
       env:
         scenario: stable_push
-    - name: "(Alpine) Install Stable Branch and Push Configuration"
+    - name: "(Alpine) Install stable branch and push a config"
       env:
         scenario: stable_push_alpine
-    - name: "(CentOS) Install Stable Branch and Push Configuration"
+    - name: "(CentOS) Install stable branch and push a config"
       env:
         scenario: stable_push_centos
 before_install:

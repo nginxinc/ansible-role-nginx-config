@@ -31,5 +31,5 @@ provisioner:
   name: ansible
   playbooks:
     prepare: ../common/playbooks/prepare.yml
-    converge: ../common/playbooks/module_converge.yml
-    verify: ../common/playbooks/module_verify.yml
+    converge: ../common/playbooks/cleanup_module_converge.yml
+    verify: ../common/playbooks/cleanup_module_verify.yml

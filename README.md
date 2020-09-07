@@ -32,17 +32,17 @@ Use `git clone https://github.com/nginxinc/ansible-role-nginx-config.git` to pul
 Platforms
 ---------
 
-The NGINX Ansible role supports all platforms supported by [NGINX Open Source](https://nginx.org/en/linux_packages.html#mainline) and s[NGINX Plus](https://www.nginx.com/products/technical-specs/):
+The NGINX Ansible role supports all platforms supported by [NGINX Open Source](https://nginx.org/en/linux_packages.html#mainline) and [NGINX Plus](https://www.nginx.com/products/technical-specs/):
 
 **NGINX Open Source**
 
 ```yaml
 Alpine:
   versions:
-    - 3.8
     - 3.9
     - 3.10
     - 3.11
+    - 3.12
 CentOS:
   versions:
     - 6
@@ -77,10 +77,10 @@ Ubuntu:
 ```yaml
 Alpine:
   versions:
-    - 3.8
     - 3.9
     - 3.10
     - 3.11
+    - 3.12
 Amazon Linux:
   versions:
     - 2018.03
@@ -134,8 +134,8 @@ Example Playbooks
 
 Working functional playbook examples can be found in the **`molecule/common`** directory in the following files:
 
--   **[molecule/common/playbooks/default_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/molecule/common/playbooks/default_converge.yml):** Use the NGINX configuration templating variables to create an NGINX configuration file
--   **[molecule/common/playbooks/module_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/molecule/common/playbooks/module_converge.yml):** Cleanup NGINX configs and configure NGINX supported modules
+-   **[molecule/common/playbooks/cleanup_module_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/molecule/common/playbooks/cleanup_module_converge.yml):** Cleanup an NGINX config and configure NGINX supported modules
+-   **[molecule/common/playbooks/default_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/molecule/common/playbooks/default_converge.yml):** Use the NGINX config templating variables to create an NGINX config
 -   **[molecule/common/playbooks/stable_push_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/molecule/common/playbooks/stable_push_converge.yml):** Install NGINX using the stable branch and push a preexisting config from your system to your NGINX instance
 
 Do note that if you install this repository via Ansible Galaxy, you will have to replace the role variable in the sample playbooks from `ansible-role-nginx-config` to `nginxinc.nginx_config`.
