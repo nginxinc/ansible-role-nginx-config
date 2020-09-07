@@ -38,86 +38,69 @@ The NGINX Ansible role supports all platforms supported by [NGINX Open Source](h
 
 ```yaml
 Alpine:
-  versions:
-    - 3.9
-    - 3.10
-    - 3.11
-    - 3.12
+  - 3.9
+  - 3.10
+  - 3.11
+  - 3.12
 CentOS:
-  versions:
-    - 6
-    - 7
-    - 8
+  - 6
+  - 7
+  - 8
 Debian:
-  versions:
-    - stretch
-    - buster
+  - stretch
+  - buster
 FreeBSD:
-  versions:
-    - 11.2+
-    - 12
+  - 11.2+
+  - 12
 RedHat:
-  versions:
-    - 6
-    - 7.4+
-    - 8
+  - 6
+  - 7.4+
+  - 8
 SUSE/SLES:
-  versions:
-    - 12
-    - 15
+  - 12
+  - 15
 Ubuntu:
-  versions:
-    - xenial
-    - bionic
-    - focal
+  - xenial
+  - bionic
+  - focal
 ```
 
 **NGINX Plus**
 
 ```yaml
 Alpine:
-  versions:
-    - 3.9
-    - 3.10
-    - 3.11
-    - 3.12
+  - 3.9
+  - 3.10
+  - 3.11
+  - 3.12
 Amazon Linux:
-  versions:
-    - 2018.03
+  - 2018.03
 Amazon Linux 2:
-  versions:
-    - any
+  - any
 CentOS:
-  versions:
-    - 6.5+
-    - 7.4+
-    - 8
+  - 6.5+
+  - 7.4+
+  - 8
 Debian:
-  versions:
-    - stretch
-    - buster
+  - stretch
+  - buster
 FreeBSD:
-  versions:
-    - 11.2+
-    - 12
+  - 11.2+
+  - 12
 Oracle Linux:
-  versions:
-    - 6.5+
-    - 7.4+
+  - 6.5+
+  - 7.4+
 RedHat:
-  versions:
-    - 6.5+
-    - 7.4+
-    - 8
+  - 6.5+
+  - 7.4+
+  - 8
 SUSE/SLES:
-  versions:
-    - 12
-    - 15
+  - 12
+  - 15
 Ubuntu:
-  versions:
-    - xenial
-    - bionic
-    - focal
+  - xenial
+  - bionic
+  - focal
 ```
 
 Role Variables
