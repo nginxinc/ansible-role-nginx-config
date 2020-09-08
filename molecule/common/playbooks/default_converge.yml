@@ -8,6 +8,8 @@
       vars:
         nginx_config_debug_output: true
         nginx_config_selinux: true
+        nginx_config_selinux_tcp_ports:
+          - 80
 
         nginx_config_main_template_enable: true
         nginx_config_main_template:
