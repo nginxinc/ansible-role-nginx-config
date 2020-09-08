@@ -46,7 +46,7 @@
             # sub_filters: []
             last_modified: "off"
             once: "on"
-            types: "text/html"
+            # types: "text/html"
           http_global_autoindex: false
           custom_options:
             - master_process on;
@@ -112,7 +112,7 @@
                   # sub_filters: []
                   last_modified: "off"
                   once: "on"
-                  types: "text/html"
+                  # types: "text/html"
             # custom_options: []
                 reverse_proxy:
                   locations:
@@ -129,6 +129,8 @@
                           name: Fancy-New-Header-To-Test
                           value: testing=true
                           always: false
+                      rewrites:
+                        - (.*).html(.*) $1$2
                       proxy_pass: http://frontend_servers/
                       proxy_cache: frontend_proxy_cache
                       proxy_cache_valid:
@@ -167,7 +169,7 @@
                         # sub_filters: []
                         last_modified: "off"
                         once: "on"
-                        types: "text/html"
+                        # types: "text/html"
                     backend:
                       location: /backend
                       proxy_pass: http://backend_servers/
@@ -294,7 +296,7 @@
                     - "'proxied_for_ip' '$http_x_forwarded_for'"
                   last_modified: "off"
                   once: "off"
-                  types: "text/html"
+                  # types: "text/html"
                 web_server:
                   locations:
                     frontend_site:
@@ -308,7 +310,7 @@
                     # sub_filters: []
                     last_modified: "off"
                     once: "off"
-                    types: "text/html"
+                    # types: "text/html"
                   http_demo_conf: false
           backend:
             template_file: http/default.conf.j2
@@ -337,7 +339,7 @@
                     - "'proxied_for_ip' '$http_x_forwarded_for'"
                   last_modified: "off"
                   once: "off"
-                  types: "text/html"
+                  # types: "text/html"
                 web_server:
                   locations:
                     backend_site:
@@ -363,7 +365,7 @@
                     # sub_filters: []
                     last_modified: "off"
                     once: "off"
-                    types: "text/html"
+                    # types: "text/html"
                   http_demo_conf: false
         nginx_config_html_demo_template_enable: true
         nginx_config_html_demo_template:
