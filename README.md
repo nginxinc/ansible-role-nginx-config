@@ -108,18 +108,18 @@ Role Variables
 
 This role has multiple variables. The descriptions and defaults for all these variables can be found in the **`defaults/main`** directory in the following files:
 
--   **[defaults/main/main.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/defaults/main/main.yml):** NGINX simple config variables
--   **[defaults/main/template.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/defaults/main/template.yml):** NGINX config template variables
--   **[defaults/main/upload.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/defaults/main/upload.yml):** NGINX config/HTML/SSL upload variables
+-   **[defaults/main/main.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/main.yml):** NGINX simple config variables
+-   **[defaults/main/template.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml):** NGINX config template variables
+-   **[defaults/main/upload.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/upload.yml):** NGINX config/HTML/SSL upload variables
 
 Example Playbooks
 -----------------
 
 Working functional playbook examples can be found in the **`molecule/common`** directory in the following files:
 
--   **[molecule/common/playbooks/cleanup_module_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/molecule/common/playbooks/cleanup_module_converge.yml):** Cleanup an NGINX config and configure NGINX supported modules
--   **[molecule/common/playbooks/default_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/molecule/common/playbooks/default_converge.yml):** Use the NGINX config templating variables to create an NGINX config
--   **[molecule/common/playbooks/stable_push_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/molecule/common/playbooks/stable_push_converge.yml):** Install NGINX using the stable branch and push a preexisting config from your system to your NGINX instance
+-   **[molecule/common/playbooks/cleanup_module_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/common/playbooks/cleanup_module_converge.yml):** Cleanup an NGINX config and configure NGINX supported modules
+-   **[molecule/common/playbooks/default_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/common/playbooks/default_converge.yml):** Use the NGINX config templating variables to create an NGINX config
+-   **[molecule/common/playbooks/stable_push_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/common/playbooks/stable_push_converge.yml):** Install NGINX using the stable branch and push a preexisting config from your system to your NGINX instance
 
 Do note that if you install this repository via Ansible Galaxy, you will have to replace the role variable in the sample playbooks from `ansible-role-nginx-config` to `nginxinc.nginx_config`.
 
@@ -133,7 +133,7 @@ You can find an Ansible role to help you install and configure NGINX App Protect
 License
 -------
 
-[Apache License, Version 2.0](https://github.com/nginxinc/ansible-role-nginx-config/blob/master/LICENSE)
+[Apache License, Version 2.0](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/LICENSE)
 
 Author Information
 ------------------
