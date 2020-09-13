@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (Unreleased)
+## 0.2.0 (September 13, 2020)
 
 BREAKING CHANGES:
 
@@ -12,8 +12,11 @@ Make sure you only use one variable or the other, since they will overwrite each
 
 FEATURES:
 
-*   Add Alpine 3.12 to the list of supported platforms
-*   Remove Alpine 3.8 from the list of supported platforms 
+*   A new variable has been introduced:
+    *   `nginx_debug_tasks` -- Print task related information to give you a better insight into the current progress of the role.
+*   Improved tasks naming conventions.
+*   Add Alpine `3.12` to the list of supported platforms.
+*   Remove Alpine `3.8` from the list of supported platforms .
 
 ENHANCEMENTS:
 
@@ -26,6 +29,7 @@ ENHANCEMENTS:
 BUG FIXES:
 
 *   An empty `nginx_config_cleanup_files` will no longer cause `nginx_config_cleanup` related tasks to fail.
+*   Handlers should now properly start NGINX if it wasn't running and reload NGINX otherwise.
 
 ## 0.1.0 (August 19, 2020)
 

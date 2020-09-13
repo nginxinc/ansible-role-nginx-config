@@ -1,50 +1,52 @@
 ---
-- name: "(Setup: SELinux) Install Required CentOS/RHEL 6/7 Dependencies"
-  package:
-    name:
-      - policycoreutils-python
-      - setools
-    state: present
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version != "8"
+- name: "Set up SELinux"
+  debug:
+    msg: "Setting up SELinux"
+  when: nginx_config_debug_tasks | bool
 
-- name: "(Setup: SELinux) Install Required CentOS/RHEL 8 Dependencies"
-  package:
-    name:
-      - selinux-policy-targeted
-      - libselinux-utils
-      - policycoreutils
-    state: present
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version == "8"
-
-- name: "(Setup: SELinux) Check if SELinux is Enabled"
+- name: "Check if SELinux is enabled"
   debug:
     msg: "You need to enable selinux, if it was disabled you need to reboot"
   when: ansible_selinux is undefined
 
-- name: "(Setup: SELinux) Setup Permissive SELinux"
+- name: "(CentOS/RHEL) Install dependencies"
+  block:
+    - name: "(CentOS/RHEL 6/7) Install dependencies"
+      yum:
+        name:
+          - policycoreutils-python
+          - setools
+      when: ansible_facts['distribution_major_version'] is version('8', '!=')
+
+    - name: "(CentOS/RHEL 8) Install dependencies"
+      yum:
+        name:
+          - libselinux-utils
+          - policycoreutils
+          - selinux-policy-targeted
+      when: ansible_facts['distribution_major_version'] is version('8', '==')
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: "Setup permissive SELinux"
   selinux:
     state: permissive
     policy: targeted
   changed_when: false
   when: ansible_selinux.mode == "enforcing"
 
-- name: "(Setup: SELinux) Allow HTTP Network Connection"
+- name: "Allow HTTP network connection"
   seboolean:
     name: httpd_can_network_connect
-    state: yes
-    persistent: yes
+    state: true
+    persistent: true
 
-- name: "(Setup: SELinux) Allow HTTP Relay Connection"
+- name: "Allow HTTP relay connection"
   seboolean:
     name: httpd_can_network_relay
-    state: yes
-    persistent: yes
+    state: true
+    persistent: true
 
-- name: "(Setup: SELinux) Allow Status Ports"
+- name: "Allow status ports"
   seport:
     ports: "{{ nginx_config_status_port }}"
     proto: tcp
@@ -52,7 +54,7 @@
     state: present
   when: nginx_config_status_port is defined
 
-- name: "(Setup: SELinux) Allow Rest API Ports"
+- name: "Allow Rest API ports"
   seport:
     ports: "{{ nginx_config_rest_api_port }}"
     proto: tcp
@@ -60,7 +62,7 @@
     state: present
   when: nginx_config_rest_api_port is defined
 
-- name: "(Setup: SELinux) Allow Specific TCP Ports"
+- name: "Allow specific TCP ports"
   seport:
     ports: "{{ nginx_config_selinux_tcp_ports }}"
     proto: tcp
@@ -68,7 +70,7 @@
     state: present
   when: nginx_config_selinux_tcp_ports is defined
 
-- name: "(Setup: SELinux) Allow Specific UDP Ports"
+- name: "Allow specific UDP ports"
   seport:
     ports: "{{ nginx_config_selinux_udp_ports }}"
     proto: udp
@@ -76,7 +78,7 @@
     state: present
   when: nginx_config_selinux_udp_ports is defined
 
-- name: "(Setup: SELinux) Enforce SELinux"
+- name: "Enforce SELinux"
   selinux:
     state: enforcing
     policy: targeted
@@ -84,3 +86,8 @@
   when:
     - nginx_config_selinux_enforcing
     - ansible_selinux.mode == "permissive"
+
+- name: "Set up SELinux"
+  debug:
+    msg: "Done setting up SELinux"
+  when: nginx_config_debug_tasks | bool

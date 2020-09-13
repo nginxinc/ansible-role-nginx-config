@@ -6,7 +6,7 @@ jobs:
     - name: "(Debian/Ubuntu) Cleanup config and try to install modules"
       env:
         scenario: cleanup_module
-    - name: "(Alpine) Cleanup config and try to install modules"
+    - name: "(Alpine Linux) Cleanup config and try to install modules"
       env:
         scenario: cleanup_module_alpine
     - name: "(CentOS) Cleanup config and try to install modules"
@@ -15,7 +15,7 @@ jobs:
     - name: "(Debian/Ubuntu) Test config templates"
       env:
         scenario: default
-    - name: "(Alpine) Test config templates"
+    - name: "(Alpine Linux) Test config templates"
       env:
         scenario: default_alpine
     - name: "(CentOS) Test config templates"
@@ -24,7 +24,7 @@ jobs:
     - name: "(Debian/Ubuntu) Install stable branch and push a config"
       env:
         scenario: stable_push
-    - name: "(Alpine) Install stable branch and push a config"
+    - name: "(Alpine Linux) Install stable branch and push a config"
       env:
         scenario: stable_push_alpine
     - name: "(CentOS) Install stable branch and push a config"

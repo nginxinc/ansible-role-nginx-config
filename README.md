@@ -44,14 +44,11 @@ Alpine:
   - 3.12
 CentOS:
   - 6
-  - 7
+  - 7.4+
   - 8
 Debian:
   - stretch
   - buster
-FreeBSD:
-  - 11.2+
-  - 12
 RedHat:
   - 6
   - 7.4+
@@ -62,6 +59,7 @@ SUSE/SLES:
 Ubuntu:
   - xenial
   - bionic
+  - eoan
   - focal
 ```
 
@@ -100,13 +98,14 @@ SUSE/SLES:
 Ubuntu:
   - xenial
   - bionic
+  - eoan
   - focal
 ```
 
 Role Variables
 --------------
 
-This role has multiple variables. The descriptions and defaults for all these variables can be found in the **`defaults/main`** directory in the following files:
+This role has multiple variables. The descriptions and defaults for all these variables can be found in the **`defaults/main/`** directory in the following files:
 
 -   **[defaults/main/main.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/main.yml):** NGINX simple config variables
 -   **[defaults/main/template.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml):** NGINX config template variables
@@ -115,7 +114,7 @@ This role has multiple variables. The descriptions and defaults for all these va
 Example Playbooks
 -----------------
 
-Working functional playbook examples can be found in the **`molecule/common`** directory in the following files:
+Working functional playbook examples can be found in the **`molecule/common/`** directory in the following files:
 
 -   **[molecule/common/playbooks/cleanup_module_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/common/playbooks/cleanup_module_converge.yml):** Cleanup an NGINX config and configure NGINX supported modules
 -   **[molecule/common/playbooks/default_converge.yml](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/common/playbooks/default_converge.yml):** Use the NGINX config templating variables to create an NGINX config
@@ -126,9 +125,13 @@ Do note that if you install this repository via Ansible Galaxy, you will have to
 Other NGINX Roles
 -----------------
 
-You can find an Ansible collection of roles to help you install and configure NGINX Controller [here](https://github.com/nginxinc/ansible-collection-nginx_controller)
+You can find an Ansible role to install NGINX [here](https://github.com/nginxinc/ansible-role-nginx)
 
 You can find an Ansible role to help you install and configure NGINX App Protect [here](https://github.com/nginxinc/ansible-role-nginx-app-protect)
+
+You can find an Ansible collection of roles to help you install and configure NGINX Controller [here](https://github.com/nginxinc/ansible-collection-nginx_controller)
+
+You can find an Ansible role to install NGINX Unit [here](https://github.com/nginxinc/ansible-role-nginx-unit)
 
 License
 -------

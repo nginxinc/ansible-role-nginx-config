@@ -1,18 +1,18 @@
 ---
-- name: "(Setup: CentOS/RedHat/Suse) Setup SELinux"
+- name: "(Red Hat/Suse OSs) Setup SELinux"
   include_tasks: "{{ role_path }}/tasks/prerequisites/setup-selinux.yml"
   when:
     - nginx_config_selinux | bool
     - ansible_selinux.mode is defined
-    - ansible_os_family in ['RedHat', 'Suse']
+    - ansible_facts['os_family'] in ['RedHat', 'Suse']
   tags: nginx_config_selinux
 
-- name: "(Config: All OSs) Cleanup NGINX Config"
+- name: "Cleanup NGINX config"
   include_tasks: "{{ role_path }}/tasks/conf/cleanup-config.yml"
   when: nginx_config_cleanup | bool
   tags: nginx_config_cleanup
 
-- name: "(Config: All OSs) Upload NGINX Config"
+- name: "Upload NGINX config"
   include_tasks: "{{ role_path }}/tasks/conf/upload-config.yml"
   when: nginx_config_main_upload_enable | bool
         or nginx_config_http_upload_enable | bool
@@ -21,7 +21,7 @@
         or nginx_config_ssl_upload_enable | bool
   tags: nginx_config_upload
 
-- name: "(Config: All OSs) Create NGINX Config"
+- name: "Create NGINX config"
   include_tasks: "{{ role_path }}/tasks/conf/template-config.yml"
   when: nginx_config_main_template_enable | bool
         or nginx_config_http_template_enable | bool
@@ -31,10 +31,10 @@
         or nginx_config_modules is defined and nginx_config_modules | length > 0
   tags: nginx_config_template
 
-- name: "(Config: All OSs) Ensure NGINX is Running"
+- name: "Ensure NGINX is running"
   meta: flush_handlers
 
-- name: "(Config: All OSs) Debug Output"
+- name: "Debug output"
   include_tasks: "{{ role_path }}/tasks/conf/debug-output.yml"
   when: nginx_config_debug_output | bool
   tags: nginx_config_debug_output
