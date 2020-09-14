@@ -84,7 +84,7 @@
     dest: "{{ nginx_config_status_file_location | default('/etc/nginx/conf.d/status.conf') }}"
     backup: yes
     mode: 0644
-  notify: "(Handler) Reload NGINX config"
+  notify: "(Handler) Start NGINX"
   when: nginx_config_status_enable | bool
 
 - name: "Dynamically generate NGINX API config file"
