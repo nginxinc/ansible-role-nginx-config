@@ -1,22 +1,21 @@
 ---
-- name: "(Handler) Check NGINX"
-  command: "nginx -t"
-  changed_when: false
-
-- name: "(Handler: All OSs) Run NGINX"
+- name: "(Handler) Run NGINX"
   block:
     - name: "(Handler) Start NGINX"
       service:
         name: nginx
         state: started
-        enabled: true
+        enabled: yes
       notify: "(Handler) Check NGINX"
-      listen: "(Handler) Reload NGINX config"
+
+    - name: "(Handler) Check NGINX"
+      command: "nginx -t"
+      notify: "(Handler) Start NGINX"
+      changed_when: false
 
     - name: "(Handler) Reload NGINX"
       command: "nginx -s reload"
       changed_when: false
-      listen: "(Handler) Reload NGINX config"
   when:
     - nginx_config_start | bool
-    - not ansible_check_mode | bool
+    - not ansible_check_mode

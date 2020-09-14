@@ -29,7 +29,6 @@ ENHANCEMENTS:
 BUG FIXES:
 
 *   An empty `nginx_config_cleanup_files` will no longer cause `nginx_config_cleanup` related tasks to fail.
-*   Handlers should now properly start NGINX if it wasn't running and reload NGINX otherwise.
 
 ## 0.1.0 (August 19, 2020)
 

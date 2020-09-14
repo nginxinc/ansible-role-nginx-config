@@ -30,7 +30,7 @@
   when:
     - nginx_config_modules is defined
     - nginx_config_modules | length > 0
-  notify: "(Handler) Reload NGINX config"
+  notify: "(Handler) Start NGINX"
 
 - name: "Ensure NGINX main directory exists"
   file:
@@ -46,7 +46,7 @@
     backup: yes
     mode: 0644
   when: nginx_config_main_template_enable | bool
-  notify: "(Handler) Reload NGINX config"
+  notify: "(Handler) Start NGINX"
 
 - name: "Ensure NGINX HTTP directory exists"
   file:
@@ -76,7 +76,7 @@
     mode: 0644
   with_dict: "{{ nginx_config_http_template }}"
   when: nginx_config_http_template_enable | bool
-  notify: "(Handler) Reload NGINX config"
+  notify: "(Handler) Start NGINX"
 
 - name: "Dynamically generate NGINX stub status config file"
   template:
@@ -93,7 +93,7 @@
     dest: "{{ nginx_config_rest_api_file_location | default('/etc/nginx/conf.d/api.conf') }}"
     backup: yes
     mode: 0644
-  notify: "(Handler) Reload NGINX config"
+  notify: "(Handler) Start NGINX"
   when: nginx_config_rest_api_enable | bool
 
 - name: "Ensure NGINX stream directory exists"
@@ -111,7 +111,7 @@
     backup: yes
     mode: 0644
   with_dict: "{{ nginx_config_stream_template }}"
-  notify: "(Handler) Reload NGINX config"
+  notify: "(Handler) Start NGINX"
   when: nginx_config_stream_template_enable | bool
 
 - name: "Create NGINX config"

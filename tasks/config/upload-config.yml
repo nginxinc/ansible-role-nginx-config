@@ -18,7 +18,7 @@
         dest: "{{ nginx_config_main_upload_dest | default('/etc/nginx/') }}"
         backup: yes
         mode: 0755
-      notify: "(Handler) Reload NGINX config"
+      notify: "(Handler) Start NGINX"
   when: nginx_config_main_upload_enable | bool
 
 - name: "Upload NGINX HTTP config"
@@ -36,7 +36,7 @@
         backup: yes
         mode: 0644
       with_fileglob: "{{ nginx_config_http_upload_src }}"
-      notify: "(Handler) Reload NGINX config"
+      notify: "(Handler) Start NGINX"
   when: nginx_config_http_upload_enable | bool
 
 - name: "Upload NGINX stream config"
@@ -54,7 +54,7 @@
         backup: yes
         mode: 0644
       with_fileglob: "{{ nginx_config_stream_upload_src }}"
-      notify: "(Handler) Reload NGINX config"
+      notify: "(Handler) Start NGINX"
   when: nginx_config_stream_upload_enable | bool
 
 - name: "Upload HTML files"
@@ -72,7 +72,7 @@
         backup: yes
         mode: 0644
       with_fileglob: "{{ nginx_config_html_upload_src }}"
-      notify: "(Handler) Reload NGINX config"
+      notify: "(Handler) Start NGINX"
   when: nginx_config_html_upload_enable | bool
 
 - name: "Upload NGINX SSL certificates and keys"
