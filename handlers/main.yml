@@ -1,19 +1,19 @@
 ---
-- name: "(Handler: All OSs) Run NGINX"
+- name: "(Handler) Run NGINX"
   block:
-    - name: "(Handler: All OSs) Start NGINX"
+    - name: "(Handler) Start NGINX"
       service:
         name: nginx
         state: started
         enabled: yes
-      notify: "(Handler: All OSs) Check NGINX"
+      notify: "(Handler) Check NGINX"
 
-    - name: "(Handler: All OSs) Check NGINX"
+    - name: "(Handler) Check NGINX"
       command: "nginx -t"
-      notify: "(Handler: All OSs) Start NGINX"
+      notify: "(Handler) Start NGINX"
       changed_when: false
 
-    - name: "(Handler: All OSs) Reload NGINX"
+    - name: "(Handler) Reload NGINX"
       command: "nginx -s reload"
       changed_when: false
   when:
