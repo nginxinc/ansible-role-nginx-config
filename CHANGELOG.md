@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (September 20, 2020)
+## 0.2.0 (September 21, 2020)
 
 BREAKING CHANGES:
 
