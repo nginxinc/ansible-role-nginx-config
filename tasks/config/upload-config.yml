@@ -1,95 +1,90 @@
 ---
-- name: "Upload NGINX config"
-  debug:
-    msg: "Uploading NGINX config"
-  when: nginx_config_debug_tasks | bool
-
-- name: "Upload NGINX main config"
+- name: Upload NGINX main config
   block:
-    - name: "Ensure NGINX main directory exists"
+    - name: Ensure NGINX main directory exists
       file:
         path: "{{ nginx_config_main_upload_dest | default('/etc/nginx/') }}"
         state: directory
         mode: 0755
 
-    - name: "Upload NGINX main config file"
+    - name: Upload NGINX main config file
       copy:
         src: "{{ nginx_config_main_upload_src | default('conf/nginx.conf') }}"
         dest: "{{ nginx_config_main_upload_dest | default('/etc/nginx/') }}"
         backup: yes
         mode: 0755
-      notify: "(Handler) Start NGINX"
+      notify: (Handler) Run NGINX
   when: nginx_config_main_upload_enable | bool
 
-- name: "Upload NGINX HTTP config"
+- name: Upload NGINX HTTP config
   block:
-    - name: "Ensure NGINX HTTP directory exists"
+    - name: Ensure NGINX HTTP directory exists
       file:
         path: "{{ nginx_config_http_upload_dest | default('/etc/nginx/conf.d/') }}"
         state: directory
         mode: 0755
 
-    - name: "Upload NGINX HTTP config files"
+    - name: Upload NGINX HTTP config files
       copy:
         src: "{{ item }}"
         dest: "{{ nginx_config_http_upload_dest | default('/etc/nginx/conf.d/') }}"
         backup: yes
         mode: 0644
       with_fileglob: "{{ nginx_config_http_upload_src }}"
-      notify: "(Handler) Start NGINX"
+      notify: (Handler) Run NGINX
   when: nginx_config_http_upload_enable | bool
 
-- name: "Upload NGINX stream config"
+- name: Upload NGINX stream config
   block:
-    - name: "Ensure NGINX stream directory exists"
+    - name: Ensure NGINX stream directory exists
       file:
         path: "{{ nginx_config_stream_upload_dest | default('/etc/nginx/conf.d/') }}"
         state: directory
         mode: 0755
 
-    - name: "Upload NGINX stream config files"
+    - name: Upload NGINX stream config files
       copy:
         src: "{{ item }}"
         dest: "{{ nginx_config_stream_upload_dest | default('/etc/nginx/conf.d/') }}"
         backup: yes
         mode: 0644
       with_fileglob: "{{ nginx_config_stream_upload_src }}"
-      notify: "(Handler) Start NGINX"
+      notify: (Handler) Run NGINX
   when: nginx_config_stream_upload_enable | bool
 
-- name: "Upload HTML files"
+- name: Upload HTML files
   block:
-    - name: "Ensure HTML directory exists"
+    - name: Ensure HTML directory exists
       file:
         path: "{{ nginx_config_html_upload_dest | default('/usr/share/nginx/html') }}"
         state: directory
         mode: 0755
 
-    - name: "Upload HTML files"
+    - name: Upload HTML files
       copy:
         src: "{{ item }}"
         dest: "{{ nginx_config_html_upload_dest | default('/usr/share/nginx/html') }}"
         backup: yes
         mode: 0644
       with_fileglob: "{{ nginx_config_html_upload_src }}"
-      notify: "(Handler) Start NGINX"
+      notify: (Handler) Run NGINX
   when: nginx_config_html_upload_enable | bool
 
-- name: "Upload NGINX SSL certificates and keys"
+- name: Upload NGINX SSL certificates and keys
   block:
-    - name: "Ensure SSL certificate directory exists"
+    - name: Ensure SSL certificate directory exists
       file:
         path: "{{ nginx_config_ssl_upload_crt_dest | default('/etc/ssl/certs/') }}"
         state: directory
         mode: 0755
 
-    - name: "Ensure SSL key directory exists"
+    - name: Ensure SSL key directory exists
       file:
         path: "{{ nginx_config_ssl_upload_key_dest | default('/etc/ssl/private/') }}"
         state: directory
         mode: 0755
 
-    - name: "Upload NGINX SSL certificates"
+    - name: Upload NGINX SSL certificates
       copy:
         src: "{{ item }}"
         dest: "{{ nginx_config_ssl_upload_crt_dest | default('/etc/ssl/certs/') }}"
@@ -98,7 +93,7 @@
         mode: 0640
       with_fileglob: "{{ nginx_config_ssl_upload_crt_src }}"
 
-    - name: "Upload NGINX SSL keys"
+    - name: Upload NGINX SSL keys
       copy:
         src: "{{ item }}"
         dest: "{{ nginx_config_ssl_upload_key_dest | default('/etc/ssl/private/') }}"
@@ -108,8 +103,3 @@
       with_fileglob: "{{ nginx_config_ssl_upload_key_src }}"
       no_log: true
   when: nginx_config_ssl_upload_enable | bool
-
-- name: "Upload NGINX config"
-  debug:
-    msg: "Done uploading NGINX config"
-  when: nginx_config_debug_tasks | bool

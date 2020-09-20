@@ -384,14 +384,14 @@
         nginx_config_stream_template:
           default:
             template_file: stream/default.conf.j2
-            conf_file_name: default.conf
+            conf_file_name: stream_default.conf
             conf_file_location: /etc/nginx/conf.d/stream
             network_streams:
               app:
                 listen:
                   listen_localhost:
                     ip: 0.0.0.0
-                    port: 80
+                    port: 9090
                     opts:
                       - udp
                 proxy_pass: backend
@@ -409,10 +409,10 @@
                 servers:
                   backend_server_1:
                     address: 0.0.0.0
-                    port: 8091
+                    port: 9091
                     weight: 1
                     health_check: max_fails=1 fail_timeout=10s
                   backend_server_2:
                     address: 0.0.0.0
-                    port: 8092
+                    port: 9092
                     down: true

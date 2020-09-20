@@ -1,21 +1,23 @@
 ---
-- name: "(Handler) Run NGINX"
-  block:
-    - name: "(Handler) Start NGINX"
-      service:
-        name: nginx
-        state: started
-        enabled: yes
-      notify: "(Handler) Check NGINX"
+- name: (Handler) Check NGINX
+  command: nginx -t
+  register: config
+  ignore_errors: yes
+  listen: (Handler) Run NGINX
 
-    - name: "(Handler) Check NGINX"
-      command: "nginx -t"
-      notify: "(Handler) Start NGINX"
-      changed_when: false
+- name: (Handler) Print NGINX error if syntax check fails
+  debug:
+    var: config.stderr_lines
+  failed_when: config.rc != 0
+  when: config.rc != 0
+  listen: (Handler) Run NGINX
 
-    - name: "(Handler) Reload NGINX"
-      command: "nginx -s reload"
-      changed_when: false
+- name: (Handler) Start/Reload NGINX
+  service:
+    name: nginx
+    state: reloaded
+    enabled: yes
   when:
     - nginx_config_start | bool
-    - not ansible_check_mode
+    - not ansible_check_mode | bool
+  listen: (Handler) Run NGINX

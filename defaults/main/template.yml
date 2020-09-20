@@ -27,6 +27,18 @@ nginx_config_main_template:
   worker_connections: 1024
   http_enable: true
   http_settings:
+    # app_protect_global:  # Optional -- Configure NGINX App Protect
+    #   physical_memory_util_thresholds:  # Optional
+    #     high: 100  # Required
+    #     low: 100  # Required
+    #   cpu_thresholds:  # Optional
+    #     high: 100  # Required
+    #     low: 100  # Required
+    #   failure_mode_action: pass  # Optional -- `pass` or `drop`
+    #   cookie_seed: encryptionseed  # Optional
+    #   compressed_requests_action: drop  # Optional -- `pass` or `drop`
+    #   request_buffer_overflow_action: pass  # Optional -- `pass` or `drop`
+    #   user_defined_signatures: []  # Optional list
     access_log_format:
       - name: main
         format: |-
@@ -77,6 +89,13 @@ nginx_config_http_template:
             port: 8081
             ssl: true
             opts: []  # Listen opts like http2 which will be added (ssl is automatically added if you specify 'ssl:').
+        # app_protect:  # Optional -- Configure NGINX App Protect
+        #   enable: false  # Optional
+        #   policy_file: path  # Optional
+        #   security_log_enable: false  # Optional
+        #   security_log:  # Optional
+        #     path: path  # Required
+        #     destination: dest  # Required
         ssl:
           cert: /etc/ssl/certs/default.crt
           key: /etc/ssl/private/default.key
@@ -135,6 +154,13 @@ nginx_config_http_template:
           locations:
             default:
               location: /
+              # app_protect:  # Optional -- Configure NGINX App Protect
+              #   enable: false  # Optional
+              #   policy_file: path  # Optional
+              #   security_log_enable: false  # Optional
+              #   security_log:  # Optional
+              #     path: path  # Required
+              #     destination: dest  # Required
               include_files: []
               proxy_hide_headers: []  # A list of headers which shouldn't be passed to the application
               add_headers:
@@ -176,6 +202,13 @@ nginx_config_http_template:
           locations:
             backend:
               location: /
+              # app_protect:  # Optional -- Configure NGINX App Protect
+              #   enable: false  # Optional
+              #   policy_file: path  # Optional
+              #   security_log_enable: false  # Optional
+              #   security_log:  # Optional
+              #     path: path  # Required
+              #     destination: dest  # Required
               include_files: []
               proxy_hide_headers: []  # A list of headers which shouldn't be passed to the application
               add_headers:

@@ -35,6 +35,20 @@ http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
+{% if nginx_config_main_template.http_settings.app_protect is defined %}
+{% from 'http/app_protect.j2' import app_protect_global with context %}
+{% filter indent(4) %}
+    {{ app_protect_global(nginx_config_main_template.http_settings.app_protect_global) }}
+{% endfilter %}
+{% endif %}
+
+{% if nginx_config_main_template.http_settings.app_protect is defined %}
+{% from 'http/app_protect.j2' import app_protect_local with context %}
+{% filter indent(4) %}
+    {{ app_protect_local(nginx_config_main_template.http_settings.app_protect) }}
+{% endfilter %}
+{% endif %}
+
 {% for access_log in nginx_config_main_template.http_settings.access_log_format %}
     log_format  {{ access_log.name }}  {{ access_log.format }};
 {% endfor %}

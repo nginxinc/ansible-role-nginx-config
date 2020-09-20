@@ -1,24 +1,14 @@
 ---
-- name: "Set up SELinux"
-  debug:
-    msg: "Setting up SELinux"
-  when: nginx_config_debug_tasks | bool
-
-- name: "Check if SELinux is enabled"
-  debug:
-    msg: "You need to enable selinux, if it was disabled you need to reboot"
-  when: ansible_selinux is undefined
-
-- name: "(CentOS/RHEL) Install dependencies"
+- name: (CentOS/RHEL) Install dependencies
   block:
-    - name: "(CentOS/RHEL 6/7) Install dependencies"
+    - name: (CentOS/RHEL 6/7) Install dependencies
       yum:
         name:
           - policycoreutils-python
           - setools
       when: ansible_facts['distribution_major_version'] is version('8', '!=')
 
-    - name: "(CentOS/RHEL 8) Install dependencies"
+    - name: (CentOS/RHEL 8) Install dependencies
       yum:
         name:
           - libselinux-utils
@@ -27,26 +17,26 @@
       when: ansible_facts['distribution_major_version'] is version('8', '==')
   when: ansible_facts['os_family'] == "RedHat"
 
-- name: "Setup permissive SELinux"
+- name: Set SELinux mode to permissive
   selinux:
     state: permissive
     policy: targeted
   changed_when: false
-  when: ansible_selinux.mode == "enforcing"
+  when: ansible_facts['selinux.mode'] == "enforcing"
 
-- name: "Allow HTTP network connection"
+- name: Allow SELinux HTTP network connections
   seboolean:
     name: httpd_can_network_connect
-    state: true
-    persistent: true
+    state: yes
+    persistent: yes
 
-- name: "Allow HTTP relay connection"
+- name: Allow SELinux HTTP network connections
   seboolean:
     name: httpd_can_network_relay
-    state: true
-    persistent: true
+    state: yes
+    persistent: yes
 
-- name: "Allow status ports"
+- name: Allow SELinux TCP connections on status ports
   seport:
     ports: "{{ nginx_config_status_port }}"
     proto: tcp
@@ -54,7 +44,7 @@
     state: present
   when: nginx_config_status_port is defined
 
-- name: "Allow Rest API ports"
+- name: Allow SELinux TCP connections on Rest API ports
   seport:
     ports: "{{ nginx_config_rest_api_port }}"
     proto: tcp
@@ -62,7 +52,7 @@
     state: present
   when: nginx_config_rest_api_port is defined
 
-- name: "Allow specific TCP ports"
+- name: Allow SELinux TCP connections on specific ports
   seport:
     ports: "{{ nginx_config_selinux_tcp_ports }}"
     proto: tcp
@@ -70,7 +60,7 @@
     state: present
   when: nginx_config_selinux_tcp_ports is defined
 
-- name: "Allow specific UDP ports"
+- name: Allow SELinux UDP connections on specific ports
   seport:
     ports: "{{ nginx_config_selinux_udp_ports }}"
     proto: udp
@@ -78,16 +68,11 @@
     state: present
   when: nginx_config_selinux_udp_ports is defined
 
-- name: "Enforce SELinux"
+- name: Set SELinux mode to enforcing
   selinux:
     state: enforcing
     policy: targeted
   changed_when: false
   when:
     - nginx_config_selinux_enforcing
-    - ansible_selinux.mode == "permissive"
-
-- name: "Set up SELinux"
-  debug:
-    msg: "Done setting up SELinux"
-  when: nginx_config_debug_tasks | bool
+    - ansible_facts['selinux.mode'] == "permissive"

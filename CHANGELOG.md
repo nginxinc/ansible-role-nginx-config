@@ -12,6 +12,7 @@ Make sure you only use one variable or the other, since they will overwrite each
 
 FEATURES:
 
+*   Support for all NGINX App Protect directives has been added. You can find details on the supported directives on `defaults/main/template.yml`. This is the first module to be included using J2 macros. Expect to slowly see a refactor of various modules to use macros where possible.
 *   A new variable has been introduced:
     *   `nginx_debug_tasks` -- Print task related information to give you a better insight into the current progress of the role.
 *   Improved tasks naming conventions.
@@ -20,7 +21,7 @@ FEATURES:
 
 ENHANCEMENTS:
 
-*   Update Ansible to `2.9.13` and Ansible Lint to `4.3.4`.
+*   Update Ansible to `2.9.13` and Ansible Lint to `4.3.5`.
 *   Explicitly defined `mode` in relevant tasks.
 *   Improve configuration templating capabilities:
     *   Allow setting `access_log`/`access_log_location` to `off`.
