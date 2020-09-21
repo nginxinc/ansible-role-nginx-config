@@ -1,23 +1,22 @@
 ---
-- name: (Handler) Check NGINX
+- name: (Handler - NGINX Config) Check NGINX
   command: nginx -t
   register: config
   ignore_errors: yes
-  listen: (Handler) Run NGINX
+  listen: (Handler - NGINX Config) Run NGINX
 
-- name: (Handler) Print NGINX error if syntax check fails
+- name: (Handler - NGINX Config) Print NGINX error if syntax check fails
   debug:
     var: config.stderr_lines
   failed_when: config.rc != 0
   when: config.rc != 0
-  listen: (Handler) Run NGINX
+  listen: (Handler - NGINX Config) Run NGINX
 
-- name: (Handler) Start/Reload NGINX
+- name: (Handler - NGINX Config) Start/Reload NGINX
   service:
     name: nginx
     state: reloaded
-    enabled: yes
   when:
     - nginx_config_start | bool
     - not ansible_check_mode | bool
-  listen: (Handler) Run NGINX
+  listen: (Handler - NGINX Config) Run NGINX

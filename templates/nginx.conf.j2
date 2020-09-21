@@ -1,8 +1,10 @@
 {{ ansible_managed | comment }}
 
+{% if nginx_config_main_template.modules is defined %}
 {% for nginx_module in nginx_config_main_template.modules %}
 load_module {{ nginx_module }};
 {% endfor %}
+{% endif %}
 
 user  {{ nginx_config_main_template.user }};
 worker_processes  {{ nginx_config_main_template.worker_processes }};

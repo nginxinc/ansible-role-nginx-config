@@ -34,9 +34,6 @@
               failure_mode_action: pass
               cookie_seed: testseed
               compressed_requests_action: drop
-            app_protect:
-              enable: false
-              security_log_enable: false
             default_type: application/octet-stream
             access_log_format:
               - name: main
@@ -106,7 +103,7 @@
                 server_name: localhost
                 app_protect:
                   enable: true
-                  security_log_enable: false
+                  policy_file: /etc/nginx/app-protect-security-policy.json
                 http_error_pages:
                   404: /404.html
                 error_page: /usr/share/nginx/html
