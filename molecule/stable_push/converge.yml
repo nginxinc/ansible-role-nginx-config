@@ -10,6 +10,6 @@
 
         nginx_branch: stable
         nginx_config_main_upload_enable: true
-        nginx_config_main_upload_src: ../files/nginx.conf
+        nginx_config_main_upload_src: ../common/files/nginx.conf
         nginx_config_http_upload_enable: true
-        nginx_config_http_upload_src: ../files/http/*.conf
+        nginx_config_http_upload_src: ../common/files/http/*.conf

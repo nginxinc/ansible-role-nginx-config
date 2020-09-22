@@ -1,0 +1,46 @@
+{{ ansible_managed | comment }}
+{# NGINX App Protect template -- Add directives under its corresponding block #}
+{# Format is as follows #}
+{# Left side (context module_name) -- Right side (module name) #}
+{# HTTP NGINX App Protect -- ngx_http_app_protect_module #}
+
+{% macro app_protect_global(app_protect) %}
+{% if app_protect['physical_memory_util_thresholds'] is defined %}
+app_protect_physical_memory_util_thresholds high={{ app_protect['physical_memory_util_thresholds']['high'] }} low={{ app_protect['physical_memory_util_thresholds']['low'] }};
+{% endif %}
+{% if app_protect['cpu_thresholds'] is defined %}
+app_protect_cpu_thresholds high={{ app_protect['cpu_thresholds']['high'] }} low={{ app_protect['cpu_thresholds']['low'] }};
+{% endif %}
+{% if app_protect['failure_mode_action'] is defined %}
+app_protect_failure_mode_action {{ app_protect['failure_mode_action'] }};
+{% endif %}
+{% if app_protect['cookie_seed'] is defined %}
+app_protect_cookie_seed {{ app_protect['cookie_seed'] }};
+{% endif %}
+{% if app_protect['compressed_requests_action'] is defined %}
+app_protect_compressed_requests_action {{ app_protect['compressed_requests_action'] }};
+{% endif %}
+{% if app_protect['request_buffer_overflow_action'] is defined %}
+app_protect_request_buffer_overflow_action {{ app_protect['request_buffer_overflow_action'] }};
+{% endif %}
+{% if app_protect['user_defined_signatures'] is defined %}
+{% for signature in app_protect['user_defined_signatures'] %}
+app_protect_user_defined_signatures {{ signature }};
+{% endfor %}
+{% endif %}
+{% endmacro %}
+
+{% macro app_protect_local(app_protect) %}
+{% if app_protect['enable'] is defined %}
+app_protect_enable {{ app_protect['enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect['policy_file'] is defined %}
+app_protect_policy_file {{ app_protect['policy_file'] }};
+{% endif %}
+{% if app_protect['security_log_enable'] is defined %}
+app_protect_security_log_enable {{ app_protect['security_log_enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect['security_log'] is defined %}
+app_protect_security_log {{ app_protect['security_log']['path'] }} {{ app_protect['security_log']['dest'] }};
+{% endif %}
+{% endmacro %}

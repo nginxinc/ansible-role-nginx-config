@@ -1,35 +1,22 @@
 ---
 language: python
 services: docker
+branches:
+  only: main
 jobs:
   include:
-    - name: "(Debian/Ubuntu) Cleanup config and try to install modules"
+    - name: (Alpine Linux/CentOS/Debian/Ubuntu) Cleanup config and try to install modules
       env:
         scenario: cleanup_module
-    - name: "(Alpine Linux) Cleanup config and try to install modules"
-      env:
-        scenario: cleanup_module_alpine
-    - name: "(CentOS) Cleanup config and try to install modules"
-      env:
-        scenario: cleanup_module_centos
-    - name: "(Debian/Ubuntu) Test config templates"
+    - name: (Alpine Linux/CentOS/Debian/Ubuntu) Test config generation
       env:
         scenario: default
-    - name: "(Alpine Linux) Test config templates"
+    - name: (CentOS/Debian/Ubuntu) Test config generation with NGINX Plus directives
       env:
-        scenario: default_alpine
-    - name: "(CentOS) Test config templates"
-      env:
-        scenario: default_centos
-    - name: "(Debian/Ubuntu) Install stable branch and push a config"
+        scenario: plus
+    - name: (Alpine Linux/CentOS/Debian/Ubuntu) Install stable branch and push a config
       env:
         scenario: stable_push
-    - name: "(Alpine Linux) Install stable branch and push a config"
-      env:
-        scenario: stable_push_alpine
-    - name: "(CentOS) Install stable branch and push a config"
-      env:
-        scenario: stable_push_centos
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -37,7 +24,7 @@ before_install:
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 install:
   - pip install ansible==2.9.13
-  - pip install ansible-lint==4.3.4
+  - pip install ansible-lint==4.3.5
   - pip install yamllint==1.24.2
   - pip install molecule==3.0.8
   - pip install docker==4.3.1

@@ -83,6 +83,12 @@ server {
     listen {% if listen.ip is defined and listen.ip | length %}{{ listen.ip }}:{% endif %}{{ listen.port }}{% if listen.ssl is defined and listen.ssl %} ssl{% endif %}{% if listen.opts is defined and listen.opts | length %} {{ listen.opts | join(" ") }}{% endif %};
 {% endfor %}
     server_name {{ item.value.servers[server].server_name | default('localhost') }};
+{% if item.value.servers[server].app_protect is defined %}
+{% from 'app_protect.j2' import app_protect_local with context %}
+{% filter indent(8) %}
+    {{ app_protect_local(item.value.servers[server].app_protect) }}
+{% endfilter %}
+{% endif %}
 {% if item.value.servers[server].ssl is defined and item.value.servers[server].ssl %}
     ssl_certificate {{ item.value.servers[server].ssl.cert }};
     ssl_certificate_key {{ item.value.servers[server].ssl.key }};
@@ -190,6 +196,12 @@ server {
     location {{ item.value.servers[server].reverse_proxy.locations[location].location }} {
 {% if item.value.servers[server].reverse_proxy.locations[location].internal is sameas true %}
         internal;
+{% endif %}
+{% if item.value.servers[server].reverse_proxy.locations[location].app_protect is defined %}
+{% from 'app_protect.j2' import app_protect_local with context %}
+{% filter indent(12) %}
+    {{ app_protect_local(item.value.servers[server].reverse_proxy.locations[location].app_protect) }}
+{% endfilter %}
 {% endif %}
 {% if item.value.servers[server].reverse_proxy.locations[location].include_files is defined and item.value.servers[server].reverse_proxy.locations[location].include_files | length %}
 {% for file in item.value.servers[server].reverse_proxy.locations[location].include_files %}
@@ -394,6 +406,12 @@ server {
 {% if item.value.servers[server].web_server is defined %}
 {% for location in item.value.servers[server].web_server.locations %}
     location {{ item.value.servers[server].web_server.locations[location].location }} {
+{% if item.value.servers[server].web_server.locations[location].app_protect is defined %}
+{% from 'app_protect.j2' import app_protect_local with context %}
+{% filter indent(12) %}
+    {{ app_protect_local(item.value.servers[server].web_server.locations[location].app_protect) }}
+{% endfilter %}
+{% endif %}
 {% if item.value.servers[server].web_server.locations[location].html_file_location is defined %}
         root   {{ item.value.servers[server].web_server.locations[location].html_file_location }};
 {% endif %}

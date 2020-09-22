@@ -1,10 +1,5 @@
 ---
-- name: "Delete NGINX config files"
-  debug:
-    msg: "Deleting NGINX config files"
-  when: nginx_config_debug_tasks | bool
-
-- name: "Find NGINX config files"
+- name: Find NGINX config files
   find:
     paths: "{{ item.directory }}"
     patterns: "*.conf"
@@ -13,16 +8,10 @@
   when: nginx_config_cleanup_paths is defined
   register: nginx_config_files
 
-- name: "Remove NGINX config files"
+- name: Remove NGINX config files
   file:
     path: "{{ item }}"
     state: absent
-  loop: >-
-    {{ nginx_config_files.results | default('') | map(attribute='files') | sum(start=[]) | map(attribute='path') | list
-    + nginx_config_cleanup_files | default('') | list }}
-  notify: "(Handler) Start NGINX"
-
-- name: "Delete NGINX config files"
-  debug:
-    msg: "Done deleting NGINX config files"
-  when: nginx_config_debug_tasks | bool
+  loop: "{{ nginx_config_files.results | default('') | map(attribute='files') | sum(start=[]) | map(attribute='path') | list
+        + nginx_config_cleanup_files | default('') | list }}"
+  notify: (Handler - NGINX Config) Run NGINX
