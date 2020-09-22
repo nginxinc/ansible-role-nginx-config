@@ -1,5 +1,5 @@
-Ansible NGINX Role
-==================
+Ansible NGINX Configuration Role
+================================
 
 This role configures NGINX Open Source and NGINX Plus on your target host.
 
@@ -145,4 +145,4 @@ Author Information
 
 [Alessandro Fael Garcia](https://github.com/alessfg)
 
-&copy; [NGINX, Inc.](https://www.nginx.com/) 2020
+&copy; [F5 Networks, Inc.](https://www.f5.com/) 2020
