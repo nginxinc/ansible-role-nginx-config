@@ -3,6 +3,7 @@
   command: nginx -t
   register: config
   ignore_errors: yes
+  changed_when: false
   listen: (Handler - NGINX Config) Run NGINX
 
 - name: (Handler - NGINX Config) Print NGINX error if syntax check fails
@@ -12,7 +13,7 @@
   when: config.rc != 0
   listen: (Handler - NGINX Config) Run NGINX
 
-- name: (Handler - NGINX Config) Start/Reload NGINX
+- name: (Handler - NGINX Config) Start/reload NGINX
   service:
     name: nginx
     state: reloaded
