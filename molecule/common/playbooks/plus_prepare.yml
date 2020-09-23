@@ -34,9 +34,6 @@
       include_role:
         name: nginxinc.nginx_app_protect
       vars:
-        nginx_app_protect_license:
-          certificate: ../files/license/nginx-repo.crt
-          key: ../files/license/nginx-repo.key
         nginx_app_protect_setup_license: false
         nginx_app_protect_remove_license: false
         nginx_app_protect_install_signatures: false

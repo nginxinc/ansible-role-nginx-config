@@ -50,10 +50,8 @@
             keyval: false
             server_tokens: "off"
           sub_filter:
-            # sub_filters: []
             last_modified: "off"
             once: "on"
-            # types: "text/html"
           http_global_autoindex: false
           custom_options:
             - master_process on;
@@ -119,11 +117,8 @@
                     value: max-age=15768000; includeSubDomains
                     always: true
                 sub_filter:
-                  # sub_filters: []
                   last_modified: "off"
                   once: "on"
-                  # types: "text/html"
-            # custom_options: []
                 reverse_proxy:
                   locations:
                     frontend:
@@ -179,10 +174,8 @@
                       proxy_buffering: false
                       client_max_body_size: 5m
                       sub_filter:
-                        # sub_filters: []
                         last_modified: "off"
                         once: "on"
-                        # types: "text/html"
                     backend:
                       location: /backend
                       proxy_pass: http://backend_servers/
@@ -320,10 +313,8 @@
                       html_file_name: frontend_index.html
                       autoindex: false
                   sub_filter:
-                    # sub_filters: []
                     last_modified: "off"
                     once: "off"
-                    # types: "text/html"
                   http_demo_conf: false
           backend:
             template_file: http/default.conf.j2
@@ -352,7 +343,6 @@
                     - "'proxied_for_ip' '$http_x_forwarded_for'"
                   last_modified: "off"
                   once: "off"
-                  # types: "text/html"
                 web_server:
                   locations:
                     backend_site:
@@ -375,10 +365,8 @@
                         - include fastcgi_params;
                         - fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                   sub_filter:
-                    # sub_filters: []
                     last_modified: "off"
                     once: "off"
-                    # types: "text/html"
                   http_demo_conf: false
         nginx_config_html_demo_template_enable: true
         nginx_config_html_demo_template:

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (September 22, 2020)
+## 0.2.0 (September 24, 2020)
 
 BREAKING CHANGES:
 
@@ -13,8 +13,6 @@ Make sure you only use one variable or the other, since they will overwrite each
 FEATURES:
 
 *   Support for all NGINX App Protect directives has been added. You can find details on the supported directives on `defaults/main/template.yml`. This is the first module to be included using J2 macros. Expect to slowly see a refactor of various modules to use macros where possible.
-*   A new variable has been introduced:
-    *   `nginx_debug_tasks` -- Print task related information to give you a better insight into the current progress of the role.
 *   Add Alpine `3.12` to the list of supported platforms.
 *   Remove Alpine `3.8` from the list of supported platforms .
 *   Add NGINX Plus tests to TravisCI
