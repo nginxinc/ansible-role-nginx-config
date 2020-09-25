@@ -361,7 +361,7 @@ nginx_config_status_enable: false
 nginx_config_status_template_file: http/status.conf.j2
 nginx_config_status_file_location: /etc/nginx/conf.d/status.conf
 nginx_config_status_log: false
-nginx_config_status_port: 80
+nginx_config_status_port: 8080
 nginx_config_status_allow: 127.0.0.1
 nginx_config_status_deny: all
 
