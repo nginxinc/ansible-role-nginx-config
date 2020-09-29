@@ -11,7 +11,7 @@ jobs:
     - name: (Alpine Linux/CentOS/Debian/Ubuntu) Test config generation
       env:
         scenario: default
-    - if: env(NGINX_CRT) != "" and env(NGINX_KEY) != ""
+    - if: $TRAVIS_PULL_REQUEST is false
       name: (CentOS/Debian/Ubuntu) Test config generation with NGINX Plus directives
       env:
         scenario: plus
