@@ -11,8 +11,8 @@ jobs:
     - name: (Alpine Linux/CentOS/Debian/Ubuntu) Test config generation
       env:
         scenario: default
-    - if: not (type = "pull_request" and fork = "true")
-      name: (CentOS/Debian/Ubuntu) Test config generation with NGINX Plus directives
+    - name: (CentOS/Debian/Ubuntu) Test config generation with NGINX Plus directives
+      if: not (type = "pull_request" and fork = "true")
       env:
         scenario: plus
     - name: (Alpine Linux/CentOS/Debian/Ubuntu) Install stable branch and push a config
