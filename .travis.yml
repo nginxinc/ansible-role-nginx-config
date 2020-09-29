@@ -11,8 +11,8 @@ jobs:
     - name: (Alpine Linux/CentOS/Debian/Ubuntu) Test config generation
       env:
         scenario: default
-    - name: (CentOS/Debian/Ubuntu) Test config generation with NGINX Plus directives
-      if: env(NGINX_CRT) != "" and env(NGINX_KEY) != ""
+    - if: env(NGINX_CRT) != "" and env(NGINX_KEY) != ""
+      name: (CentOS/Debian/Ubuntu) Test config generation with NGINX Plus directives
       env:
         scenario: plus
     - name: (Alpine Linux/CentOS/Debian/Ubuntu) Install stable branch and push a config
