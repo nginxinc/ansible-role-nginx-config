@@ -1,15 +1,15 @@
 {{ ansible_managed | comment }}
 
 server {
-    listen {{ nginx_config_status_port | default('80') }};
+    listen {{ nginx_config_status_port | default('8080') }};
     access_log {{ nginx_config_status_log | ternary('on', 'off') }};
     location /nginx_status {
         stub_status on;
+    }
 {% if nginx_config_status_allow is defined %}
-        allow {{ nginx_config_status_allow }};
+    allow {{ nginx_config_status_allow }};
 {% endif %}
 {% if nginx_config_status_deny is defined %}
-        deny {{ nginx_config_status_deny }};
+    deny {{ nginx_config_status_deny }};
 {% endif %}
-    }
 }
