@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.1 (September 28, 2020)
+## 0.3.0 (Unreleased)
 
 BREAKING CHANGES:
 
