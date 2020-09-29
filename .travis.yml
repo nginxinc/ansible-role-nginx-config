@@ -11,7 +11,7 @@ jobs:
     - name: (Alpine Linux/CentOS/Debian/Ubuntu) Test config generation
       env:
         scenario: default
-    - if: $TRAVIS_PULL_REQUEST is false
+    - if: not (type = "pull_request" and fork = "true")
       name: (CentOS/Debian/Ubuntu) Test config generation with NGINX Plus directives
       env:
         scenario: plus
