@@ -6,9 +6,15 @@ BREAKING CHANGES:
 
 *   The default port of the status module is now 8080 and matches the CI molecule test which already used it. Set ```nginx_config_status_port```to another desired value.
 
+ENHANCEMENTS:
+
+*   Add survey to README.
+*   Improve README structure and use tables where relevant.
+
 BUG FIXES:
 
 *   Prevent TravisCI from trying to build (and failing) NGINX Plus images on external PRs.
+*   Fix naming for selinux facts dict.
 
 ## 0.2.0 (September 24, 2020)
 
