@@ -15,7 +15,8 @@ ENHANCEMENTS:
 BUG FIXES:
 
 *   Prevent TravisCI from trying to build (and failing) NGINX Plus images on external PRs.
-*   Fix naming for SELinux facts dict.
+*   Fix naming for SELinux Ansible facts.
+*   Correctly import `app_protect` global directives in template.
 
 ## 0.2.0 (September 24, 2020)
 

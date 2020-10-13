@@ -37,7 +37,7 @@ http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
 
-{% if nginx_config_main_template.http_settings.app_protect is defined %}
+{% if nginx_config_main_template.http_settings.app_protect_global is defined %}
 {% from 'http/app_protect.j2' import app_protect_global with context %}
 {% filter indent(4) %}
     {{ app_protect_global(nginx_config_main_template.http_settings.app_protect_global) }}
