@@ -11,6 +11,7 @@ ENHANCEMENTS:
 *   Add survey to README.
 *   Improve README structure and use tables where relevant.
 *   Update Ansible (now Ansible base) to `2.10.3`, Ansible (now Ansible Community Distribution) to `2.10.3`, Ansible Lint to `4.3.7`, Molecule to `3.1.5`, and yamllint to `1.25.0`.
+*   Improve templating of stub status and REST API config.
 
 BUG FIXES:
 
@@ -18,6 +19,7 @@ BUG FIXES:
 *   Fix naming for SELinux Ansible facts.
 *   Correctly import `app_protect` global directives in template.
 *   Role now runs correctly when using Ansible's check mode.
+*   Fix issue with access log in stub status and REST API config template not being properly parsed.
 
 ## 0.2.0 (September 24, 2020)
 

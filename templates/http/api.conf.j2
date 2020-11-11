@@ -1,29 +1,39 @@
 {{ ansible_managed | comment }}
 
 server {
-    listen {{ nginx_config_rest_api_port | default('80') }};
-    access_log {{ nginx_config_rest_api_log | ternary('on', 'off') }};
+    listen {{ nginx_config_rest_api_port | default('8080') }};
+{% if nginx_config_rest_api_access_log is defined and not nginx_config_rest_api_access_log %}
+    access_log off;
+{% elif nginx_config_rest_api_access_log is defined and nginx_config_rest_api_access_log is mapping %}
+    access_log {{ nginx_config_rest_api_access_log.location }} {{ nginx_config_rest_api_access_log.name }};
+{% endif %}
     location /api {
-{% if nginx_config_rest_api_write %}
-        api write=on;
-{% else %}
-        api;
+{% if nginx_config_rest_api_write is defined %}
+        api{{ ' write=on' if nginx_config_rest_api_write }};
 {% endif %}
 {% if nginx_config_rest_api_allow is defined %}
-        allow {{ nginx_config_rest_api_allow }};
+{% for address in nginx_config_rest_api_allow %}
+        allow {{ address }};
+{% endfor %}
 {% endif %}
 {% if nginx_config_rest_api_deny is defined %}
-        deny {{ nginx_config_rest_api_deny }};
+{% for address in nginx_config_rest_api_deny %}
+        deny {{ address }};
+{% endfor %}
 {% endif %}
     }
-{% if nginx_config_rest_api_dashboard %}
+{% if nginx_config_rest_api_dashboard is defined and nginx_config_rest_api_dashboard %}
     location = /dashboard.html {
         root /usr/share/nginx/html;
 {% if nginx_config_rest_api_dashboard_allow is defined %}
-        allow {{ nginx_config_rest_api_dashboard_allow }};
+{% for address in nginx_config_rest_api_dashboard_allow %}
+        allow {{ address }};
+{% endfor %}
 {% endif %}
 {% if nginx_config_rest_api_dashboard_deny is defined %}
-        deny {{ nginx_config_rest_api_dashboard_deny }};
+{% for address in nginx_config_rest_api_dashboard_deny %}
+        deny {{ address }};
+{% endfor %}
 {% endif %}
     }
 {% endif %}

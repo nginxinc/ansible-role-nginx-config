@@ -2,14 +2,22 @@
 
 server {
     listen {{ nginx_config_status_port | default('8080') }};
-    access_log {{ nginx_config_status_log | ternary('on', 'off') }};
+{% if nginx_config_status_access_log is defined and not nginx_config_status_access_log %}
+    access_log off;
+{% elif nginx_config_status_access_log is defined and nginx_config_status_access_log is mapping %}
+    access_log {{ nginx_config_status_access_log.location }} {{ nginx_config_status_access_log.name }};
+{% endif %}
     location /nginx_status {
         stub_status on;
     }
 {% if nginx_config_status_allow is defined %}
-    allow {{ nginx_config_status_allow }};
+{% for address in nginx_config_status_allow %}
+        allow {{ address }};
+{% endfor %}
 {% endif %}
-{% if nginx_config_status_deny is defined %}
-    deny {{ nginx_config_status_deny }};
+{% if nginx_config_status_allow is defined %}
+{% for address in nginx_config_status_allow %}
+        deny {{ address }};
+{% endfor %}
 {% endif %}
 }
