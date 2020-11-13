@@ -16,7 +16,7 @@ ENHANCEMENTS:
 BUG FIXES:
 
 *   Prevent TravisCI from trying to build (and failing) NGINX Plus images on external PRs.
-*   Fix naming for SELinux Ansible facts.
+*   Fix naming for SELinux facts dictionary.
 *   Correctly import `app_protect` global directives in template.
 *   Role now runs correctly when using Ansible's check mode.
 *   Fix issue with access log in stub status and REST API config template not being properly parsed.
