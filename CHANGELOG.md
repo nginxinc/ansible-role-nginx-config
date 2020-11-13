@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.3.0 (November 12, 2020)
+## 0.3.0 (November 13, 2020)
 
 BREAKING CHANGES:
 
-*   The default port of the status module is now 8080 and matches the CI molecule test which already used it. Set ```nginx_config_status_port```to another desired value.
+The default port of the status module is now 8080 and matches the CI molecule test which already used it. Set ```nginx_config_status_port```to another desired value.
 
 ENHANCEMENTS:
 
@@ -25,9 +25,9 @@ BUG FIXES:
 
 BREAKING CHANGES:
 
-*   The process to configure modules has changed. Instead of manually setting the modules you want to install to `true` or `false`, you will now have to use either:
-    *   A newly introduced top level list variable, `nginx_config_modules`.
-    *   A newly introduced list variable within your main NGINX config template, `nginx_config_main_template.modules`.
+The process to configure modules has changed. Instead of manually setting the modules you want to install to `true` or `false`, you will now have to use either:
+*   A newly introduced top level list variable, `nginx_config_modules`.
+*   A newly introduced list variable within your main NGINX config template, `nginx_config_main_template.modules`.
 
 Make sure you only use one variable or the other, since they will overwrite each other. This change will simplify adding future supported modules to this role, and allows you to include any external modules you may wish in your NGINX config.
 
@@ -51,7 +51,7 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-*   An empty `nginx_config_cleanup_files` will no longer cause `nginx_config_cleanup` related tasks to fail.
+An empty `nginx_config_cleanup_files` will no longer cause `nginx_config_cleanup` related tasks to fail.
 
 ## 0.1.0 (August 19, 2020)
 
