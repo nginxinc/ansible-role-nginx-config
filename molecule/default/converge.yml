@@ -7,6 +7,7 @@
         name: ansible-role-nginx-config
       vars:
         nginx_config_debug_output: true
+
         nginx_config_selinux: true
         nginx_config_selinux_tcp_ports:
           - 80
@@ -58,7 +59,9 @@
 
         nginx_config_status_enable: true
         nginx_config_status_port: 8080
-        nginx_config_status_log: true
+        nginx_config_status_access_log:
+          location: /var/log/nginx/access.log
+          name: main
 
         nginx_config_http_template_enable: true
         nginx_config_http_template:

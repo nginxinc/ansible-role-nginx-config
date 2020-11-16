@@ -2,10 +2,8 @@
 
 server {
     listen {{ nginx_config_rest_api_port | default('8080') }};
-{% if nginx_config_rest_api_access_log is defined and not nginx_config_rest_api_access_log %}
-    access_log off;
-{% elif nginx_config_rest_api_access_log is defined and nginx_config_rest_api_access_log is mapping %}
-    access_log {{ nginx_config_rest_api_access_log.location }} {{ nginx_config_rest_api_access_log.name }};
+{% if nginx_config_rest_api_access_log is defined %}
+    access_log{{ ' off' if not nginx_config_rest_api_access_log }}{{ (' ' + nginx_config_rest_api_access_log.location) if nginx_config_rest_api_access_log.location is defined }}{{ (' ' + nginx_config_rest_api_access_log.name) if nginx_config_status_rest_api_log.name is defined }};
 {% endif %}
     location /api {
 {% if nginx_config_rest_api_write is defined %}
