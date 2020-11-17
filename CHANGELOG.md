@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.3.0 (November 16, 2020)
+## 0.3.0 (November 17, 2020)
 
 BREAKING CHANGES:
 
-The default port of the status module is now 8080 and matches the CI molecule test which already used it. Set ```nginx_config_status_port```to another desired value.
+The default port of the status module is now 8080 and matches the CI molecule test which already used it. Set `nginx_config_status_port` to another desired value.
 
 ENHANCEMENTS:
 

@@ -1,6 +1,6 @@
 ---
 roles:
   - name: nginxinc.nginx
-    version: 0.18.0
+    version: 0.18.1
   - name: nginxinc.nginx_app_protect
-    version: 0.4.0
+    version: 0.4.1
