@@ -64,8 +64,9 @@
           stream_enable: true
 
         nginx_config_rest_api_enable: true
-        nginx_config_rest_api_write: true
-        nginx_config_rest_api_dashboard: true
+        nginx_config_rest_api_write: false
+        nginx_config_rest_api_access_log: false
+        nginx_config_rest_api_dashboard: false
 
         nginx_config_http_template_enable: true
         nginx_config_http_template:

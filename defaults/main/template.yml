@@ -360,10 +360,14 @@ nginx_config_http_template:
 nginx_config_status_enable: false
 nginx_config_status_template_file: http/status.conf.j2
 nginx_config_status_file_location: /etc/nginx/conf.d/status.conf
-nginx_config_status_log: false
-nginx_config_status_port: 8080
-nginx_config_status_allow: 127.0.0.1
-nginx_config_status_deny: all
+nginx_config_status_port: 8080  # Optional -- Defaults to 8080
+nginx_config_status_access_log:  # Optional -- Set to 'false' to disable access log
+  location: /var/log/nginx/access.log  # Required
+  name: main  # Required
+nginx_config_status_allow:  # Optional
+  - 127.0.0.1
+nginx_config_status_deny:  # Optional
+  - all
 
 # Enable NGINX Plus REST API, write access to the REST API, and NGINX Plus dashboard.
 # Requires NGINX Plus.
@@ -371,14 +375,20 @@ nginx_config_status_deny: all
 nginx_config_rest_api_enable: false
 nginx_config_rest_api_template_file: http/api.conf.j2
 nginx_config_rest_api_file_location: /etc/nginx/conf.d/api.conf
-nginx_config_rest_api_log: false
-nginx_config_rest_api_port: 80
-nginx_config_rest_api_write: false
-nginx_config_rest_api_dashboard: false
-nginx_config_rest_api_allow: 127.0.0.1
-nginx_config_rest_api_deny: all
-nginx_config_rest_api_dashboard_allow: 127.0.0.1
-nginx_config_rest_api_dashboard_deny: all
+nginx_config_rest_api_port: 8080  # Optional-- Defaults to 8080
+nginx_config_rest_api_write: false  # Optional
+nginx_config_rest_api_access_log:  # Optional -- Set to 'false' to disable access log
+  location: /var/log/nginx/access.log  # Required
+  name: main  # Required
+nginx_config_rest_api_allow:  # Optional
+  - 127.0.0.1
+nginx_config_rest_api_deny:  # Optional
+  - all
+nginx_config_rest_api_dashboard: false  # Optional
+nginx_config_rest_api_dashboard_allow:  # Optional
+  - 127.0.0.1
+nginx_config_rest_api_dashboard_deny:  # Optional
+  - all
 
 # Enable creating dynamic templated NGINX stream configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
