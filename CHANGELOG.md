@@ -4,7 +4,9 @@
 
 BREAKING CHANGES:
 
-The default port of the status module is now 8080 and matches the CI molecule test which already used it. Set `nginx_config_status_port` to another desired value.
+*   The default port of the status and REST API config is now `8080` and matches the CI Molecule test which already uses it. You can set `nginx_config_status_port` to another value if desired.
+*   The allow/deny directives for `nginx_config_status` and `nginx_config_rest_api` now take a list instead of a single value.
+*   The default `nginx_config_*_log` values have changed to `nginx_config_*_access_log` and no longer have a default value of `off`. Set the respective variables to `false` to preserve the previous behaviour.
 
 ENHANCEMENTS:
 
