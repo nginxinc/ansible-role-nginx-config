@@ -146,8 +146,8 @@ nginx_config_http_template:
 
         sub_filter:
           # sub_filters: []
-          last_modified: "off"
-          once: "on"
+          last_modified: false
+          once: true
           types: "text/html"
         # custom_options: []
         web_server:
@@ -193,8 +193,8 @@ nginx_config_http_template:
               #     url: https://sso.somehost.local/?url=https://$http_host$request_uri
               sub_filter:
                 # sub_filters: []
-                last_modified: "off"
-                once: "on"
+                last_modified: false
+                once: true
                 types: "text/html"
               # custom_options: []
           http_demo_conf: false
@@ -301,8 +301,8 @@ nginx_config_http_template:
               #     url: https://sso.somehost.local/?url=https://$http_host$request_uri
               sub_filter:
                 # sub_filters: []
-                last_modified: "off"
-                once: "on"
+                last_modified: false
+                once: true
                 types: "text/html"
               # custom_options: []
           health_check_plus: false

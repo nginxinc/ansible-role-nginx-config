@@ -50,8 +50,8 @@
             keyval: false
             server_tokens: "off"
           sub_filter:
-            last_modified: "off"
-            once: "on"
+            last_modified: false
+            once: true
           http_global_autoindex: false
           custom_options:
             - master_process on;
@@ -118,8 +118,8 @@
                     value: max-age=15768000; includeSubDomains
                     always: true
                 sub_filter:
-                  last_modified: "off"
-                  once: "on"
+                  last_modified: false
+                  once: true
                 reverse_proxy:
                   locations:
                     frontend:
@@ -175,8 +175,8 @@
                       proxy_buffering: false
                       client_max_body_size: 5m
                       sub_filter:
-                        last_modified: "off"
-                        once: "on"
+                        last_modified: false
+                        once: true
                     backend:
                       location: /backend
                       proxy_pass: http://backend_servers/
@@ -301,8 +301,8 @@
                     - "'nginx_version' '$nginx_version'"
                     - "'document_root' '$document_root'"
                     - "'proxied_for_ip' '$http_x_forwarded_for'"
-                  last_modified: "off"
-                  once: "off"
+                  last_modified: false
+                  once: false
                   # types: "text/html"
                 web_server:
                   locations:
@@ -314,8 +314,8 @@
                       html_file_name: frontend_index.html
                       autoindex: false
                   sub_filter:
-                    last_modified: "off"
-                    once: "off"
+                    last_modified: false
+                    once: false
                   http_demo_conf: false
           backend:
             template_file: http/default.conf.j2
@@ -342,8 +342,8 @@
                     - "'nginx_version' '$nginx_version'"
                     - "'document_root' '$document_root'"
                     - "'proxied_for_ip' '$http_x_forwarded_for'"
-                  last_modified: "off"
-                  once: "off"
+                  last_modified: false
+                  once: false
                 web_server:
                   locations:
                     backend_site:
@@ -366,8 +366,8 @@
                         - include fastcgi_params;
                         - fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                   sub_filter:
-                    last_modified: "off"
-                    once: "off"
+                    last_modified: false
+                    once: false
                   http_demo_conf: false
         nginx_config_html_demo_template_enable: true
         nginx_config_html_demo_template:
