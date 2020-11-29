@@ -58,8 +58,8 @@ nginx_config_main_template:
   http_global_autoindex: false
   sub_filter:
     # sub_filters: []
-    last_modified: "off"
-    once: "on"
+    last_modified: false
+    once: true
     types: "text/html"
   # custom_options: []
   # http_custom_options: []
