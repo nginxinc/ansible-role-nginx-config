@@ -110,7 +110,7 @@ http {
 {% endif %}
 {% if nginx_config_main_template.http_custom_options is defined and nginx_config_main_template.http_custom_options | length %}
 {% for inline_option in nginx_config_main_template.http_custom_options %}
-    {{ inline_option }}
+    {{ inline_option }};
 {% endfor %}
 {% endif %}
     include /etc/nginx/conf.d/*.conf;
