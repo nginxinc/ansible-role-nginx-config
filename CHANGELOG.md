@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1 (November 30, 2020)
+
+BUG FIXES:
+
+*   using boolean values in defaults for `last_modified` and `since` in `nginx_config_main_template`. Quoted string values are treated as True; on or off values witout quotation marks could be used as ansible treats them as boolean true and false.
+
 ## 0.3.0 (November 17, 2020)
 
 BREAKING CHANGES:
