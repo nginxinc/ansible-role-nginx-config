@@ -6,14 +6,14 @@
     - name: Create ephemeral license certificate file from b64 decoded env var
       copy:
         content: "{{ lookup('env','NGINX_CRT') | b64decode }}"
-        dest: ../../../files/license/nginx-repo.crt
+        dest: ../files/license/nginx-repo.crt
         force: no
         mode: 0444
 
     - name: Create ephemeral license key file from b64 decoded env var
       copy:
         content: "{{ lookup('env','NGINX_KEY') | b64decode }}"
-        dest: ../../../files/license/nginx-repo.key
+        dest: ../files/license/nginx-repo.key
         force: no
         mode: 0444
 
@@ -26,8 +26,8 @@
       vars:
         nginx_type: plus
         nginx_license:
-          certificate: ../../../files/license/nginx-repo.crt
-          key: ../../../files/license/nginx-repo.key
+          certificate: ../files/license/nginx-repo.crt
+          key: ../files/license/nginx-repo.key
         nginx_remove_license: false
 
     - name: Install NGINX App Protect
