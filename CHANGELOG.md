@@ -8,7 +8,8 @@ Update Molecule to `3.2.0` and Docker Python SDK to `4.4.0`.
 
 BUG FIXES:
 
-Switch to explicit boolean values in `sub_filter` defaults for `last_modified` and `since` in `nginx_config_main_template`. `"on"` and `"off"` values are treated as true instead of true/false when surrounded by double quotes. By always resorting to true/false we avoid unaccounted edge cases.
+*   Switch to explicit boolean values in `sub_filter` defaults for `last_modified` and `since` in `nginx_config_main_template`. `"on"` and `"off"` values are treated as true instead of true/false when surrounded by double quotes. By always resorting to true/false we avoid unaccounted edge cases.
+*   Fix issue whereas SELinux state would not be correctly set back to `enforcing` when `nginx_config_selinux: true`.
 
 ## 0.3.0 (November 17, 2020)
 
