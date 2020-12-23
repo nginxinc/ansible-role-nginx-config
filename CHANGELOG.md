@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2 (Unreleased)
+
+ENHANCEMENTS:
+
+The GitHub actions Molecule CI/CD workflow is no longer run on a new release (this is not necessary since it already runs on every push).
+
 ## 0.3.1 (December 22, 2020)
 
 ENHANCEMENTS:
