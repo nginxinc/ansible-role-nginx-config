@@ -48,7 +48,7 @@ jobs:
 
       - name: Run Molecule tests
         run: molecule test -s ${{ matrix.scenario }}
-        if: contains(${{ matrix.scenario }}, "plus")
+        if: contains(matrix.scenario, "plus")
         env:
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"
