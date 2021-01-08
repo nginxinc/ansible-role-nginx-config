@@ -18,11 +18,11 @@ jobs:
     strategy:
       matrix:
         scenario:
-          oss:
+          - oss:
             - cleanup_module
             - default
             - stable_push
-          plus:
+          - plus:
             - plus
     steps:
       - name: Check out the codebase
