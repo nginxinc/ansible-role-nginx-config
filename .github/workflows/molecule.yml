@@ -47,7 +47,7 @@ jobs:
       #     ANSIBLE_FORCE_COLOR: "1"
 
       - name: Run Molecule tests
-        if: startsWith(matrix.scenario, 'plus')
+        if: "!(startsWith(matrix.scenario, 'plus') && github.event.pull_request.head.repo.full_name != github.repository)"
         run: molecule test -s ${{ matrix.scenario }}
         env:
           PY_COLORS: "1"
