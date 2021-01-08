@@ -18,12 +18,10 @@ jobs:
     strategy:
       matrix:
         scenario:
-          - oss:
-            - cleanup_module
-            - default
-            - stable_push
-          - plus:
-            - plus
+          - cleanup_module
+          - default
+          - plus
+          - stable_push
     steps:
       - name: Check out the codebase
         uses: actions/checkout@v2
@@ -49,8 +47,8 @@ jobs:
       #     ANSIBLE_FORCE_COLOR: "1"
 
       - name: Run Molecule tests
-        run: molecule test -s ${{ matrix.scenario.oss }}
-        # if: github.event.pull_request.head.repo.full_name != github.repository
+        run: molecule test -s ${{ matrix.scenario }}
+        if: contains(${{ matrix.scenario }}, "plus")
         env:
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"
