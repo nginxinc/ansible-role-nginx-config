@@ -17,11 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        scenario:
+        scenario_oss:
           - cleanup_module
           - default
-          - plus
           - stable_push
+        scenario_plus:
+          - plus
     steps:
       - name: Check out the codebase
         uses: actions/checkout@v2
@@ -41,8 +42,14 @@ jobs:
           pip3 install docker==4.4.0
 
       - name: Run Molecule tests
-        run: molecule test -s ${{ matrix.scenario }}
-        if: "!(${{ matrix.scenario }} == "plus" && github.event.pull_request.head.repo.full_name == github.repository)"
+        run: molecule test -s ${{ matrix.scenario_oss }}
+        env:
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"
+
+      - name: Run Molecule tests
+        run: molecule test -s ${{ matrix.scenario_plus }}
+        if: github.event.pull_request.head.repo.full_name != github.repository
         env:
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"
