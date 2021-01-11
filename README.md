@@ -147,4 +147,4 @@ You can find the Ansible NGINX Unit role to install NGINX Unit [here](https://gi
 
 [Alessandro Fael Garcia](https://github.com/alessfg)
 
-&copy; [F5 Networks, Inc.](https://www.f5.com/) 2020
+&copy; [F5 Networks, Inc.](https://www.f5.com/) 2020 - 2021

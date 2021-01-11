@@ -7,6 +7,8 @@ ENHANCEMENTS:
 *   The GitHub actions Molecule CI/CD workflow is no longer run on a new release (this is not necessary since it already runs on every push).
 *   The GitHub actions Molecule CI/CD workflow should now correctly avoid running 'Plus' related tests on external PRs.
 *   The `cleanup-config.yml` playbook has been slightly refactored and simplified.
+*   Update Ansible base to `2.10.4`, Ansible to `2.10.5`, Molecule to `3.2.2` and Docker Python SDK to `4.4.1`.
+*   Update copyright notice.
 
 ## 0.3.1 (December 22, 2020)
 
