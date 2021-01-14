@@ -1,0 +1,105 @@
+{{ ansible_managed | comment }}
+{# NGINX GRPC template -- Add directives under its corresponding block #}
+{# Format is as follows #}
+{# Left side (context module_name) -- Right side (module name) #}
+{# HTTP NGINX GRPC -- ngx_http_grpc_module #}
+
+{% macro grpc_global(grpc) %}
+{% if grpc['bind'] is defined %}
+grpc_bind{{ ' off' if not grpc['bind'] }}{{ (' ' + grpc['bind']['address']) if grpc['bind']['address'] is defined }}{{' transparent' if (grpc['bind']['transparent'] is defined and grpc['bind']['transparent']) }};
+{% endif %}
+{% if grpc['buffer_size'] is defined %}
+grpc_buffer_size {{ grpc['buffer_size'] }};
+{% endif %}
+{% if grpc['connect_timeout'] is defined %}
+grpc_connect_timeout {{ grpc['connect_timeout'] }};
+{% endif %}
+{% if grpc['hide_header'] is defined %}
+{% for header in grpc['hide_header'] %}
+grpc_hide_header {{ header }};
+{% endfor %}
+{% endif %}
+{% if grpc['ignore_headers'] is defined %}
+{% for header in grpc['ignore_headers'] %}
+grpc_ignore_headers {{ header }};
+{% endfor %}
+{% endif %}
+{% if grpc['intercept_errors'] is defined %}
+grpc_intercept_errors {{ grpc['intercept_errors'] | ternary ('on', 'off') }};
+{% endif %}
+{% if grpc['next_upstream'] is defined %}
+grpc_next_upstream {{ grpc['next_upstream'] | join(' ') }};
+{% endif %}
+{% if grpc['next_upstream_timeout'] is defined %}
+grpc_next_upstream_timeout {{ grpc['next_upstream_timeout'] }};
+{% endif %}
+{% if grpc['next_upstream_tries'] is defined %}
+grpc_next_upstream_tries {{ grpc['next_upstream_tries'] }};
+{% endif %}
+{% if grpc['pass_header'] is defined %}
+{% for header in grpc['pass_header'] %}
+grpc_pass_header {{ header }};
+{% endfor %}
+{% endif %}
+{% if grpc['read_timeout'] is defined %}
+grpc_read_timeout {{ grpc['read_timeout'] }};
+{% endif %}
+{% if grpc['send_timeout'] is defined %}
+grpc_send_timeout {{ grpc['send_timeout'] }};
+{% endif %}
+{% if grpc['set_header'] is defined %}
+{% for header in grpc['set_header'] %}
+grpc_set_header {{ header['field'] }} {{ header['value'] }};
+{% endfor %}
+{% endif %}
+{% if grpc['socket_keepalive'] is defined %}
+grpc_socket_keepalive {{ grpc['socket_keepalive'] | ternary ('on', 'off') }};
+{% endif %}
+{% if grpc['ssl_certificate'] is defined %}
+grpc_ssl_certificate {{ grpc['ssl_certificate'] }};
+{% endif %}
+{% if grpc['ssl_certificate_key'] is defined %}
+grpc_ssl_certificate_key {{ grpc['ssl_certificate_key'] }};
+{% endif %}
+{% if grpc['ssl_ciphers'] is defined %}
+grpc_ssl_ciphers {{ grpc['ssl_ciphers'] }};
+{% endif %}
+{% if grpc['ssl_conf_command'] is defined %}
+{% for command in grpc['ssl_conf_command'] %}
+grpc_ssl_conf_command {{ command }};
+{% endfor %}
+{% endif %}
+{% if grpc['ssl_crl'] is defined %}
+grpc_ssl_crl {{ grpc['ssl_crl'] }};
+{% endif %}
+{% if grpc['ssl_name'] is defined %}
+grpc_ssl_name {{ grpc['ssl_name'] }};
+{% endif %}
+{% if grpc['ssl_password_file'] is defined %}
+grpc_ssl_password_file {{ grpc['ssl_password_file'] }};
+{% endif %}
+{% if grpc['ssl_protocols'] is defined %}
+grpc_ssl_protocols {{ grpc['ssl_protocols'] | join(' ') }};
+{% endif %}
+{% if grpc['ssl_server_name'] is defined %}
+grpc_ssl_server_name {{ grpc['ssl_server_name'] | ternary ('on', 'off') }};
+{% endif %}
+{% if grpc['ssl_session_reuse'] is defined %}
+grpc_ssl_session_reuse {{ grpc['ssl_session_reuse'] | ternary ('on', 'off') }};
+{% endif %}
+{% if grpc['ssl_trusted_certificate'] is defined %}
+grpc_ssl_trusted_certificate {{ grpc['ssl_trusted_certificate'] }};
+{% endif %}
+{% if grpc['ssl_verify']is defined %}
+grpc_ssl_verify {{ grpc['ssl_verify'] | ternary ('on', 'off') }};
+{% endif %}
+{% if grpc['ssl_verify_depth'] is defined %}
+grpc_ssl_verify_depth {{ grpc['ssl_verify_depth'] }};
+{% endif %}
+{% endmacro %}
+
+{% macro grpc_local(grpc) %}
+{% if grpc['pass'] is defined %}
+grpc_pass {{ grpc['pass'] }};
+{% endif %}
+{% endmacro %}

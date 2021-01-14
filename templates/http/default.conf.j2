@@ -85,8 +85,14 @@ server {
     server_name {{ item.value.servers[server].server_name | default('localhost') }};
 {% if item.value.servers[server].app_protect is defined %}
 {% from 'app_protect.j2' import app_protect_local with context %}
-{% filter indent(8) %}
+{% filter indent(4) %}
     {{ app_protect_local(item.value.servers[server].app_protect) }}
+{% endfilter %}
+{% endif %}
+{% if item.value.servers[server].grpc_global is defined %}
+{% from 'http/grpc.j2' import grpc_global with context %}
+{% filter indent(4) %}
+    {{ grpc_global(item.value.servers[server].grpc_global) }}
 {% endfilter %}
 {% endif %}
 {% if item.value.servers[server].ssl is defined and item.value.servers[server].ssl %}
@@ -199,8 +205,20 @@ server {
 {% endif %}
 {% if item.value.servers[server].reverse_proxy.locations[location].app_protect is defined %}
 {% from 'app_protect.j2' import app_protect_local with context %}
-{% filter indent(12) %}
-    {{ app_protect_local(item.value.servers[server].reverse_proxy.locations[location].app_protect) }}
+{% filter indent(8) %}
+        {{ app_protect_local(item.value.servers[server].reverse_proxy.locations[location].app_protect) }}
+{% endfilter %}
+{% endif %}
+{% if item.value.servers[server].reverse_proxy.locations[location].grpc_global is defined %}
+{% from 'http/grpc.j2' import grpc_global with context %}
+{% filter indent(8) %}
+        {{ grpc_global(item.value.servers[server].reverse_proxy.locations[location].grpc_global) }}
+{% endfilter %}
+{% endif %}
+{% if item.value.servers[server].reverse_proxy.locations[location].grpc is defined %}
+{% from 'http/grpc.j2' import grpc_local with context %}
+{% filter indent(8) %}
+        {{ grpc_local(item.value.servers[server].reverse_proxy.locations[location].grpc) }}
 {% endfilter %}
 {% endif %}
 {% if item.value.servers[server].reverse_proxy.locations[location].include_files is defined and item.value.servers[server].reverse_proxy.locations[location].include_files | length %}

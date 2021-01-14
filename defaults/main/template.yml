@@ -34,11 +34,50 @@ nginx_config_main_template:
     #   cpu_thresholds:  # Optional
     #     high: 100  # Required
     #     low: 100  # Required
-    #   failure_mode_action: pass  # Optional -- `pass` or `drop`
+    #   failure_mode_action: pass  # Optional -- 'pass' or 'drop'
     #   cookie_seed: encryptionseed  # Optional
-    #   compressed_requests_action: drop  # Optional -- `pass` or `drop`
-    #   request_buffer_overflow_action: pass  # Optional -- `pass` or `drop`
+    #   compressed_requests_action: drop  # Optional -- 'pass' or 'drop'
+    #   request_buffer_overflow_action: pass  # Optional -- 'pass' or 'drop'
     #   user_defined_signatures: []  # Optional list
+    # app_protect:  # Optional -- Configure NGINX App Protect
+    #   enable: false  # Optional
+    #   policy_file: path  # Optional
+    #   security_log_enable: false  # Optional
+    #   security_log:  # Optional
+    #     path: path  # Required
+    #     destination: dest  # Required
+    # grpc_global:  # Optional -- Configure GRPC
+    #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+    #     address: $remote_addr  # Required
+    #     transparent: true  # Optional
+    #   buffer_size: 4k  # Optional
+    #   connect_timeout: 60s  # Optional
+    #   hide_header: []  # Optional list
+    #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+    #   intercept_errors: false  # Optional
+    #   next_upstream: []  # Optional list
+    #   next_upstream_timeout: 0  # Optional
+    #   next_upstream_tries: 0  # Optional
+    #   pass_header: []  # Optional list
+    #   read_timeout: 60s  # Optional
+    #   send_timeout: 60s  # Optional
+    #   set_header:  # Optional
+    #     - field: Accept-Encoding  # Required
+    #       value: '""'  # Required
+    #   socket_keepalive: false  # Optional
+    #   ssl_certificate: fileLocation  # Optional
+    #   ssl_certificate_key: fileLocation  # Optional
+    #   ssl_ciphers: DEFAULT  # Optional
+    #   ssl_conf_command: command  # Optional
+    #   ssl_crl: fileLocation  # Optional
+    #   ssl_name: serverName  # Optional
+    #   ssl_password_file: fileLocation  # Optional
+    #   ssl_protocols: []  # Optional list
+    #   ssl_server_name: false  # Optional
+    #   ssl_session_reuse: true  # Optional
+    #   ssl_trusted_certificate: fileLocation  # Optional
+    #   ssl_verify: false  # Optional
+    #   ssl_verify_depth: 1  # Optional
     access_log_format:
       - name: main
         format: |-
@@ -96,6 +135,38 @@ nginx_config_http_template:
         #   security_log:  # Optional
         #     path: path  # Required
         #     destination: dest  # Required
+        # grpc_global:  # Optional -- Configure GRPC
+        #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+        #     address: $remote_addr  # Required
+        #     transparent: true  # Optional
+        #   buffer_size: 4k  # Optional
+        #   connect_timeout: 60s  # Optional
+        #   hide_header: []  # Optional list
+        #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+        #   intercept_errors: false  # Optional
+        #   next_upstream: []  # Optional list
+        #   next_upstream_timeout: 0  # Optional
+        #   next_upstream_tries: 0  # Optional
+        #   pass_header: []  # Optional list
+        #   read_timeout: 60s  # Optional
+        #   send_timeout: 60s  # Optional
+        #   set_header:  # Optional
+        #     - field: Accept-Encoding  # Required
+        #       value: '""'  # Required
+        #   socket_keepalive: false  # Optional
+        #   ssl_certificate: fileLocation  # Optional
+        #   ssl_certificate_key: fileLocation  # Optional
+        #   ssl_ciphers: DEFAULT  # Optional
+        #   ssl_conf_command: command  # Optional
+        #   ssl_crl: fileLocation  # Optional
+        #   ssl_name: serverName  # Optional
+        #   ssl_password_file: fileLocation  # Optional
+        #   ssl_protocols: []  # Optional list
+        #   ssl_server_name: false  # Optional
+        #   ssl_session_reuse: true  # Optional
+        #   ssl_trusted_certificate: fileLocation  # Optional
+        #   ssl_verify: false  # Optional
+        #   ssl_verify_depth: 1  # Optional
         ssl:
           cert: /etc/ssl/certs/default.crt
           key: /etc/ssl/private/default.key
@@ -161,6 +232,40 @@ nginx_config_http_template:
               #   security_log:  # Optional
               #     path: path  # Required
               #     destination: dest  # Required
+              # grpc_global:  # Optional -- Configure GRPC
+              #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+              #     address: $remote_addr  # Required
+              #     transparent: true  # Optional
+              #   buffer_size: 4k  # Optional
+              #   connect_timeout: 60s  # Optional
+              #   hide_header: []  # Optional list
+              #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+              #   intercept_errors: false  # Optional
+              #   next_upstream: []  # Optional list
+              #   next_upstream_timeout: 0  # Optional
+              #   next_upstream_tries: 0  # Optional
+              #   pass_header: []  # Optional list
+              #   read_timeout: 60s  # Optional
+              #   send_timeout: 60s  # Optional
+              #   set_header:  # Optional
+              #     - field: Accept-Encoding  # Required
+              #       value: '""'  # Required
+              #   socket_keepalive: false  # Optional
+              #   ssl_certificate: fileLocation  # Optional
+              #   ssl_certificate_key: fileLocation  # Optional
+              #   ssl_ciphers: DEFAULT  # Optional
+              #   ssl_conf_command: command  # Optional
+              #   ssl_crl: fileLocation  # Optional
+              #   ssl_name: serverName  # Optional
+              #   ssl_password_file: fileLocation  # Optional
+              #   ssl_protocols: []  # Optional list
+              #   ssl_server_name: false  # Optional
+              #   ssl_session_reuse: true  # Optional
+              #   ssl_trusted_certificate: fileLocation  # Optional
+              #   ssl_verify: false  # Optional
+              #   ssl_verify_depth: 1  # Optional
+              # grpc:  # Optional -- Configure GRPC
+              #   pass: localhost:9000  # Optional
               include_files: []
               proxy_hide_headers: []  # A list of headers which shouldn't be passed to the application
               add_headers:
@@ -361,7 +466,7 @@ nginx_config_status_enable: false
 nginx_config_status_template_file: http/status.conf.j2
 nginx_config_status_file_location: /etc/nginx/conf.d/status.conf
 nginx_config_status_port: 8080  # Optional -- Defaults to 8080
-nginx_config_status_access_log:  # Optional -- Set to 'false' to disable access log
+nginx_config_status_access_log:  # Optional -- Set to 'false' and remove/comment nested variables to disable access log
   location: /var/log/nginx/access.log  # Required
   name: main  # Required
 nginx_config_status_allow:  # Optional
@@ -377,7 +482,7 @@ nginx_config_rest_api_template_file: http/api.conf.j2
 nginx_config_rest_api_file_location: /etc/nginx/conf.d/api.conf
 nginx_config_rest_api_port: 8080  # Optional-- Defaults to 8080
 nginx_config_rest_api_write: false  # Optional
-nginx_config_rest_api_access_log:  # Optional -- Set to 'false' to disable access log
+nginx_config_rest_api_access_log:  # Optional -- Set to 'false' and remove/comment nested variables to disable access log
   location: /var/log/nginx/access.log  # Required
   name: main  # Required
 nginx_config_rest_api_allow:  # Optional
