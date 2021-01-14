@@ -28,6 +28,29 @@
           worker_connections: 1024
           http_enable: true
           http_settings:
+            grpc_global:
+              bind:
+                address: $remote_addr
+                transparent: false
+              buffer_size: 4k
+              connect_timeout: 60s
+              hide_header:
+                - X-Accel-Redirect
+              ignore_headers:
+                - X-Accel-Redirect
+              intercept_errors: false
+              next_upstream:
+                - timeout
+              next_upstream_timeout: 0
+              next_upstream_tries: 0
+              pass_header:
+                - X-Accel-Charset
+              read_timeout: 60s
+              send_timeout: 60s
+              set_header:
+                - field: Accept-Encoding
+                  value: '""'
+              socket_keepalive: false
             default_type: application/octet-stream
             access_log_format:
               - name: main
@@ -116,6 +139,8 @@
                   locations:
                     frontend:
                       location: /
+                      grpc:
+                        pass: localhost:9000
                       proxy_hide_headers:
                         - X-Powered-By
                       add_headers:

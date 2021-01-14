@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.3 (Unreleased)
+
+ENHANCEMENTS:
+
+*   Add support for NGINX GRPC directives.
+*   Only run GitHub actions Galaxy CI/CD workflow when a new release is published.
+*   Update list of supported platforms.
+
 ## 0.3.2 (January 11, 2021)
 
 ENHANCEMENTS:
