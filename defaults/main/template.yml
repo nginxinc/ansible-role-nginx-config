@@ -78,6 +78,18 @@ nginx_config_main_template:
     #   ssl_trusted_certificate: fileLocation  # Optional
     #   ssl_verify: false  # Optional
     #   ssl_verify_depth: 1  # Optional
+    # gzip:  # Optional -- Configure GZIP
+    #   enable: true  # Optional
+    #   buffers:  # Optional
+    #     number: 32  # Required
+    #     size: 4k  # Required
+    #   comp_level: 1  # Optional
+    #   disable: []  # Optional list
+    #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+    #   min_length: 20  # Optional
+    #   proxied: []  # Optional list
+    #   types: []  # Optional list
+    #   vary: false  # Optional
     access_log_format:
       - name: main
         format: |-
@@ -167,6 +179,18 @@ nginx_config_http_template:
         #   ssl_trusted_certificate: fileLocation  # Optional
         #   ssl_verify: false  # Optional
         #   ssl_verify_depth: 1  # Optional
+        # gzip:  # Optional -- Configure GZIP
+        #   enable: true  # Optional
+        #   buffers:  # Optional
+        #     number: 32  # Required
+        #     size: 4k  # Required
+        #   comp_level: 1  # Optional
+        #   disable: []  # Optional list
+        #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+        #   min_length: 20  # Optional
+        #   proxied: []  # Optional list
+        #   types: []  # Optional list
+        #   vary: false  # Optional
         ssl:
           cert: /etc/ssl/certs/default.crt
           key: /etc/ssl/private/default.key
@@ -232,40 +256,18 @@ nginx_config_http_template:
               #   security_log:  # Optional
               #     path: path  # Required
               #     destination: dest  # Required
-              # grpc_global:  # Optional -- Configure GRPC
-              #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-              #     address: $remote_addr  # Required
-              #     transparent: true  # Optional
-              #   buffer_size: 4k  # Optional
-              #   connect_timeout: 60s  # Optional
-              #   hide_header: []  # Optional list
-              #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-              #   intercept_errors: false  # Optional
-              #   next_upstream: []  # Optional list
-              #   next_upstream_timeout: 0  # Optional
-              #   next_upstream_tries: 0  # Optional
-              #   pass_header: []  # Optional list
-              #   read_timeout: 60s  # Optional
-              #   send_timeout: 60s  # Optional
-              #   set_header:  # Optional
-              #     - field: Accept-Encoding  # Required
-              #       value: '""'  # Required
-              #   socket_keepalive: false  # Optional
-              #   ssl_certificate: fileLocation  # Optional
-              #   ssl_certificate_key: fileLocation  # Optional
-              #   ssl_ciphers: DEFAULT  # Optional
-              #   ssl_conf_command: command  # Optional
-              #   ssl_crl: fileLocation  # Optional
-              #   ssl_name: serverName  # Optional
-              #   ssl_password_file: fileLocation  # Optional
-              #   ssl_protocols: []  # Optional list
-              #   ssl_server_name: false  # Optional
-              #   ssl_session_reuse: true  # Optional
-              #   ssl_trusted_certificate: fileLocation  # Optional
-              #   ssl_verify: false  # Optional
-              #   ssl_verify_depth: 1  # Optional
-              # grpc:  # Optional -- Configure GRPC
-              #   pass: localhost:9000  # Optional
+              # gzip:  # Optional -- Configure GZIP
+              #   enable: true  # Optional
+              #   buffers:  # Optional
+              #     number: 32  # Required
+              #     size: 4k  # Required
+              #   comp_level: 1  # Optional
+              #   disable: []  # Optional list
+              #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+              #   min_length: 20  # Optional
+              #   proxied: []  # Optional list
+              #   types: []  # Optional list
+              #   vary: false  # Optional
               include_files: []
               proxy_hide_headers: []  # A list of headers which shouldn't be passed to the application
               add_headers:
@@ -314,6 +316,52 @@ nginx_config_http_template:
               #   security_log:  # Optional
               #     path: path  # Required
               #     destination: dest  # Required
+              # grpc_global:  # Optional -- Configure GRPC
+              #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+              #     address: $remote_addr  # Required
+              #     transparent: true  # Optional
+              #   buffer_size: 4k  # Optional
+              #   connect_timeout: 60s  # Optional
+              #   hide_header: []  # Optional list
+              #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+              #   intercept_errors: false  # Optional
+              #   next_upstream: []  # Optional list
+              #   next_upstream_timeout: 0  # Optional
+              #   next_upstream_tries: 0  # Optional
+              #   pass_header: []  # Optional list
+              #   read_timeout: 60s  # Optional
+              #   send_timeout: 60s  # Optional
+              #   set_header:  # Optional
+              #     - field: Accept-Encoding  # Required
+              #       value: '""'  # Required
+              #   socket_keepalive: false  # Optional
+              #   ssl_certificate: fileLocation  # Optional
+              #   ssl_certificate_key: fileLocation  # Optional
+              #   ssl_ciphers: DEFAULT  # Optional
+              #   ssl_conf_command: command  # Optional
+              #   ssl_crl: fileLocation  # Optional
+              #   ssl_name: serverName  # Optional
+              #   ssl_password_file: fileLocation  # Optional
+              #   ssl_protocols: []  # Optional list
+              #   ssl_server_name: false  # Optional
+              #   ssl_session_reuse: true  # Optional
+              #   ssl_trusted_certificate: fileLocation  # Optional
+              #   ssl_verify: false  # Optional
+              #   ssl_verify_depth: 1  # Optional
+              # grpc:  # Optional -- Configure GRPC
+              #   pass: localhost:9000  # Optional
+              # gzip:  # Optional -- Configure GZIP
+              #   enable: true  # Optional
+              #   buffers:  # Optional
+              #     number: 32  # Required
+              #     size: 4k  # Required
+              #   comp_level: 1  # Optional
+              #   disable: []  # Optional list
+              #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+              #   min_length: 20  # Optional
+              #   proxied: []  # Optional list
+              #   types: []  # Optional list
+              #   vary: false  # Optional
               include_files: []
               proxy_hide_headers: []  # A list of headers which shouldn't be passed to the application
               add_headers:

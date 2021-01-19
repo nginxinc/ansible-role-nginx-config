@@ -95,6 +95,12 @@ server {
     {{ grpc_global(item.value.servers[server].grpc_global) }}
 {% endfilter %}
 {% endif %}
+{% if item.value.servers[server].gzip is defined %}
+{% from 'http/gzip.j2' import gzip with context %}
+{% filter indent(4) %}
+    {{ gzip(item.value.servers[server].gzip) }}
+{% endfilter %}
+{% endif %}
 {% if item.value.servers[server].ssl is defined and item.value.servers[server].ssl %}
     ssl_certificate {{ item.value.servers[server].ssl.cert }};
     ssl_certificate_key {{ item.value.servers[server].ssl.key }};
@@ -219,6 +225,12 @@ server {
 {% from 'http/grpc.j2' import grpc_local with context %}
 {% filter indent(8) %}
         {{ grpc_local(item.value.servers[server].reverse_proxy.locations[location].grpc) }}
+{% endfilter %}
+{% endif %}
+{% if item.value.servers[server].reverse_proxy.locations[location].gzip is defined %}
+{% from 'http/gzip.j2' import gzip with context %}
+{% filter indent(8) %}
+        {{ gzip(item.value.servers[server].reverse_proxy.locations[location].gzip) }}
 {% endfilter %}
 {% endif %}
 {% if item.value.servers[server].reverse_proxy.locations[location].include_files is defined and item.value.servers[server].reverse_proxy.locations[location].include_files | length %}
@@ -426,8 +438,14 @@ server {
     location {{ item.value.servers[server].web_server.locations[location].location }} {
 {% if item.value.servers[server].web_server.locations[location].app_protect is defined %}
 {% from 'app_protect.j2' import app_protect_local with context %}
-{% filter indent(12) %}
-    {{ app_protect_local(item.value.servers[server].web_server.locations[location].app_protect) }}
+{% filter indent(8) %}
+       {{ app_protect_local(item.value.servers[server].web_server.locations[location].app_protect) }}
+{% endfilter %}
+{% endif %}
+{% if item.value.servers[server].web_server.locations[location].gzip is defined %}
+{% from 'http/gzip.j2' import gzip with context %}
+{% filter indent(8) %}
+        {{ gzip(item.value.servers[server].web_server.locations[location].gzip) }}
 {% endfilter %}
 {% endif %}
 {% if item.value.servers[server].web_server.locations[location].html_file_location is defined %}
@@ -497,7 +515,6 @@ server {
 {% if item.value.servers[server].web_server.locations[location].sub_filter.types is defined and item.value.servers[server].web_server.locations[location].sub_filter.types %}
         sub_filter_types {{ item.value.servers[server].web_server.locations[location].sub_filter.types }};
 {% endif %}
-
     }
 {% endfor %}
 {% if item.value.servers[server].web_server.http_demo_conf is defined and item.value.servers[server].web_server.http_demo_conf %}
@@ -548,7 +565,6 @@ server {
 {% if item.value.servers[server].error_log is defined %}
     error_log {{ item.value.servers[server].error_log.location }} {{ item.value.servers[server].error_log.level }};
 {% endif %}
-
 }
 {% endfor %}
 {% endif %}

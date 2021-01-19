@@ -67,23 +67,23 @@ http {
 {% endfor %}
 {% endif %}
 {% endif %}
-
     sendfile        on;
-
 {% if nginx_config_main_template.http_settings.tcp_nopush is defined and nginx_config_main_template.http_settings.tcp_nopush %}
     tcp_nopush      on;
 {% endif %}
 {% if nginx_config_main_template.http_settings.tcp_nodelay is defined and nginx_config_main_template.http_settings.tcp_nodelay %}
     tcp_nodelay     on;
 {% endif %}
-
 {% if nginx_config_main_template.http_settings.server_tokens is defined and nginx_config_main_template.http_settings.server_tokens | length %}
     server_tokens {{ nginx_config_main_template.http_settings.server_tokens }};
 {% endif %}
-
     keepalive_timeout  {{ nginx_config_main_template.http_settings.keepalive_timeout }};
-
-    #gzip  on;
+{% if nginx_config_main_template.http_settings.gzip is defined %}
+{% from 'http/gzip.j2' import gzip with context %}
+{% filter indent(4) %}
+    {{ gzip(nginx_config_main_template.http_settings.gzip) }}
+{% endfilter %}
+{% endif %}
 {% if nginx_config_main_template.http_settings.cache %}
     proxy_cache_path /tmp/cache keys_zone=one:10m;
 {% endif %}

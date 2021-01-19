@@ -1,0 +1,35 @@
+{{ ansible_managed | comment }}
+{# NGINX GZIP template -- Add directives under its corresponding block #}
+{# Format is as follows #}
+{# Left side (context module_name) -- Right side (module name) #}
+{# HTTP NGINX GZIP -- ngx_http_gzip_module #}
+
+{% macro gzip(gzip) %}
+{% if gzip['enable'] is defined %}
+gzip {{ gzip['enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if gzip['buffers'] is defined %}
+gzip_buffers {{ gzip['buffers']['number'] }} {{ gzip['buffers']['size'] }};
+{% endif %}
+{% if gzip['comp_level'] is defined %}
+gzip_comp_level {{ gzip['comp_level'] }};
+{% endif %}
+{% if gzip['disable'] is defined %}
+gzip_disable {{ gzip['disable'] | join(' ') }};
+{% endif %}
+{% if gzip['http_version'] is defined %}
+gzip_http_version {{ gzip['http_version'] }};
+{% endif %}
+{% if gzip['min_length'] is defined %}
+gzip_min_length {{ gzip['min_length'] }};
+{% endif %}
+{% if gzip['proxied'] is defined %}
+gzip_proxied {{ 'off' if not gzip['proxied'] }}{{ gzip['proxied'] | join(' ') if gzip['proxied'] | type_debug == 'list' }};
+{% endif %}
+{% if gzip['types'] is defined %}
+gzip_types {{ gzip['types'] | join(' ') }};
+{% endif %}
+{% if gzip['vary'] is defined %}
+gzip_vary {{ gzip['vary'] | ternary('on', 'off') }};
+{% endif %}
+{% endmacro %}

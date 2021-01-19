@@ -5,6 +5,7 @@
 ENHANCEMENTS:
 
 *   Add support for NGINX GRPC directives.
+*   Add support for NGINX GZIP directives.
 *   Added support for upstream server `backup` parameter in http and stream template.
 *   Only run GitHub actions Galaxy CI/CD workflow when a new release is published.
 *   Update list of supported platforms.
