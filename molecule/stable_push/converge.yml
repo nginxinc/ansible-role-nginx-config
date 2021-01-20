@@ -13,3 +13,7 @@
         nginx_config_main_upload_src: ../common/files/nginx.conf
         nginx_config_http_upload_enable: true
         nginx_config_http_upload_src: ../common/files/http/*.conf
+        nginx_config_snippet_upload_enable: true
+        nginx_config_snippet_upload:
+          - src: ../common/files/snippets/location_snippet.conf
+            dest: /etc/nginx/snippets
