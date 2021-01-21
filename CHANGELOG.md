@@ -4,7 +4,8 @@
 
 FEATURES:
 
-Add support for configuration snippets.
+*   Add support for configuration snippets.
+*   Add support for Dependabot.
 
 ENHANCEMENTS:
 
