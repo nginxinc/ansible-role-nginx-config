@@ -1,4 +1,22 @@
 ---
+- name: Upload NGINX config snippets
+  block:
+    - name: Ensure NGINX config snippet directories exist
+      file:
+        path: "{{ item.dest | dirname if item.dest.endswith('.conf') else item.dest }}"
+        state: directory
+        mode: 0755
+      loop: "{{ nginx_config_snippet_upload }}"
+
+    - name: Upload NGINX config snippet files
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        backup: yes
+        mode: 0644
+      loop: "{{ nginx_config_snippet_upload }}"
+  when: nginx_config_snippet_upload_enable
+
 - name: Upload NGINX main config
   block:
     - name: Ensure NGINX main directory exists

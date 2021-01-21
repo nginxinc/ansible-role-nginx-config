@@ -24,3 +24,8 @@ nginx_config_ssl_upload_crt_src: ssl/*.crt
 nginx_config_ssl_upload_crt_dest: /etc/ssl/certs/
 nginx_config_ssl_upload_key_src: ssl/*.key
 nginx_config_ssl_upload_key_dest: /etc/ssl/private/
+# Upload individual NGINX snippets.
+nginx_config_snippet_upload_enable: false
+nginx_config_snippet_upload:
+  - src: config/snippets/snippet.conf
+    dest: /etc/nginx/snippets  # You can optionally also include the file name
