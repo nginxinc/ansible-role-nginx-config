@@ -14,7 +14,7 @@ ENHANCEMENTS:
 *   Add support for upstream server `backup` parameter in http and stream template.
 *   Only run GitHub actions Galaxy CI/CD workflow when a new release is published.
 *   Update list of supported platforms.
-*   Update Ansible base to `2.10.5`.
+*   Update Ansible base to `2.10.5` and Ansible to `2.10.6`.
 
 ## 0.3.2 (January 11, 2021)
 
