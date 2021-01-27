@@ -16,6 +16,10 @@ ENHANCEMENTS:
 *   Update list of supported platforms.
 *   Update Ansible base to `2.10.5` and Ansible to `2.10.6`.
 
+BUG FIXES:
+
+Address inconsistent types within Jinja templates.
+
 ## 0.3.2 (January 11, 2021)
 
 ENHANCEMENTS:

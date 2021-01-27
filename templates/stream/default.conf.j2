@@ -45,25 +45,25 @@ server {
 {% if item.value.network_streams[stream].ssl.dhparam is defined %}
     ssl_dhparam {{ item.value.network_streams[stream].ssl.dhparam }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.protocols is defined and item.value.network_streams[stream].ssl.protocols %}
+{% if item.value.network_streams[stream].ssl.protocols is defined %}
     ssl_protocols {{ item.value.network_streams[stream].ssl.protocols }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.ciphers is defined and item.value.network_streams[stream].ssl.ciphers %}
+{% if item.value.network_streams[stream].ssl.ciphers is defined %}
     ssl_ciphers {{ item.value.network_streams[stream].ssl.ciphers }};
 {% endif %}
 {% if item.value.network_streams[stream].ssl.prefer_server_ciphers is defined and item.value.network_streams[stream].ssl.prefer_server_ciphers %}
     ssl_prefer_server_ciphers on;
 {% endif %}
-{% if item.value.network_streams[stream].ssl.session_cache is defined and item.value.network_streams[stream].ssl.session_cache %}
+{% if item.value.network_streams[stream].ssl.session_cache is defined %}
     ssl_session_cache {{ item.value.network_streams[stream].ssl.session_cache }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.session_timeout is defined and item.value.network_streams[stream].ssl.session_timeout %}
+{% if item.value.network_streams[stream].ssl.session_timeout is defined %}
     ssl_session_timeout {{ item.value.network_streams[stream].ssl.session_timeout }};
 {% endif %}
 {% if item.value.network_streams[stream].ssl.disable_session_tickets is defined and item.value.network_streams[stream].ssl.disable_session_tickets %}
     ssl_session_tickets off;
 {% endif %}
-{% if item.value.network_streams[stream].ssl.ecdh_curve is defined and item.value.network_streams[stream].ssl.ecdh_curve %}
+{% if item.value.network_streams[stream].ssl.ecdh_curve is defined %}
     ssl_ecdh_curve {{ item.value.network_streams[stream].ssl.ecdh_curve }};
 {% endif %}
 {% endif %}
