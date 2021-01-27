@@ -228,7 +228,7 @@ nginx_config_http_template:
         #   name: $auth_user
         #   value: $upstream_http_x_user
         client_max_body_size: 1m
-        proxy_hide_headers: []  # A list of headers which shouldn't be passed to the application
+        proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
         add_headers:
           strict_transport_security:
             name: Strict-Transport-Security
@@ -269,7 +269,7 @@ nginx_config_http_template:
               #   types: []  # Optional list
               #   vary: false  # Optional
               include_files: []
-              proxy_hide_headers: []  # A list of headers which shouldn't be passed to the application
+              proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
               add_headers:
                 strict_transport_security:
                   name: Strict-Transport-Security
@@ -363,7 +363,7 @@ nginx_config_http_template:
               #   types: []  # Optional list
               #   vary: false  # Optional
               include_files: []
-              proxy_hide_headers: []  # A list of headers which shouldn't be passed to the application
+              proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
               add_headers:
                 strict_transport_security:
                   name: Strict-Transport-Security

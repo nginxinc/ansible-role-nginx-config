@@ -146,8 +146,8 @@ server {
     include "{{ file }}";
 {% endfor %}
 {% endif %}
-{% if item.value.servers[server].proxy_hide_headers is defined %}
-{% for header in item.value.servers[server].proxy_hide_headers %}
+{% if item.value.servers[server].proxy_hide_header is defined %}
+{% for header in item.value.servers[server].proxy_hide_header %}
     proxy_hide_header {{ header }};
 {% endfor %}
 {% endif %}
@@ -238,8 +238,8 @@ server {
         include "{{ file }}";
 {% endfor %}
 {% endif %}
-{% if item.value.servers[server].reverse_proxy.locations[location].proxy_hide_headers is defined %}
-{% for header in item.value.servers[server].reverse_proxy.locations[location].proxy_hide_headers %}
+{% if item.value.servers[server].reverse_proxy.locations[location].proxy_hide_header is defined %}
+{% for header in item.value.servers[server].reverse_proxy.locations[location].proxy_hide_header %}
         proxy_hide_header {{ header }};
 {% endfor %}
 {% endif %}
@@ -470,8 +470,8 @@ server {
         {{ inline_option }}
 {% endfor %}
 {% endif %}
-{% if item.value.servers[server].web_server.locations[location].proxy_hide_headers is defined %}
-{% for header in item.value.servers[server].web_server.locations[location].proxy_hide_headers %}
+{% if item.value.servers[server].web_server.locations[location].proxy_hide_header is defined %}
+{% for header in item.value.servers[server].web_server.locations[location].proxy_hide_header %}
         proxy_hide_header {{ header }};
 {% endfor %}
 {% endif %}

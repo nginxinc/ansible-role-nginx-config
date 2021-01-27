@@ -110,7 +110,7 @@
                   - name: main
                     location: /var/log/nginx/access.log
                 client_max_body_size: 512k
-                proxy_hide_headers:
+                proxy_hide_header:
                   - X-Powered-By
                 add_headers:
                   strict_transport_security:
@@ -127,7 +127,7 @@
                       app_protect:
                         enable: true
                         policy_file: /etc/nginx/app-protect-security-policy.json
-                      proxy_hide_headers:
+                      proxy_hide_header:
                         - X-Powered-By
                       add_headers:
                         strict_transport_security:
@@ -312,7 +312,7 @@
                   locations:
                     frontend_site:
                       location: /
-                      proxy_hide_headers:
+                      proxy_hide_header:
                         - X-Powered-By
                       html_file_location: /usr/share/nginx/html
                       html_file_name: frontend_index.html
