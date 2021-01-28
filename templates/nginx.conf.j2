@@ -6,9 +6,12 @@ load_module {{ nginx_module }};
 {% endfor %}
 {% endif %}
 
-user  {{ nginx_config_main_template.user }};
-worker_processes  {{ nginx_config_main_template.worker_processes }};
-
+{% if nginx_config_main_template.user is defined %}
+user {{ nginx_config_main_template.user }};
+{% endif %}
+{% if nginx_config_main_template.worker_processes is defined %}
+worker_processes {{ nginx_config_main_template.worker_processes }};
+{% endif %}
 {% if nginx_config_main_template.worker_rlimit_nofile is defined %}
 worker_rlimit_nofile {{ nginx_config_main_template.worker_rlimit_nofile }};
 {% endif %}
@@ -19,12 +22,17 @@ worker_rlimit_nofile {{ nginx_config_main_template.worker_rlimit_nofile }};
 {% endfor %}
 {% endif %}
 
-error_log  {{ nginx_config_main_template.error_log.location | default("/var/log/nginx/error.log") }} {{ nginx_config_main_template.error_log.level | default("warn") }};
-pid        {{ nginx_config_main_template.pid | default("/var/run/nginx.pid") }};
-
+{% if nginx_config_main_template.error_log is defined %}
+error_log  {{ nginx_config_main_template.error_log.location }} {{ nginx_config_main_template.error_log.level }};
+{% endif %}
+{% if nginx_config_main_template.pid is defined %}
+pid {{ nginx_config_main_template.pid }};
+{% endif %}
 
 events {
+{% if nginx_config_main_template.worker_connections is defined %}
     worker_connections  {{ nginx_config_main_template.worker_connections }};
+{% endif %}
 {% if nginx_config_main_template.events_custom_options is defined and nginx_config_main_template.events_custom_options | length %}
 {% for inline_option in nginx_config_main_template.events_custom_options %}
     {{ inline_option }}
@@ -36,7 +44,6 @@ events {
 http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
-
 {% if nginx_config_main_template.http_settings.app_protect_global is defined %}
 {% from 'http/app_protect.j2' import app_protect_global with context %}
 {% filter indent(4) %}
@@ -67,7 +74,9 @@ http {
 {% endfor %}
 {% endif %}
 {% endif %}
-    sendfile        on;
+{% if nginx_config_main_template.http_settings.sendfile is defined and nginx_config_main_template.http_settings.sendfile %}
+sendfile        on;
+{% endif %}
 {% if nginx_config_main_template.http_settings.tcp_nopush is defined and nginx_config_main_template.http_settings.tcp_nopush %}
     tcp_nopush      on;
 {% endif %}
@@ -125,7 +134,7 @@ http {
 }
 {% endif %}
 
-{% if nginx_config_main_template.stream_enable %}
+{% if nginx_config_main_template.stream_enable is defined and nginx_config_main_template.stream_enable %}
 stream {
 {% if nginx_config_main_template.stream_custom_options is defined and nginx_config_main_template.stream_custom_options | length %}
 {% for inline_option in nginx_config_main_template.stream_custom_options %}
