@@ -32,7 +32,7 @@ events {
 {% endif %}
 }
 
-{% if nginx_config_main_template.http_enable %}
+{% if nginx_config_main_template.http_enable is defined and nginx_config_main_template.http_enable %}
 http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
@@ -84,17 +84,17 @@ http {
     {{ gzip(nginx_config_main_template.http_settings.gzip) }}
 {% endfilter %}
 {% endif %}
-{% if nginx_config_main_template.http_settings.cache %}
+{% if nginx_config_main_template.http_settings.cache is defined %}
     proxy_cache_path /tmp/cache keys_zone=one:10m;
 {% endif %}
-{% if nginx_config_main_template.http_settings.rate_limit %}
+{% if nginx_config_main_template.http_settings.rate_limit is defined %}
     limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
 {% endif %}
-{% if nginx_config_main_template.http_settings.keyval %}
+{% if nginx_config_main_template.http_settings.keyval is defined and nginx_config_main_template.http_settings.keyval %}
     keyval_zone zone={{nginx_config_main_template.http_settings.keyval.zone}}:32k state=one.keyval;
     keyval $arg_text $text zone=one;
 {% endif %}
-{% if nginx_config_main_template.http_global_autoindex | default(false) %}
+{% if nginx_config_main_template.http_global_autoindex is defined | default(false) %}
     autoindex on;
 {% endif %}
 {% if nginx_config_main_template.sub_filter.sub_filters is defined and nginx_config_main_template.sub_filter.sub_filters | length %}
@@ -108,7 +108,7 @@ http {
 {% if nginx_config_main_template.sub_filter.once is defined %}
     sub_filter_once {{ nginx_config_main_template.sub_filter.once | ternary("on", "off") }};
 {% endif %}
-{% if nginx_config_main_template.sub_filter.types is defined and nginx_config_main_template.sub_filter.types %}
+{% if nginx_config_main_template.sub_filter.types is defined %}
     sub_filter_types {{ nginx_config_main_template.sub_filter.types }};
 {% endif %}
 {% if nginx_config_main_template.http_custom_options is defined and nginx_config_main_template.http_custom_options | length %}

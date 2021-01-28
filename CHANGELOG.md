@@ -18,7 +18,8 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-Fix edge case where `proxy_pass` is still required when using `grpc_pass`.
+*   Address inconsistent types within Jinja templates.
+*   Fix edge case where `proxy_pass` is still required when using `grpc_pass`.
 
 ## 0.3.2 (January 11, 2021)
 
