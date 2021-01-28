@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.3 (Unreleased)
+## 0.3.3 (January 28, 2021)
 
 FEATURES:
 
