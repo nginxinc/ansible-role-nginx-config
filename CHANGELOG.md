@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 (Unreleased)
+
+BREAKING CHANGES:
+
+Rename `proxy_hide_headers` to `proxy_hide_header` to align with NGINX directive names.
+
 ## 0.3.3 (January 28, 2021)
 
 FEATURES:
