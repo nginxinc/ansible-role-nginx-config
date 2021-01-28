@@ -19,6 +19,7 @@ ENHANCEMENTS:
 BUG FIXES:
 
 *   Address inconsistent types within Jinja templates.
+*   Add Jinja2 checks to all config template parameters to ensure that they are only included when appropriately defined.
 *   Fix edge case where `proxy_pass` is still required when using `grpc_pass`.
 
 ## 0.3.2 (January 11, 2021)
