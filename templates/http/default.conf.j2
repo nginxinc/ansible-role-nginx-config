@@ -165,6 +165,9 @@ server {
 {% if item.value.servers[server].root is defined %}
     root {{ item.value.servers[server].root }};
 {% endif %}
+{% if item.value.servers[server].html_file_name is defined %}
+    index {{ item.value.servers[server].html_file_name }};
+{% endif %}
 {% if item.value.servers[server].https_redirect is defined %}
     return 301 https://{{ item.value.servers[server].https_redirect }}$request_uri;
 {% endif %}
