@@ -6,6 +6,10 @@ BREAKING CHANGES:
 
 Rename `proxy_hide_headers` to `proxy_hide_header` to align with NGINX directive names.
 
+ENHANCEMENTS:
+
+Update Molecule to `3.2.3`.
+
 ## 0.3.3 (January 28, 2021)
 
 FEATURES:
