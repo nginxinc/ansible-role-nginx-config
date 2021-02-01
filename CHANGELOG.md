@@ -10,6 +10,10 @@ ENHANCEMENTS:
 
 *   Add support for index to server block
 
+ENHANCEMENTS:
+
+Update Molecule to `3.2.3` and yamllint to `1.26.0`.
+
 ## 0.3.3 (January 28, 2021)
 
 FEATURES:
