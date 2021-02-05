@@ -8,7 +8,13 @@ Rename `proxy_hide_headers` to `proxy_hide_header` to align with NGINX directive
 
 ENHANCEMENTS:
 
-Update Molecule to `3.2.3` and yamllint to `1.26.0`.
+*   Update Molecule to `3.2.3` and yamllint to `1.26.0`.
+*   Specify GitHub actions Ubuntu release.
+*   Minor GitHub template tweaks, including the creation of a SECURITY doc.
+
+BUG FIXES:
+
+Add `state` parameter to package module in Molecule verification tests.
 
 ## 0.3.3 (January 28, 2021)
 
