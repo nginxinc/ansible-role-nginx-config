@@ -286,7 +286,7 @@ server {
         proxy_connect_timeout {{ item.value.servers[server].reverse_proxy.locations[location].proxy_connect_timeout }};
 {% endif %}
 {% if item.value.servers[server].reverse_proxy.locations[location].proxy_pass is defined %}
-proxy_pass {{ item.value.servers[server].reverse_proxy.locations[location].proxy_pass }};
+        proxy_pass {{ item.value.servers[server].reverse_proxy.locations[location].proxy_pass }};
 {% endif %}
 {% if item.value.servers[server].reverse_proxy.locations[location].rewrites is defined %}
 {% for rewrite in item.value.servers[server].reverse_proxy.locations[location].rewrites %}
