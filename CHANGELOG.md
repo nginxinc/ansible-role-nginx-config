@@ -4,7 +4,8 @@
 
 BREAKING CHANGES:
 
-Rename `proxy_hide_headers` to `proxy_hide_header` to align with NGINX directive names.
+*   Rename `proxy_hide_headers` to `proxy_hide_header` to align with NGINX directive names.
+*   Remove/merge the `web_server` and `reverse_proxy` sub-dictionary keys from the HTTP templates. These often lead to confusing and innecesary code duplication and hard to maintain code. To update your templates simply remove both keys and adjust your spacing accordingly.
 
 ENHANCEMENTS:
 
