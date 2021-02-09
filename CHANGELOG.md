@@ -9,7 +9,7 @@ BREAKING CHANGES:
 
 FEATURES:
 
-Replace Ansible with Ansible base and add the necessary extra collections as a dependency requirement. For reference, these are:
+Replace Ansible community distribution with Ansible base and add the necessary extra collections as a dependency requirement. For reference, these are:
 *   `ansible.posix`
 
 ENHANCEMENTS:
