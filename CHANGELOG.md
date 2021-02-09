@@ -7,6 +7,12 @@ BREAKING CHANGES:
 *   Rename `proxy_hide_headers` to `proxy_hide_header` to align with NGINX directive names.
 *   Remove/merge the `web_server` and `reverse_proxy` sub-dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates simply remove both keys and adjust your spacing accordingly.
 
+FEATURES:
+
+Replace Ansible community distribution with Ansible base and add the necessary extra collections as a dependency requirement. For reference, these are:
+*   `community.general`
+*   `ansible.posix`
+
 ENHANCEMENTS:
 
 *   Update Molecule to `3.2.3` and yamllint to `1.26.0`.
