@@ -120,95 +120,94 @@
                 sub_filter:
                   last_modified: false
                   once: true
-                reverse_proxy:
-                  locations:
-                    frontend:
-                      location: /
-                      app_protect:
-                        enable: true
-                        policy_file: /etc/nginx/app-protect-security-policy.json
-                      proxy_hide_header:
-                        - X-Powered-By
-                      add_headers:
-                        strict_transport_security:
-                          name: Strict-Transport-Security
-                          value: max-age=15768000; includeSubDomains
-                          always: true
-                        another_header:
-                          name: Fancy-New-Header-To-Test
-                          value: testing=true
-                          always: false
-                      rewrites:
-                        - (.*).html(.*) $1$2
-                      proxy_pass: http://frontend_servers/
-                      proxy_cache: frontend_proxy_cache
-                      proxy_cache_valid:
-                        - code: 200
-                          time: 10m
-                        - code: 301
-                          time: 1m
-                      proxy_temp_path:
-                        path: /var/cache/nginx/proxy/frontend/temp
-                      proxy_cache_lock: false
-                      proxy_cache_min_uses: 3
-                      proxy_cache_revalidate: false
-                      proxy_cache_use_stale:
-                        - http_403
-                        - http_404
-                      proxy_ignore_headers:
-                        - Vary
-                        - Cache-Control
-                      proxy_redirect: false
-                      proxy_set_header:
-                        header_host:
-                          name: Host
-                          value: $host
-                        header_x_real_ip:
-                          name: X-Real-IP
-                          value: $remote_addr
-                        header_x_forwarded_for:
-                          name: X-Forwarded-For
-                          value: $proxy_add_x_forwarded_for
-                        header_x_forwarded_proto:
-                          name: X-Forwarded-Proto
-                          value: $scheme
-                      proxy_buffering: false
-                      client_max_body_size: 5m
-                      sub_filter:
-                        last_modified: false
-                        once: true
-                    backend:
-                      location: /backend
-                      proxy_pass: http://backend_servers/
-                      proxy_cache: backend_proxy_cache
-                      proxy_cache_valid:
-                        - time: 10m
-                      proxy_temp_path:
-                        path: /var/cache/nginx/proxy/backend/temp
-                      proxy_cache_lock: true
-                      proxy_cache_min_uses: 2
-                      proxy_cache_revalidate: true
-                      proxy_cache_use_stale:
-                        - http_500
-                        - http_502
-                        - http_503
-                      proxy_redirect: default
-                      proxy_set_header:
-                        header_host:
-                          name: Host
-                          value: $host
-                        header_x_real_ip:
-                          name: X-Real-IP
-                          value: $remote_addr
-                        header_x_forwarded_for:
-                          name: X-Forwarded-For
-                          value: $proxy_add_x_forwarded_for
-                        header_x_forwarded_proto:
-                          name: X-Forwarded-Proto
-                          value: $scheme
-                      proxy_cookie_path:
-                        path: /web/
-                        replacement: /
+                locations:
+                  frontend:
+                    location: /
+                    app_protect:
+                      enable: true
+                      policy_file: /etc/nginx/app-protect-security-policy.json
+                    proxy_hide_header:
+                      - X-Powered-By
+                    add_headers:
+                      strict_transport_security:
+                        name: Strict-Transport-Security
+                        value: max-age=15768000; includeSubDomains
+                        always: true
+                      another_header:
+                        name: Fancy-New-Header-To-Test
+                        value: testing=true
+                        always: false
+                    rewrites:
+                      - (.*).html(.*) $1$2
+                    proxy_pass: http://frontend_servers/
+                    proxy_cache: frontend_proxy_cache
+                    proxy_cache_valid:
+                      - code: 200
+                        time: 10m
+                      - code: 301
+                        time: 1m
+                    proxy_temp_path:
+                      path: /var/cache/nginx/proxy/frontend/temp
+                    proxy_cache_lock: false
+                    proxy_cache_min_uses: 3
+                    proxy_cache_revalidate: false
+                    proxy_cache_use_stale:
+                      - http_403
+                      - http_404
+                    proxy_ignore_headers:
+                      - Vary
+                      - Cache-Control
+                    proxy_redirect: false
+                    proxy_set_header:
+                      header_host:
+                        name: Host
+                        value: $host
+                      header_x_real_ip:
+                        name: X-Real-IP
+                        value: $remote_addr
+                      header_x_forwarded_for:
+                        name: X-Forwarded-For
+                        value: $proxy_add_x_forwarded_for
+                      header_x_forwarded_proto:
+                        name: X-Forwarded-Proto
+                        value: $scheme
+                    proxy_buffering: false
+                    client_max_body_size: 5m
+                    sub_filter:
+                      last_modified: false
+                      once: true
+                  backend:
+                    location: /backend
+                    proxy_pass: http://backend_servers/
+                    proxy_cache: backend_proxy_cache
+                    proxy_cache_valid:
+                      - time: 10m
+                    proxy_temp_path:
+                      path: /var/cache/nginx/proxy/backend/temp
+                    proxy_cache_lock: true
+                    proxy_cache_min_uses: 2
+                    proxy_cache_revalidate: true
+                    proxy_cache_use_stale:
+                      - http_500
+                      - http_502
+                      - http_503
+                    proxy_redirect: default
+                    proxy_set_header:
+                      header_host:
+                        name: Host
+                        value: $host
+                      header_x_real_ip:
+                        name: X-Real-IP
+                        value: $remote_addr
+                      header_x_forwarded_for:
+                        name: X-Forwarded-For
+                        value: $proxy_add_x_forwarded_for
+                      header_x_forwarded_proto:
+                        name: X-Forwarded-Proto
+                        value: $scheme
+                    proxy_cookie_path:
+                      path: /web/
+                      replacement: /
                 returns:
                   return301:
                     location: ^~ /old-path
@@ -307,20 +306,16 @@
                     - "'proxied_for_ip' '$http_x_forwarded_for'"
                   last_modified: false
                   once: false
-                  # types: "text/html"
-                web_server:
-                  locations:
-                    frontend_site:
-                      location: /
-                      proxy_hide_header:
-                        - X-Powered-By
-                      html_file_location: /usr/share/nginx/html
-                      html_file_name: frontend_index.html
-                      autoindex: false
-                  sub_filter:
-                    last_modified: false
-                    once: false
-                  http_demo_conf: false
+                  types: "text/html"
+                locations:
+                  frontend_site:
+                    location: /
+                    proxy_hide_header:
+                      - X-Powered-By
+                    html_file_location: /usr/share/nginx/html
+                    html_file_name: frontend_index.html
+                    autoindex: false
+                http_demo_conf: false
           backend:
             template_file: http/default.conf.j2
             conf_file_name: backend_default.conf
@@ -348,31 +343,27 @@
                     - "'proxied_for_ip' '$http_x_forwarded_for'"
                   last_modified: false
                   once: false
-                web_server:
-                  locations:
-                    backend_site:
-                      location: /
-                      html_file_location: /usr/share/nginx/html
-                      html_file_name: backend_index.html
-                      autoindex: false
-                      allows:
-                        - 192.168.1.0/24
-                      denies:
-                        - all
-                    php:
-                      location: ~ \.php$
-                      html_file_location: /usr/share/nginx/html
-                      autoindex: false
-                      custom_options:
-                        - fastcgi_split_path_info ^(.+\.php)(/.+)$;
-                        - fastcgi_pass unix:/run/php/php7.2-fpm.sock;
-                        - fastcgi_index index.php;
-                        - include fastcgi_params;
-                        - fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                  sub_filter:
-                    last_modified: false
-                    once: false
-                  http_demo_conf: false
+                locations:
+                  backend_site:
+                    location: /
+                    html_file_location: /usr/share/nginx/html
+                    html_file_name: backend_index.html
+                    autoindex: false
+                    allows:
+                      - 192.168.1.0/24
+                    denies:
+                      - all
+                  php:
+                    location: ~ \.php$
+                    html_file_location: /usr/share/nginx/html
+                    autoindex: false
+                    custom_options:
+                      - fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                      - fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+                      - fastcgi_index index.php;
+                      - include fastcgi_params;
+                      - fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                http_demo_conf: false
         nginx_config_html_demo_template_enable: true
         nginx_config_html_demo_template:
           frontend:
