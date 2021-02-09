@@ -14,7 +14,14 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
 
 ### Ansible
 
-*   This role is developed and tested with [maintained](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) versions of Ansible base. Backwards compatibility is not guaranteed.
+*   This role is developed and tested with [maintained](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) versions of Ansible base. When using Ansible base, you will also need to install the following collection:
+    ```yaml
+    ---
+    collections:
+      - name: ansible.posix
+        version: 1.1.1
+    ```
+    **Note:** You can alternatively install the Ansible community distribution if you don't want to manage individual collections.
 *   Instructions on how to install Ansible can be found in the [Ansible website](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#upgrading-ansible-from-version-2-9-and-older-to-version-2-10-or-later).
 
 ### Molecule
