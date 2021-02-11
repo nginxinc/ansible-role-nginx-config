@@ -4,8 +4,9 @@
 
 BREAKING CHANGES:
 
+*   Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists, as well as modify the `nginx_config_html_demo_template` variable from a nested dictionary to a list. To update your templates, replace the aforementioned nested dictionary keys by lists (place a dash in front of the topmost nested value within each aforementioned nested dictionary).
+*   Remove/merge the `web_server` and `reverse_proxy` nested dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates, remove both keys and adjust your spacing accordingly.
 *   Rename `proxy_hide_headers` to `proxy_hide_header` to align with NGINX directive names.
-*   Remove/merge the `web_server` and `reverse_proxy` sub-dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates simply remove both keys and adjust your spacing accordingly.
 
 FEATURES:
 
