@@ -2,8 +2,7 @@
 # Enable creating dynamic templated NGINX HTML demo websites.
 nginx_config_html_demo_template_enable: false
 nginx_config_html_demo_template:
-  default:
-    template_file: www/index.html.j2
+  - template_file: www/index.html.j2
     html_file_name: index.html
     html_file_location: /usr/share/nginx/html
     web_server_name: Default
@@ -129,15 +128,12 @@ nginx_config_main_template:
 # the options available for templating. Each key represents a new configuration file.
 nginx_config_http_template_enable: false
 nginx_config_http_template:
-  default:
-    template_file: http/default.conf.j2
+  - template_file: http/default.conf.j2
     conf_file_name: default.conf
     conf_file_location: /etc/nginx/conf.d/
     servers:
-      server1:
-        listen:
-          listen_localhost:
-            ip: localhost  # Wrap in square brackets for IPv6 addresses
+      - listen:
+          - ip: localhost  # Wrap in square brackets for IPv6 addresses
             port: 8081
             ssl: true
             opts: []  # Listen opts like http2 which will be added (ssl is automatically added if you specify 'ssl:').
@@ -246,220 +242,150 @@ nginx_config_http_template:
           once: true
           types: "text/html"
         # custom_options: []
-        web_server:
-          locations:
-            default:
-              location: /
-              # app_protect:  # Optional -- Configure NGINX App Protect
-              #   enable: false  # Optional
-              #   policy_file: path  # Optional
-              #   security_log_enable: false  # Optional
-              #   security_log:  # Optional
-              #     path: path  # Required
-              #     destination: dest  # Required
-              # gzip:  # Optional -- Configure GZIP
-              #   enable: true  # Optional
-              #   buffers:  # Optional
-              #     number: 32  # Required
-              #     size: 4k  # Required
-              #   comp_level: 1  # Optional
-              #   disable: []  # Optional list
-              #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-              #   min_length: 20  # Optional
-              #   proxied: []  # Optional list
-              #   types: []  # Optional list
-              #   vary: false  # Optional
-              include_files: []
-              proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
-              add_headers:
-                strict_transport_security:
-                  name: Strict-Transport-Security
-                  value: max-age=15768000; includeSubDomains
-                  always: true
-                # header_name:
-                #   name: Header-X
-                #   value: Value-X
-                #   always: false
-              html_file_location: /usr/share/nginx/html
-              html_file_name: index.html
-              autoindex: false
-              auth_basic: null
-              auth_basic_user_file: null
-              try_files: $uri $uri/index.html $uri.html =404
-              # allows:
-              #   - 192.168.1.0/24
-              # denies:
-              #   - all
-              # auth_request: /auth
-              # auth_request_set:
-              #   name: $auth_user
-              #   value: $upstream_http_x_user
-              client_max_body_size: 1m
-              # returns:
-              #   return302:
-              #     code: 302
-              #     url: https://sso.somehost.local/?url=https://$http_host$request_uri
-              sub_filter:
-                # sub_filters: []
-                last_modified: false
-                once: true
-                types: "text/html"
-              # custom_options: []
-          http_demo_conf: false
-        reverse_proxy:
-          locations:
-            backend:
-              location: /
-              # app_protect:  # Optional -- Configure NGINX App Protect
-              #   enable: false  # Optional
-              #   policy_file: path  # Optional
-              #   security_log_enable: false  # Optional
-              #   security_log:  # Optional
-              #     path: path  # Required
-              #     destination: dest  # Required
-              # grpc_global:  # Optional -- Configure GRPC
-              #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-              #     address: $remote_addr  # Required
-              #     transparent: true  # Optional
-              #   buffer_size: 4k  # Optional
-              #   connect_timeout: 60s  # Optional
-              #   hide_header: []  # Optional list
-              #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-              #   intercept_errors: false  # Optional
-              #   next_upstream: []  # Optional list
-              #   next_upstream_timeout: 0  # Optional
-              #   next_upstream_tries: 0  # Optional
-              #   pass_header: []  # Optional list
-              #   read_timeout: 60s  # Optional
-              #   send_timeout: 60s  # Optional
-              #   set_header:  # Optional
-              #     - field: Accept-Encoding  # Required
-              #       value: '""'  # Required
-              #   socket_keepalive: false  # Optional
-              #   ssl_certificate: fileLocation  # Optional
-              #   ssl_certificate_key: fileLocation  # Optional
-              #   ssl_ciphers: DEFAULT  # Optional
-              #   ssl_conf_command: command  # Optional
-              #   ssl_crl: fileLocation  # Optional
-              #   ssl_name: serverName  # Optional
-              #   ssl_password_file: fileLocation  # Optional
-              #   ssl_protocols: []  # Optional list
-              #   ssl_server_name: false  # Optional
-              #   ssl_session_reuse: true  # Optional
-              #   ssl_trusted_certificate: fileLocation  # Optional
-              #   ssl_verify: false  # Optional
-              #   ssl_verify_depth: 1  # Optional
-              # grpc:  # Optional -- Configure GRPC
-              #   pass: localhost:9000  # Optional
-              # gzip:  # Optional -- Configure GZIP
-              #   enable: true  # Optional
-              #   buffers:  # Optional
-              #     number: 32  # Required
-              #     size: 4k  # Required
-              #   comp_level: 1  # Optional
-              #   disable: []  # Optional list
-              #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-              #   min_length: 20  # Optional
-              #   proxied: []  # Optional list
-              #   types: []  # Optional list
-              #   vary: false  # Optional
-              include_files: []
-              proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
-              add_headers:
-                strict_transport_security:
-                  name: Strict-Transport-Security
-                  value: max-age=15768000; includeSubDomains
-                  always: true
-                # header_name:
-                #   name: Header-X
-                #   value: Value-X
-                #   always: false
-              proxy_connect_timeout: null
-              proxy_pass: http://backend
-              # rewrites:
-              #   - /foo(.*) /$1 break
-              # proxy_pass_request_body: off
-              # allows:
-              #   - 192.168.1.0/24
-              # denies:
-              #   - all
-              proxy_set_header:
-                header_host:
-                  name: Host
-                  value: $host
-                header_x_real_ip:
-                  name: X-Real-IP
-                  value: $remote_addr
-                header_x_forwarded_for:
-                  name: X-Forwarded-For
-                  value: $proxy_add_x_forwarded_for
-                header_x_forwarded_proto:
-                  name: X-Forwarded-Proto
-                  value: $scheme
-                # header_upgrade:
-                #   name: Upgrade
-                #   value: $http_upgrade
-                # header_connection:
-                #   name: Connection
-                #   value: "Upgrade"
-                # header_random:
-                #   name: RandomName
-                #   value: RandomValue
-              # internal: false
-              # proxy_store: off
-              # proxy_store_acccess: user:rw
-              proxy_read_timeout: null
-              proxy_send_timeout: null
-              proxy_ssl:
-                cert: /etc/ssl/certs/proxy_default.crt
-                key: /etc/ssl/private/proxy_default.key
-                trusted_cert: /etc/ssl/certs/proxy_ca.crt
-                protocols: TLSv1 TLSv1.1 TLSv1.2
-                ciphers: HIGH:!aNULL:!MD5
-                verify: false
-                verify_depth: 1
-                session_reuse: true
-              proxy_cache: backend_proxy_cache
-              proxy_cache_valid:
-                - code: 200
-                  time: 10m
-                - code: 301
-                  time: 1m
-              proxy_temp_path:
-                path: /var/cache/nginx/proxy/backend/temp
-              proxy_cache_lock: false
-              proxy_cache_min_uses: 3
-              proxy_cache_revalidate: false
-              proxy_cache_use_stale:
-                - http_403
-                - http_404
-              proxy_ignore_headers:
-                - Vary
-                - Cache-Control
-              proxy_cookie_path:
-                path: /web/
-                replacement: /
-              proxy_buffering: false
-              proxy_http_version: 1.0
-              websocket: false
-              auth_basic: null
-              auth_basic_user_file: null
-              try_files: $uri $uri/index.html $uri.html =404
-              # auth_request: /auth
-              # auth_request_set:
-              #   name: $auth_user
-              #   value: $upstream_http_x_user
-              # returns:
-              #   return302:
-              #     code: 302
-              #     url: https://sso.somehost.local/?url=https://$http_host$request_uri
-              sub_filter:
-                # sub_filters: []
-                last_modified: false
-                once: true
-                types: "text/html"
-              # custom_options: []
-          health_check_plus: false
+        health_check_plus: false
+        http_demo_conf: false
+        locations:
+          - location: /
+            # app_protect:  # Optional -- Configure NGINX App Protect
+            #   enable: false  # Optional
+            #   policy_file: path  # Optional
+            #   security_log_enable: false  # Optional
+            #   security_log:  # Optional
+            #     path: path  # Required
+            #     destination: dest  # Required
+            # grpc_global:  # Optional -- Configure GRPC
+            #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+            #     address: $remote_addr  # Required
+            #     transparent: true  # Optional
+            #   buffer_size: 4k  # Optional
+            #   connect_timeout: 60s  # Optional
+            #   hide_header: []  # Optional list
+            #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+            #   intercept_errors: false  # Optional
+            #   next_upstream: []  # Optional list
+            #   next_upstream_timeout: 0  # Optional
+            #   next_upstream_tries: 0  # Optional
+            #   pass_header: []  # Optional list
+            #   read_timeout: 60s  # Optional
+            #   send_timeout: 60s  # Optional
+            #   set_header:  # Optional
+            #     - field: Accept-Encoding  # Required
+            #       value: '""'  # Required
+            #   socket_keepalive: false  # Optional
+            #   ssl_certificate: fileLocation  # Optional
+            #   ssl_certificate_key: fileLocation  # Optional
+            #   ssl_ciphers: DEFAULT  # Optional
+            #   ssl_conf_command: command  # Optional
+            #   ssl_crl: fileLocation  # Optional
+            #   ssl_name: serverName  # Optional
+            #   ssl_password_file: fileLocation  # Optional
+            #   ssl_protocols: []  # Optional list
+            #   ssl_server_name: false  # Optional
+            #   ssl_session_reuse: true  # Optional
+            #   ssl_trusted_certificate: fileLocation  # Optional
+            #   ssl_verify: false  # Optional
+            #   ssl_verify_depth: 1  # Optional
+            # grpc:  # Optional -- Configure GRPC
+            #   pass: localhost:9000  # Optional
+            # gzip:  # Optional -- Configure GZIP
+            #   enable: true  # Optional
+            #   buffers:  # Optional
+            #     number: 32  # Required
+            #     size: 4k  # Required
+            #   comp_level: 1  # Optional
+            #   disable: []  # Optional list
+            #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+            #   min_length: 20  # Optional
+            #   proxied: []  # Optional list
+            #   types: []  # Optional list
+            #   vary: false  # Optional
+            include_files: []
+            proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
+            add_headers:
+              strict_transport_security:
+                name: Strict-Transport-Security
+                value: max-age=15768000; includeSubDomains
+                always: true
+              # header_name:
+              #   name: Header-X
+              #   value: Value-X
+              #   always: false
+            html_file_location: /usr/share/nginx/html
+            html_file_name: index.html
+            autoindex: false
+            auth_basic: null
+            auth_basic_user_file: null
+            try_files: $uri $uri/index.html $uri.html =404
+            # allows:
+            #   - 192.168.1.0/24
+            # denies:
+            #   - all
+            # auth_request: /auth
+            # auth_request_set:
+            #   name: $auth_user
+            #   value: $upstream_http_x_user
+            client_max_body_size: 1m
+            # returns:
+            #   return302:
+            #     code: 302
+            #     url: https://sso.somehost.local/?url=https://$http_host$request_uri
+            # custom_options: []
+            proxy_connect_timeout: null
+            proxy_pass: http://backend
+            # rewrites:
+            #   - /foo(.*) /$1 break
+            # proxy_pass_request_body: off
+            # allows:
+            #   - 192.168.1.0/24
+            # denies:
+            #   - all
+            proxy_set_header:
+              header_host:
+                name: Host
+                value: $host
+            internal: false
+            proxy_store: off
+            proxy_store_acccess: user:rw
+            proxy_read_timeout: null
+            proxy_send_timeout: null
+            proxy_ssl:
+              cert: /etc/ssl/certs/proxy_default.crt
+              key: /etc/ssl/private/proxy_default.key
+              trusted_cert: /etc/ssl/certs/proxy_ca.crt
+              protocols: TLSv1 TLSv1.1 TLSv1.2
+              ciphers: HIGH:!aNULL:!MD5
+              verify: false
+              verify_depth: 1
+              session_reuse: true
+            proxy_cache: backend_proxy_cache
+            proxy_cache_valid:
+              - code: 200
+                time: 10m
+              - code: 301
+                time: 1m
+            proxy_temp_path:
+              path: /var/cache/nginx/proxy/backend/temp
+            proxy_cache_lock: false
+            proxy_cache_min_uses: 3
+            proxy_cache_revalidate: false
+            proxy_cache_use_stale:
+              - http_403
+              - http_404
+            proxy_ignore_headers:
+              - Vary
+              - Cache-Control
+            proxy_cookie_path:
+              path: /web/
+              replacement: /
+            proxy_buffering: false
+            proxy_http_version: 1.0
+            websocket: false
+            sub_filter:
+              # sub_filters: []
+              last_modified: false
+              once: true
+              types: "text/html"
+            # custom_options: []
         returns:
           return301:
             location: /
@@ -491,15 +417,13 @@ nginx_config_http_template:
       proxy_ignore_headers:
         - Expires
     upstreams:
-      upstream1:
-        name: backend
+      - name: backend
         lb_method: least_conn
         zone_name: backend_mem_zone
         zone_size: 64k
         sticky_cookie: false
         servers:
-          server1:
-            address: localhost
+          - address: localhost
             port: 8081
             weight: 1
             health_check: max_fails=1 fail_timeout=10s
@@ -549,15 +473,12 @@ nginx_config_rest_api_dashboard_deny:  # Optional
 # the options available for templating. Each key represents a new configuration file.
 nginx_config_stream_template_enable: false
 nginx_config_stream_template:
-  default:
-    template_file: stream/default.conf.j2
+  - template_file: stream/default.conf.j2
     conf_file_name: default.conf
     conf_file_location: /etc/nginx/conf.d/stream/
     network_streams:
-      default:
-        listen:
-          listen_localhost:
-            ip: 0.0.0.0  # Wrap in square brackets for IPv6 addresses
+      - listen:
+          - ip: 0.0.0.0  # Wrap in square brackets for IPv6 addresses
             port: 80
             ssl: false
             opts: []  # Listen opts like udp which will be added (ssl is automatically added if you specify 'ssl:').
@@ -590,15 +511,13 @@ nginx_config_stream_template:
         health_check_plus: false
         # custom_options: []
     upstreams:
-      upstream1:
-        name: backend
+      - name: backend
         lb_method: least_conn
         zone_name: backend
         zone_size: 64k
         sticky_cookie: false
         servers:
-          server1:
-            address: localhost
+          - address: localhost
             port: 8080
             weight: 1
             health_check: max_fails=1 fail_timeout=10s
