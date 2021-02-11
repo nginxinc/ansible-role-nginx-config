@@ -477,7 +477,7 @@ nginx_config_stream_template:
     conf_file_name: default.conf
     conf_file_location: /etc/nginx/conf.d/stream/
     network_streams:
-        listen:
+      - listen:
           - ip: 0.0.0.0  # Wrap in square brackets for IPv6 addresses
             port: 80
             ssl: false
