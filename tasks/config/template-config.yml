@@ -1,19 +1,19 @@
 ---
 - name: Ensure HTML directory exists
   file:
-    path: "{{ item.value.html_file_location | default('/usr/share/nginx/html') }}"
+    path: "{{ item.html_file_location | default('/usr/share/nginx/html') }}"
     state: directory
     mode: 0755
-  with_dict: "{{ nginx_config_html_demo_template }}"
+  loop: "{{ nginx_config_html_demo_template }}"
   when: nginx_config_html_demo_template_enable | bool
 
 - name: Dynamically generate HTML files
   template:
-    src: "{{ item.value.template_file | default('www/index.html.j2') }}"
-    dest: "{{ item.value.html_file_location | default('/usr/share/nginx/html') }}/{{ item.value.html_file_name | default('index.html') }}"
+    src: "{{ item.template_file | default('www/index.html.j2') }}"
+    dest: "{{ item.html_file_location | default('/usr/share/nginx/html') }}/{{ item.html_file_name | default('index.html') }}"
     backup: yes
     mode: 0644
-  with_dict: "{{ nginx_config_html_demo_template }}"
+  loop: "{{ nginx_config_html_demo_template }}"
   when: nginx_config_html_demo_template_enable | bool
 
 - name: Configure NGINX modules
@@ -45,10 +45,10 @@
 
 - name: Ensure NGINX HTTP directory exists
   file:
-    path: "{{ item.value.conf_file_location | default('/etc/nginx/conf.d/') }}"
+    path: "{{ item.conf_file_location | default('/etc/nginx/conf.d/') }}"
     state: directory
     mode: 0755
-  with_dict: "{{ nginx_config_http_template }}"
+  loop: "{{ nginx_config_http_template }}"
   when: nginx_config_http_template_enable | bool
 
 - name: Ensure NGINX proxy cache directories exist
@@ -65,11 +65,11 @@
 
 - name: Dynamically generate NGINX HTTP config files
   template:
-    src: "{{ item.value.template_file | default('http/default.conf.j2') }}"
-    dest: "{{ item.value.conf_file_location | default('/etc/nginx/conf.d/') }}/{{ item.value.conf_file_name | default('default.conf') }}"
+    src: "{{ item.template_file | default('http/default.conf.j2') }}"
+    dest: "{{ item.conf_file_location | default('/etc/nginx/conf.d') }}/{{ item.conf_file_name | default('default.conf') }}"
     backup: yes
     mode: 0644
-  with_dict: "{{ nginx_config_http_template }}"
+  loop: "{{ nginx_config_http_template }}"
   when: nginx_config_http_template_enable | bool
   notify: (Handler - NGINX Config) Run NGINX
 
@@ -93,18 +93,18 @@
 
 - name: Ensure NGINX stream directory exists
   file:
-    path: "{{ item.value.conf_file_location | default('/etc/nginx/conf.d/stream/') }}"
+    path: "{{ item.conf_file_location | default('/etc/nginx/conf.d/stream/') }}"
     state: directory
     mode: 0755
-  with_dict: "{{ nginx_config_stream_template }}"
+  loop: "{{ nginx_config_stream_template }}"
   when: nginx_config_stream_template_enable | bool
 
 - name: Dynamically generate NGINX stream config files
   template:
-    src: "{{ item.value.template_file | default('stream/default.conf.j2') }}"
-    dest: "{{ item.value.conf_file_location | default('/etc/nginx/conf.d/stream/') }}/{{ item.value.conf_file_name | default('default.conf') }}"
+    src: "{{ item.template_file | default('stream/default.conf.j2') }}"
+    dest: "{{ item.conf_file_location | default('/etc/nginx/conf.d/stream') }}/{{ item.conf_file_name | default('default.conf') }}"
     backup: yes
     mode: 0644
-  with_dict: "{{ nginx_config_stream_template }}"
+  loop: "{{ nginx_config_stream_template }}"
   notify: (Handler - NGINX Config) Run NGINX
   when: nginx_config_stream_template_enable | bool

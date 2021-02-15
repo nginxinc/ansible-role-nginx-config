@@ -1,22 +1,22 @@
 {{ ansible_managed | comment }}
 
-{% if item.value.upstreams is defined %}
-{% for upstream in item.value.upstreams %}
-upstream {{ item.value.upstreams[upstream].name }} {
-{% if item.value.upstreams[upstream].lb_method is defined %}
-    {{ item.value.upstreams[upstream].lb_method }};
+{% if item.upstreams is defined %}
+{% for upstream in item.upstreams %}
+upstream {{ upstream.name }} {
+{% if upstream.lb_method is defined %}
+    {{ upstream.lb_method }};
 {% endif %}
-    zone {{ item.value.upstreams[upstream].zone_name }} {{ item.value.upstreams[upstream].zone_size }};
-{% for server in item.value.upstreams[upstream].servers %}
-    server {{ item.value.upstreams[upstream].servers[server].address }}{{(":" + item.value.upstreams[upstream].servers[server].port | string) if item.value.upstreams[upstream].servers[server].port is defined}} {% if item.value.upstreams[upstream].servers[server].backup is defined and item.value.upstreams[upstream].servers[server].backup %}backup{% endif %} {% if item.value.upstreams[upstream].servers[server].down is defined and item.value.upstreams[upstream].servers[server].down %}down{% else %}weight={{ item.value.upstreams[upstream].servers[server].weight | default("1") }} {{ item.value.upstreams[upstream].servers[server].health_check | default("") }}{% endif %};
+    zone {{ upstream.zone_name }} {{ upstream.zone_size }};
+{% for server in upstream.servers %}
+    server {{ server.address }}{{(":" + server.port | string) if server.port is defined}} {% if server.backup is defined and server.backup %}backup{% endif %} {% if server.down is defined and server.down %}down{% else %}weight={{ server.weight | default("1") }} {{ server.health_check | default("") }}{% endif %};
 {% endfor %}
-{% if item.value.upstreams[upstream].sticky_cookie is defined %}
-{% if item.value.upstreams[upstream].sticky_cookie %}
+{% if upstream.sticky_cookie is defined %}
+{% if upstream.sticky_cookie %}
     sticky cookie srv_id expires=1h  path=/;
 {% endif %}
 {% endif %}
-{% if item.value.upstreams[upstream].custom_options is defined and item.value.upstreams[upstream].custom_options | length %}
-{% for inline_option in item.value.upstreams[upstream].custom_options %}
+{% if upstream.custom_options is defined and upstream.custom_options | length %}
+{% for inline_option in upstream.custom_options %}
     {{ inline_option }}
 {% endfor %}
 {% endif %}
@@ -24,100 +24,100 @@ upstream {{ item.value.upstreams[upstream].name }} {
 {% endfor %}
 {% endif %}
 
-{% if item.value.custom_options is defined and item.value.custom_options | length %}
-{% for inline_option in item.value.custom_options %}
+{% if item.custom_options is defined and item.custom_options | length %}
+{% for inline_option in item.custom_options %}
 {{ inline_option }}
 {% endfor %}
 {% endif %}
 
-{% if item.value.network_streams is defined %}
-{% for stream in item.value.network_streams %}
+{% if item.network_streams is defined %}
+{% for stream in item.network_streams %}
 server {
-{% for listen in (item.value.network_streams[stream].listen.values() | rejectattr("ip", "defined") | sort(attribute='port') + item.value.network_streams[stream].listen.values() | rejectattr("ip", "undefined") | sort(attribute='port') | sort(attribute='ip')) %}
+{% for listen in (stream.listen | rejectattr("ip", "defined") | sort(attribute='port') + stream.listen | rejectattr("ip", "undefined") | sort(attribute='port') | sort(attribute='ip')) %}
     listen {% if listen.ip is defined and listen.ip | length %}{{ listen.ip }}:{% endif %}{{ listen.port }}{% if listen.ssl is defined and listen.ssl %} ssl{% endif %}{% if listen.opts is defined and listen.opts | length %} {{ listen.opts | join(" ") }}{% endif %};
 {% endfor %}
-{% if item.value.network_streams[stream].ssl is defined and item.value.network_streams[stream].ssl %}
-    ssl_certificate {{ item.value.network_streams[stream].ssl.cert }};
-    ssl_certificate_key {{ item.value.network_streams[stream].ssl.key }};
-{% if item.value.network_streams[stream].ssl.trusted_cert is defined %}
-    ssl_trusted_certificate {{ item.value.network_streams[stream].ssl.trusted_cert }};
+{% if stream.ssl is defined and stream.ssl %}
+    ssl_certificate {{ stream.ssl.cert }};
+    ssl_certificate_key {{ stream.ssl.key }};
+{% if stream.ssl.trusted_cert is defined %}
+    ssl_trusted_certificate {{ stream.ssl.trusted_cert }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.dhparam is defined %}
-    ssl_dhparam {{ item.value.network_streams[stream].ssl.dhparam }};
+{% if stream.ssl.dhparam is defined %}
+    ssl_dhparam {{ stream.ssl.dhparam }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.protocols is defined %}
-    ssl_protocols {{ item.value.network_streams[stream].ssl.protocols }};
+{% if stream.ssl.protocols is defined %}
+    ssl_protocols {{ stream.ssl.protocols }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.ciphers is defined %}
-    ssl_ciphers {{ item.value.network_streams[stream].ssl.ciphers }};
+{% if stream.ssl.ciphers is defined %}
+    ssl_ciphers {{ stream.ssl.ciphers }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.prefer_server_ciphers is defined and item.value.network_streams[stream].ssl.prefer_server_ciphers %}
+{% if stream.ssl.prefer_server_ciphers is defined and stream.ssl.prefer_server_ciphers %}
     ssl_prefer_server_ciphers on;
 {% endif %}
-{% if item.value.network_streams[stream].ssl.session_cache is defined %}
-    ssl_session_cache {{ item.value.network_streams[stream].ssl.session_cache }};
+{% if stream.ssl.session_cache is defined %}
+    ssl_session_cache {{ stream.ssl.session_cache }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.session_timeout is defined %}
-    ssl_session_timeout {{ item.value.network_streams[stream].ssl.session_timeout }};
+{% if stream.ssl.session_timeout is defined %}
+    ssl_session_timeout {{ stream.ssl.session_timeout }};
 {% endif %}
-{% if item.value.network_streams[stream].ssl.disable_session_tickets is defined and item.value.network_streams[stream].ssl.disable_session_tickets %}
+{% if stream.ssl.disable_session_tickets is defined and stream.ssl.disable_session_tickets %}
     ssl_session_tickets off;
 {% endif %}
-{% if item.value.network_streams[stream].ssl.ecdh_curve is defined %}
-    ssl_ecdh_curve {{ item.value.network_streams[stream].ssl.ecdh_curve }};
+{% if stream.ssl.ecdh_curve is defined %}
+    ssl_ecdh_curve {{ stream.ssl.ecdh_curve }};
 {% endif %}
 {% endif %}
-{% if item.value.network_streams[stream].include_files is defined and item.value.network_streams[stream].include_files | length %}
-{% for file in item.value.network_streams[stream].include_files %}
+{% if stream.include_files is defined and stream.include_files | length %}
+{% for file in stream.include_files %}
     include "{{ file }}";
 {% endfor %}
 {% endif %}
-    proxy_pass {{ item.value.network_streams[stream].proxy_pass }};
-    proxy_timeout {{ item.value.network_streams[stream].proxy_timeout }};
-    proxy_connect_timeout {{ item.value.network_streams[stream].proxy_connect_timeout }};
-{% if item.value.network_streams[stream].proxy_protocol %}
+    proxy_pass {{ stream.proxy_pass }};
+    proxy_timeout {{ stream.proxy_timeout }};
+    proxy_connect_timeout {{ stream.proxy_connect_timeout }};
+{% if stream.proxy_protocol %}
     proxy_protocol on;
 {% else %}
     proxy_protocol off;
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl is defined %}
+{% if stream.proxy_ssl is defined %}
     proxy_ssl on;
-{% if item.value.network_streams[stream].proxy_ssl.cert is defined %}
-    proxy_ssl_certificate {{ item.value.network_streams[stream].proxy_ssl.cert }};
+{% if stream.proxy_ssl.cert is defined %}
+    proxy_ssl_certificate {{ stream.proxy_ssl.cert }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.key is defined %}
-    proxy_ssl_certificate_key {{ item.value.network_streams[stream].proxy_ssl.key }};
+{% if stream.proxy_ssl.key is defined %}
+    proxy_ssl_certificate_key {{ stream.proxy_ssl.key }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.server_name is defined %}
-    proxy_ssl_server_name {{ item.value.network_streams[stream].proxy_ssl.server_name | ternary("on", "off") }};
+{% if stream.proxy_ssl.server_name is defined %}
+    proxy_ssl_server_name {{ stream.proxy_ssl.server_name | ternary("on", "off") }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.name is defined %}
-    proxy_ssl_name {{ item.value.network_streams[stream].proxy_ssl.name }};
+{% if stream.proxy_ssl.name is defined %}
+    proxy_ssl_name {{ stream.proxy_ssl.name }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.protocols is defined %}
-    proxy_ssl_protocols {{ item.value.network_streams[stream].proxy_ssl.protocols }};
+{% if stream.proxy_ssl.protocols is defined %}
+    proxy_ssl_protocols {{ stream.proxy_ssl.protocols }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.ciphers is defined %}
-    proxy_ssl_ciphers {{ item.value.network_streams[stream].proxy_ssl.ciphers }};
+{% if stream.proxy_ssl.ciphers is defined %}
+    proxy_ssl_ciphers {{ stream.proxy_ssl.ciphers }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.trusted_cert is defined %}
-    proxy_ssl_trusted_certificate {{ item.value.network_streams[stream].proxy_ssl.trusted_cert }};
+{% if stream.proxy_ssl.trusted_cert is defined %}
+    proxy_ssl_trusted_certificate {{ stream.proxy_ssl.trusted_cert }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.verify is defined %}
-    proxy_ssl_verify {{ item.value.network_streams[stream].proxy_ssl.verify | ternary("on", "off") }};
+{% if stream.proxy_ssl.verify is defined %}
+    proxy_ssl_verify {{ stream.proxy_ssl.verify | ternary("on", "off") }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.verify_depth is defined %}
-    proxy_ssl_verify_depth {{ item.value.network_streams[stream].proxy_ssl.verify_depth }};
+{% if stream.proxy_ssl.verify_depth is defined %}
+    proxy_ssl_verify_depth {{ stream.proxy_ssl.verify_depth }};
 {% endif %}
-{% if item.value.network_streams[stream].proxy_ssl.session_reuse is defined %}
-    proxy_ssl_session_reuse {{ item.value.network_streams[stream].proxy_ssl.session_reuse | ternary("on", "off") }};
+{% if stream.proxy_ssl.session_reuse is defined %}
+    proxy_ssl_session_reuse {{ stream.proxy_ssl.session_reuse | ternary("on", "off") }};
 {% endif %}
 {% endif %}
-{% if item.value.network_streams[stream].health_check_plus %}
+{% if stream.health_check_plus %}
     health_check;
 {% endif %}
-{% if item.value.network_streams[stream].custom_options is defined and item.value.network_streams[stream].custom_options | length %}
-{% for inline_option in item.value.network_streams[stream].custom_options %}
+{% if stream.custom_options is defined and stream.custom_options | length %}
+{% for inline_option in stream.custom_options %}
     {{ inline_option }}
 {% endfor %}
 {% endif %}
