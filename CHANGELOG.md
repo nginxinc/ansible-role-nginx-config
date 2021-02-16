@@ -16,7 +16,7 @@ Replace Ansible community distribution with Ansible base and add the necessary e
 
 ENHANCEMENTS:
 
-*   Update Molecule to `3.2.3` and yamllint to `1.26.0`.
+*   Update Molecule to `3.2.3`, yamllint to `1.26.0` and Docker Python SDK to `4.4.2`.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
 
