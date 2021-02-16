@@ -17,7 +17,7 @@ nginx_config_stream_upload_dest: /etc/nginx/conf.d/
 # Upload NGINX config files/snippets.
 nginx_config_upload_enable: false
 nginx_config_upload:
-  - src: config/snippets/ # You can optionally also include the specific file name
+  - src: config/snippets/  # You can optionally also include the specific file name
     dest: /etc/nginx/snippets  # You can optionally also include the specific desired file name
 # Upload HTML files.
 nginx_config_upload_html_enable: false
