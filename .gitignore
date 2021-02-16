@@ -4,6 +4,8 @@
 *.key
 *~
 \#*
+!molecule.crt
+!molecule.key
 
 # OS Specific #
 ###############
