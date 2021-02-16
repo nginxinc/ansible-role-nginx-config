@@ -9,11 +9,27 @@
         nginx_config_debug_output: true
 
         nginx_branch: stable
+        nginx_config_upload_enable: true
+        nginx_config_upload:
+          - src: ../common/files/snippets/location_snippet.conf
+            dest: /etc/nginx/snippets
+          - src: ../common/files/http/
+            dest: /etc/nginx/conf.d
+        nginx_config_upload_html_enable: true
+        nginx_config_upload_html:
+          - src: ../common/files/www/index.html
+            dest: /usr/share/nginx/html
+        nginx_config_upload_ssl_enable: true
+        nginx_config_upload_ssl_crt:
+          - src: ../common/files/ssl/molecule.crt
+            dest: /etc/ssl/certs
+        nginx_config_upload_ssl_key:
+          - src: ../common/files/ssl/molecule.key
+            dest: /etc/ssl/private
+
+        # DEPRECATED
         nginx_config_main_upload_enable: true
         nginx_config_main_upload_src: ../common/files/nginx.conf
         nginx_config_http_upload_enable: true
         nginx_config_http_upload_src: ../common/files/http/*.conf
-        nginx_config_snippet_upload_enable: true
-        nginx_config_snippet_upload:
-          - src: ../common/files/snippets/location_snippet.conf
-            dest: /etc/nginx/snippets
+        nginx_config_http_upload_dest: /etc/nginx/conf.d/deprecated_http

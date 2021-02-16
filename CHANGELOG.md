@@ -4,9 +4,19 @@
 
 BREAKING CHANGES:
 
-*   Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists, as well as modify the `nginx_config_html_demo_template` variable from a nested dictionary to a list. To update your templates, replace the aforementioned nested dictionary keys by lists (place a dash in front of the topmost nested value within each aforementioned nested dictionary).
-*   Remove/merge the `web_server` and `reverse_proxy` nested dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates, remove both keys and adjust your spacing accordingly.
-*   Rename `proxy_hide_headers` to `proxy_hide_header` to align with NGINX directive names.
+*   Rename upload related variables:
+    *   Rename the `nginx_config_snippet_upload_*` parameters to `nginx_config_upload_*` (check `defaults/main/upload.yml` for an example).
+    *   Rename the `nginx_config_html_upload_*` parameters to `nginx_config_upload_html_*`.
+    *   Rename the `nginx_config_ssl_upload_*` parameters to `nginx_config_upload_ssl_*`.
+*   Tweak the `nginx_config_html_upload` and `nginx_config_ssl_upload` parameters to ow use a list instead of a single `src` and `dest` value (check `defaults/main/upload.yml` for an example).
+*   Refactor the config templates to simplify the creation of templates as well as development and maintenance moving forward:
+    *   Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists, as well as modify the `nginx_config_html_demo_template` variable from a nested dictionary to a list. To update your templates, replace the aforementioned nested dictionary keys by lists (place a dash in front of the topmost nested value within each aforementioned nested dictionary).
+    *   Remove/merge the `web_server` and `reverse_proxy` nested dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates, remove both keys and adjust your spacing accordingly.
+*   Rename `proxy_hide_headers` to `proxy_hide_header` within NGINX's template config to align with NGINX directive names.
+
+DEPRECATION WARNINGS:
+
+The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload_*` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The depecrated parameters will be removed in the next major release (0.5.0), due April 2021.
 
 FEATURES:
 
@@ -28,7 +38,7 @@ Add `state` parameter to package module in Molecule verification tests.
 
 FEATURES:
 
-*   Add support for configuration snippets.
+*   Add support for configuration snippets (use the `nginx_config_snippet_upload_*` parameters to configure it).
 *   Add support for Dependabot.
 
 ENHANCEMENTS:

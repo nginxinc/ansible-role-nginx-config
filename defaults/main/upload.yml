@@ -1,31 +1,34 @@
 ---
-# Enable uploading NGINX configuration files to your system.
+# Enable uploading NGINX related files to your system.
 # Default for uploading files is false.
 # Default location of files is the files folder within the NGINX Config Ansible role.
-# Upload the main NGINX configuration file.
+# (DEPRECATED) Upload the main NGINX configuration file.
 nginx_config_main_upload_enable: false
 nginx_config_main_upload_src: config/nginx.conf
 nginx_config_main_upload_dest: /etc/nginx/
-# Upload HTTP NGINX configuration files.
+# (DEPRECATED) Upload HTTP NGINX configuration files.
 nginx_config_http_upload_enable: false
 nginx_config_http_upload_src: config/http/*.conf
 nginx_config_http_upload_dest: /etc/nginx/conf.d/
-# Upload Stream NGINX configuration files.
+# (DEPRECATED) Upload Stream NGINX configuration files.
 nginx_config_stream_upload_enable: false
 nginx_config_stream_upload_src: config/stream/*.conf
 nginx_config_stream_upload_dest: /etc/nginx/conf.d/
+# Upload NGINX config files/snippets.
+nginx_config_upload_enable: false
+nginx_config_upload:
+  - src: config/snippets/ # You can optionally also include the specific file name
+    dest: /etc/nginx/snippets  # You can optionally also include the specific desired file name
 # Upload HTML files.
-nginx_config_html_upload_enable: false
-nginx_config_html_upload_src: www/*
-nginx_config_html_upload_dest: /usr/share/nginx/html
+nginx_config_upload_html_enable: false
+nginx_config_upload_html:
+  - src: www/index.html
+    dest: /usr/share/nginx/html
 # Upload SSL certificates and keys.
-nginx_config_ssl_upload_enable: false
-nginx_config_ssl_upload_crt_src: ssl/*.crt
-nginx_config_ssl_upload_crt_dest: /etc/ssl/certs/
-nginx_config_ssl_upload_key_src: ssl/*.key
-nginx_config_ssl_upload_key_dest: /etc/ssl/private/
-# Upload individual NGINX snippets.
-nginx_config_snippet_upload_enable: false
-nginx_config_snippet_upload:
-  - src: config/snippets/snippet.conf
-    dest: /etc/nginx/snippets  # You can optionally also include the file name
+nginx_config_upload_ssl_enable: false
+nginx_config_upload_ssl_crt:
+  - src: ssl/certs/
+    dest: /etc/ssl/certs
+nginx_config_upload_ssl_key:
+  - src: ssl/private/
+    dest: /etc/ssl/private

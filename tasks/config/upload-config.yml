@@ -1,48 +1,30 @@
 ---
-- name: Upload NGINX config snippets
+- name: (DEPRECATED) Upload NGINX main config
   block:
-    - name: Ensure NGINX config snippet directories exist
-      file:
-        path: "{{ item.dest | dirname if item.dest.endswith('.conf') else item.dest }}"
-        state: directory
-        mode: 0755
-      loop: "{{ nginx_config_snippet_upload }}"
-
-    - name: Upload NGINX config snippet files
-      copy:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-        backup: yes
-        mode: 0644
-      loop: "{{ nginx_config_snippet_upload }}"
-  when: nginx_config_snippet_upload_enable
-
-- name: Upload NGINX main config
-  block:
-    - name: Ensure NGINX main directory exists
+    - name: (DEPRECATED) Ensure NGINX main directory exists
       file:
         path: "{{ nginx_config_main_upload_dest | default('/etc/nginx/') }}"
         state: directory
         mode: 0755
 
-    - name: Upload NGINX main config file
+    - name: (DEPRECATED) Upload NGINX main config file
       copy:
         src: "{{ nginx_config_main_upload_src | default('conf/nginx.conf') }}"
-        dest: "{{ nginx_config_main_upload_dest | default('/etc/nginx/') }}"
+        dest: "{{ nginx_config_main_upload_dest | default('/etc/nginx') }}"
         backup: yes
-        mode: 0755
+        mode: 0644
       notify: (Handler - NGINX Config) Run NGINX
   when: nginx_config_main_upload_enable | bool
 
-- name: Upload NGINX HTTP config
+- name: (DEPRECATED) Upload NGINX HTTP config
   block:
-    - name: Ensure NGINX HTTP directory exists
+    - name: (DEPRECATED) Ensure NGINX HTTP directory exists
       file:
         path: "{{ nginx_config_http_upload_dest | default('/etc/nginx/conf.d/') }}"
         state: directory
         mode: 0755
 
-    - name: Upload NGINX HTTP config files
+    - name: (DEPRECATED) Upload NGINX HTTP config files
       copy:
         src: "{{ item }}"
         dest: "{{ nginx_config_http_upload_dest | default('/etc/nginx/conf.d/') }}"
@@ -52,15 +34,15 @@
       notify: (Handler - NGINX Config) Run NGINX
   when: nginx_config_http_upload_enable | bool
 
-- name: Upload NGINX stream config
+- name: (DEPRECATED) Upload NGINX stream config
   block:
-    - name: Ensure NGINX stream directory exists
+    - name: (DEPRECATED) Ensure NGINX stream directory exists
       file:
         path: "{{ nginx_config_stream_upload_dest | default('/etc/nginx/conf.d/') }}"
         state: directory
         mode: 0755
 
-    - name: Upload NGINX stream config files
+    - name: (DEPRECATED) Upload NGINX stream config files
       copy:
         src: "{{ item }}"
         dest: "{{ nginx_config_stream_upload_dest | default('/etc/nginx/conf.d/') }}"
@@ -70,54 +52,67 @@
       notify: (Handler - NGINX Config) Run NGINX
   when: nginx_config_stream_upload_enable | bool
 
+- name: Upload NGINX config snippets
+  block:
+    - name: Ensure NGINX config snippet directories exist
+      file:
+        path: "{{ item.dest | dirname if item.dest.endswith('.conf') else item.dest | default('/etc/nginx') }}"
+        state: directory
+        mode: 0755
+      loop: "{{ nginx_config_upload }}"
+
+    - name: Upload NGINX config snippet files
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest | default('/etc/nginx/') }}"
+        backup: yes
+        mode: 0644
+      loop: "{{ nginx_config_upload }}"
+      notify: (Handler - NGINX Config) Run NGINX
+  when: nginx_config_upload_enable | bool
+
 - name: Upload HTML files
   block:
     - name: Ensure HTML directory exists
       file:
-        path: "{{ nginx_config_html_upload_dest | default('/usr/share/nginx/html') }}"
+        path: "{{ item.dest | dirname if item.dest.endswith('.html') else item.dest | default('/usr/share/nginx/html') }}"
         state: directory
         mode: 0755
+      loop: "{{ nginx_config_upload_html }}"
 
     - name: Upload HTML files
       copy:
-        src: "{{ item }}"
-        dest: "{{ nginx_config_html_upload_dest | default('/usr/share/nginx/html') }}"
+        src: "{{ item.src }}"
+        dest: "{{ item.dest | default('/usr/share/nginx/html') }}"
         backup: yes
         mode: 0644
-      with_fileglob: "{{ nginx_config_html_upload_src }}"
+      loop: "{{ nginx_config_upload_html }}"
       notify: (Handler - NGINX Config) Run NGINX
-  when: nginx_config_html_upload_enable | bool
+  when: nginx_config_upload_html_enable | bool
 
 - name: Upload NGINX SSL certificates and keys
   block:
-    - name: Ensure SSL certificate directory exists
+    - name: Ensure SSL certificate and key directories exist
       file:
-        path: "{{ nginx_config_ssl_upload_crt_dest | default('/etc/ssl/certs/') }}"
+        path: "{{ item.dest }}"
         state: directory
         mode: 0755
-
-    - name: Ensure SSL key directory exists
-      file:
-        path: "{{ nginx_config_ssl_upload_key_dest | default('/etc/ssl/private/') }}"
-        state: directory
-        mode: 0755
+      loop: "{{ nginx_config_upload_ssl_crt +  nginx_config_upload_ssl_key }}"
 
     - name: Upload NGINX SSL certificates
       copy:
-        src: "{{ item }}"
-        dest: "{{ nginx_config_ssl_upload_crt_dest | default('/etc/ssl/certs/') }}"
-        decrypt: yes
+        src: "{{ item.src }}"
+        dest: "{{ item.dest | default('/etc/ssl/certs') }}"
         backup: yes
         mode: 0640
-      with_fileglob: "{{ nginx_config_ssl_upload_crt_src }}"
+      loop: "{{ nginx_config_upload_ssl_crt }}"
 
     - name: Upload NGINX SSL keys
       copy:
-        src: "{{ item }}"
-        dest: "{{ nginx_config_ssl_upload_key_dest | default('/etc/ssl/private/') }}"
-        decrypt: yes
+        src: "{{ item.src }}"
+        dest: "{{ item.dest | default('/etc/ssl/private') }}"
         backup: yes
         mode: 0640
-      with_fileglob: "{{ nginx_config_ssl_upload_key_src }}"
+      loop: "{{ nginx_config_upload_ssl_key }}"
       no_log: true
-  when: nginx_config_ssl_upload_enable | bool
+  when: nginx_config_upload_ssl_enable | bool
