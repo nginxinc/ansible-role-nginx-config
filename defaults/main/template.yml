@@ -215,6 +215,7 @@ nginx_config_http_template:
           location: /var/log/nginx/error.log
           level: warn
         root: /usr/share/nginx/html
+        index: index.html index.php
         # https_redirect: $host
         autoindex: false
         auth_basic: null
@@ -310,8 +311,8 @@ nginx_config_http_template:
               #   name: Header-X
               #   value: Value-X
               #   always: false
-            html_file_location: /usr/share/nginx/html
-            html_file_name: index.html
+            root: /usr/share/nginx/html
+            index: index.html
             autoindex: false
             auth_basic: null
             auth_basic_user_file: null
