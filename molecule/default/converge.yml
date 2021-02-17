@@ -321,8 +321,8 @@
                   - location: /
                     proxy_hide_header:
                       - X-Powered-By
-                    html_file_location: /usr/share/nginx/html
-                    html_file_name: frontend_index.html
+                    root: /usr/share/nginx/html
+                    index: frontend_index.html
                     autoindex: false
                 http_demo_conf: false
           - template_file: http/default.conf.j2
@@ -351,15 +351,15 @@
                   once: false
                 locations:
                   - location: /
-                    html_file_location: /usr/share/nginx/html
-                    html_file_name: backend_index.html
+                    root: /usr/share/nginx/html
+                    index: backend_index.html
                     autoindex: false
                     allows:
                       - 192.168.1.0/24
                     denies:
                       - all
                   - location: ~ \.php$
-                    html_file_location: /usr/share/nginx/html
+                    root: /usr/share/nginx/html
                     autoindex: false
                     custom_options:
                       - fastcgi_split_path_info ^(.+\.php)(/.+)$;
