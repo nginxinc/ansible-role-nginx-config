@@ -165,8 +165,8 @@ server {
 {% if server.root is defined %}
     root {{ server.root }};
 {% endif %}
-{% if server.html_file_name is defined %}
-    index {{ server.html_file_name }};
+{% if server.index is defined %}
+    index {{ server.index }};
 {% endif %}
 {% if server.https_redirect is defined %}
     return 301 https://{{ server.https_redirect }}$request_uri;
@@ -235,11 +235,11 @@ server {
         {{ gzip(location.gzip) }}
 {% endfilter %}
 {% endif %}
-{% if location.html_file_location is defined %}
-        root   {{ location.html_file_location }};
+{% if location.root is defined %}
+        root   {{ location.root }};
 {% endif %}
-{% if location.html_file_name is defined %}
-        index  {{ location.html_file_name }};
+{% if location.index is defined %}
+        index  {{ location.index }};
 {% endif %}
 {% if location.autoindex | default(false) %}
         autoindex on;

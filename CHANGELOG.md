@@ -12,7 +12,10 @@ BREAKING CHANGES:
 *   Refactor the config templates to simplify the creation of templates as well as development and maintenance moving forward:
     *   Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists, as well as modify the `nginx_config_html_demo_template` variable from a nested dictionary to a list. To update your templates, replace the aforementioned nested dictionary keys by lists (place a dash in front of the topmost nested value within each aforementioned nested dictionary).
     *   Remove/merge the `web_server` and `reverse_proxy` nested dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates, remove both keys and adjust your spacing accordingly.
-*   Rename `proxy_hide_headers` to `proxy_hide_header` within NGINX's template config to align with NGINX directive names.
+*   Rename some NGINX template config parameters to align with NGINX directive names:
+    *   Rename `proxy_hide_headers` to `proxy_hide_header`.
+    *   Rename `html_file_location` to `root`.
+    *   Rename `html_file_name` to `index`.
 
 DEPRECATION WARNINGS:
 
@@ -26,10 +29,10 @@ Replace Ansible community distribution with Ansible base and add the necessary e
 
 ENHANCEMENTS:
 
+*   Add support for NGINX's `index` directive to the `server` block within the template config parameters.
 *   Update Molecule to `3.2.3`, yamllint to `1.26.0` and Docker Python SDK to `4.4.2`.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
-*   Add support for index to server block
 
 BUG FIXES:
 
