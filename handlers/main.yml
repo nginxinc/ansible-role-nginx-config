@@ -1,6 +1,8 @@
 ---
 - name: (Handler - NGINX Config) Check NGINX
   command: nginx -t
+  args:
+    chdir: /etc/nginx/
   register: config_check
   ignore_errors: yes
   check_mode: no

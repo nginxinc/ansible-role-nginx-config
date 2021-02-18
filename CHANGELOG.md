@@ -36,7 +36,8 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-Add `state` parameter to package module in Molecule verification tests.
+*   Add `state` parameter to package module in Molecule verification tests.
+*   In App Protect environments on SELinux enforced systems, the `nginx -t` handler fails when run from a directory that the nginx process' user does not have access to.
 
 ## 0.3.3 (January 28, 2021)
 
