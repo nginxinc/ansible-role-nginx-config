@@ -19,7 +19,7 @@ BREAKING CHANGES:
 
 DEPRECATION WARNINGS:
 
-The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload_*` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The depecrated parameters will be removed in the next major release (0.5.0), due April 2021.
+The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload_*` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The deprecated parameters will be removed in the next major release (0.5.0), due April 2021.
 
 FEATURES:
 
@@ -36,7 +36,8 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-Add `state` parameter to package module in Molecule verification tests.
+*   Add `state` parameter to package module in Molecule verification tests.
+*   In App Protect environments on SELinux enforced systems, the `nginx -t` handler fails when run from a directory that the nginx process' user does not have access to.
 
 ## 0.3.3 (January 28, 2021)
 
