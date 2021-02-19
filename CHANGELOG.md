@@ -30,7 +30,7 @@ Replace Ansible community distribution with Ansible base and add the necessary e
 ENHANCEMENTS:
 
 *   Add support for NGINX's `index` directive to the `server` block within the template config parameters.
-*   Update Molecule to `3.2.3`, yamllint to `1.26.0` and Docker Python SDK to `4.4.2`.
+*   Update Molecule to `3.2.3`, yamllint to `1.26.0` and Docker Python SDK to `4.4.3`.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
 
