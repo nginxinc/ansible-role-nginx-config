@@ -1,27 +1,8 @@
 {{ ansible_managed | comment }}
 
 {% if item.upstreams is defined %}
-{% for upstream in item.upstreams %}
-upstream {{ upstream.name }} {
-{% if upstream.lb_method is defined and upstream.lb_method | length %}
-    {{ upstream.lb_method }};
-{% endif %}
-{% if upstream.zone_name is defined and upstream.zone_size is defined %}
-    zone {{ upstream.zone_name }} {{ upstream.zone_size }};
-{% endif %}
-{% for server in upstream.servers %}
-    server {{ server.address }}{{(":" + server.port | string) if server.port is defined}} {% if server.backup is defined and server.backup %}backup{% endif %} {% if server.down is defined and server.down %}down{% else %}weight={{ server.weight | default("1") }} {{ server.health_check | default("") }}{% endif %};
-{% endfor %}
-{% if upstream.sticky_cookie is defined and upstream.sticky_cookie %}
-    sticky cookie srv_id expires=1h  path=/;
-{% endif %}
-{% if upstream.custom_options is defined and upstream.custom_options | length %}
-{% for inline_option in upstream.custom_options %}
-    {{ inline_option }}
-{% endfor %}
-{% endif %}
-}
-{% endfor %}
+{% from 'http/upstream.j2' import upstream with context %}
+{{ upstream(item.upstreams) }}
 {% endif %}
 
 {% if item.proxy_cache is defined %}

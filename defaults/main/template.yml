@@ -26,69 +26,69 @@ nginx_config_main_template:
   worker_connections: 1024
   http_enable: true
   http_settings:
-    # app_protect_global:  # Optional -- Configure NGINX App Protect
-    #   physical_memory_util_thresholds:  # Optional
-    #     high: 100  # Required
-    #     low: 100  # Required
-    #   cpu_thresholds:  # Optional
-    #     high: 100  # Required
-    #     low: 100  # Required
-    #   failure_mode_action: pass  # Optional -- 'pass' or 'drop'
-    #   cookie_seed: encryptionseed  # Optional
-    #   compressed_requests_action: drop  # Optional -- 'pass' or 'drop'
-    #   request_buffer_overflow_action: pass  # Optional -- 'pass' or 'drop'
-    #   user_defined_signatures: []  # Optional list
-    # app_protect:  # Optional -- Configure NGINX App Protect
-    #   enable: false  # Optional
-    #   policy_file: path  # Optional
-    #   security_log_enable: false  # Optional
-    #   security_log:  # Optional
-    #     path: path  # Required
-    #     destination: dest  # Required
-    # grpc_global:  # Optional -- Configure GRPC
-    #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-    #     address: $remote_addr  # Required
-    #     transparent: true  # Optional
-    #   buffer_size: 4k  # Optional
-    #   connect_timeout: 60s  # Optional
-    #   hide_header: []  # Optional list
-    #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-    #   intercept_errors: false  # Optional
-    #   next_upstream: []  # Optional list
-    #   next_upstream_timeout: 0  # Optional
-    #   next_upstream_tries: 0  # Optional
-    #   pass_header: []  # Optional list
-    #   read_timeout: 60s  # Optional
-    #   send_timeout: 60s  # Optional
-    #   set_header:  # Optional
-    #     - field: Accept-Encoding  # Required
-    #       value: '""'  # Required
-    #   socket_keepalive: false  # Optional
-    #   ssl_certificate: fileLocation  # Optional
-    #   ssl_certificate_key: fileLocation  # Optional
-    #   ssl_ciphers: DEFAULT  # Optional
-    #   ssl_conf_command: command  # Optional
-    #   ssl_crl: fileLocation  # Optional
-    #   ssl_name: serverName  # Optional
-    #   ssl_password_file: fileLocation  # Optional
-    #   ssl_protocols: []  # Optional list
-    #   ssl_server_name: false  # Optional
-    #   ssl_session_reuse: true  # Optional
-    #   ssl_trusted_certificate: fileLocation  # Optional
-    #   ssl_verify: false  # Optional
-    #   ssl_verify_depth: 1  # Optional
-    # gzip:  # Optional -- Configure GZIP
-    #   enable: true  # Optional
-    #   buffers:  # Optional
-    #     number: 32  # Required
-    #     size: 4k  # Required
-    #   comp_level: 1  # Optional
-    #   disable: []  # Optional list
-    #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-    #   min_length: 20  # Optional
-    #   proxied: []  # Optional list
-    #   types: []  # Optional list
-    #   vary: false  # Optional
+    app_protect_global:  # Optional -- Configure NGINX App Protect
+      physical_memory_util_thresholds:  # Optional
+        high: 100  # Required
+        low: 100  # Required
+      cpu_thresholds:  # Optional
+        high: 100  # Required
+        low: 100  # Required
+      failure_mode_action: pass  # Optional -- 'pass' or 'drop'
+      cookie_seed: encryptionseed  # Optional
+      compressed_requests_action: drop  # Optional -- 'pass' or 'drop'
+      request_buffer_overflow_action: pass  # Optional -- 'pass' or 'drop'
+      user_defined_signatures: []  # Optional list
+    app_protect:  # Optional -- Configure NGINX App Protect
+      enable: false  # Optional
+      policy_file: path  # Optional
+      security_log_enable: false  # Optional
+      security_log:  # Optional
+        path: path  # Required
+        destination: dest  # Required
+    grpc_global:  # Optional -- Configure GRPC
+      bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+        address: $remote_addr  # Required
+        transparent: true  # Optional
+      buffer_size: 4k  # Optional
+      connect_timeout: 60s  # Optional
+      hide_header: []  # Optional list
+      ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+      intercept_errors: false  # Optional
+      next_upstream: []  # Optional list
+      next_upstream_timeout: 0  # Optional
+      next_upstream_tries: 0  # Optional
+      pass_header: []  # Optional list
+      read_timeout: 60s  # Optional
+      send_timeout: 60s  # Optional
+      set_header:  # Optional
+        - field: Accept-Encoding  # Required
+          value: '""'  # Required
+      socket_keepalive: false  # Optional
+      ssl_certificate: fileLocation  # Optional
+      ssl_certificate_key: fileLocation  # Optional
+      ssl_ciphers: DEFAULT  # Optional
+      ssl_conf_command: command  # Optional
+      ssl_crl: fileLocation  # Optional
+      ssl_name: serverName  # Optional
+      ssl_password_file: fileLocation  # Optional
+      ssl_protocols: []  # Optional list
+      ssl_server_name: false  # Optional
+      ssl_session_reuse: true  # Optional
+      ssl_trusted_certificate: fileLocation  # Optional
+      ssl_verify: false  # Optional
+      ssl_verify_depth: 1  # Optional
+    gzip:  # Optional -- Configure GZIP
+      enable: true  # Optional
+      buffers:  # Optional
+        number: 32  # Required
+        size: 4k  # Required
+      comp_level: 1  # Optional
+      disable: []  # Optional list
+      http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+      min_length: 20  # Optional
+      proxied: []  # Optional list
+      types: []  # Optional list
+      vary: false  # Optional
     access_log_format:
       - name: main
         format: |-
@@ -137,57 +137,57 @@ nginx_config_http_template:
             port: 8081
             ssl: true
             opts: []  # Listen opts like http2 which will be added (ssl is automatically added if you specify 'ssl:').
-        # app_protect:  # Optional -- Configure NGINX App Protect
-        #   enable: false  # Optional
-        #   policy_file: path  # Optional
-        #   security_log_enable: false  # Optional
-        #   security_log:  # Optional
-        #     path: path  # Required
-        #     destination: dest  # Required
-        # grpc_global:  # Optional -- Configure GRPC
-        #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-        #     address: $remote_addr  # Required
-        #     transparent: true  # Optional
-        #   buffer_size: 4k  # Optional
-        #   connect_timeout: 60s  # Optional
-        #   hide_header: []  # Optional list
-        #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-        #   intercept_errors: false  # Optional
-        #   next_upstream: []  # Optional list
-        #   next_upstream_timeout: 0  # Optional
-        #   next_upstream_tries: 0  # Optional
-        #   pass_header: []  # Optional list
-        #   read_timeout: 60s  # Optional
-        #   send_timeout: 60s  # Optional
-        #   set_header:  # Optional
-        #     - field: Accept-Encoding  # Required
-        #       value: '""'  # Required
-        #   socket_keepalive: false  # Optional
-        #   ssl_certificate: fileLocation  # Optional
-        #   ssl_certificate_key: fileLocation  # Optional
-        #   ssl_ciphers: DEFAULT  # Optional
-        #   ssl_conf_command: command  # Optional
-        #   ssl_crl: fileLocation  # Optional
-        #   ssl_name: serverName  # Optional
-        #   ssl_password_file: fileLocation  # Optional
-        #   ssl_protocols: []  # Optional list
-        #   ssl_server_name: false  # Optional
-        #   ssl_session_reuse: true  # Optional
-        #   ssl_trusted_certificate: fileLocation  # Optional
-        #   ssl_verify: false  # Optional
-        #   ssl_verify_depth: 1  # Optional
-        # gzip:  # Optional -- Configure GZIP
-        #   enable: true  # Optional
-        #   buffers:  # Optional
-        #     number: 32  # Required
-        #     size: 4k  # Required
-        #   comp_level: 1  # Optional
-        #   disable: []  # Optional list
-        #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-        #   min_length: 20  # Optional
-        #   proxied: []  # Optional list
-        #   types: []  # Optional list
-        #   vary: false  # Optional
+        app_protect:  # Optional -- Configure NGINX App Protect
+          enable: false  # Optional
+          policy_file: path  # Optional
+          security_log_enable: false  # Optional
+          security_log:  # Optional
+            path: path  # Required
+            destination: dest  # Required
+        grpc_global:  # Optional -- Configure GRPC
+          bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+            address: $remote_addr  # Required
+            transparent: true  # Optional
+          buffer_size: 4k  # Optional
+          connect_timeout: 60s  # Optional
+          hide_header: []  # Optional list
+          ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+          intercept_errors: false  # Optional
+          next_upstream: []  # Optional list
+          next_upstream_timeout: 0  # Optional
+          next_upstream_tries: 0  # Optional
+          pass_header: []  # Optional list
+          read_timeout: 60s  # Optional
+          send_timeout: 60s  # Optional
+          set_header:  # Optional
+            - field: Accept-Encoding  # Required
+              value: '""'  # Required
+          socket_keepalive: false  # Optional
+          ssl_certificate: fileLocation  # Optional
+          ssl_certificate_key: fileLocation  # Optional
+          ssl_ciphers: DEFAULT  # Optional
+          ssl_conf_command: command  # Optional
+          ssl_crl: fileLocation  # Optional
+          ssl_name: serverName  # Optional
+          ssl_password_file: fileLocation  # Optional
+          ssl_protocols: []  # Optional list
+          ssl_server_name: false  # Optional
+          ssl_session_reuse: true  # Optional
+          ssl_trusted_certificate: fileLocation  # Optional
+          ssl_verify: false  # Optional
+          ssl_verify_depth: 1  # Optional
+        gzip:  # Optional -- Configure GZIP
+          enable: true  # Optional
+          buffers:  # Optional
+            number: 32  # Required
+            size: 4k  # Required
+          comp_level: 1  # Optional
+          disable: []  # Optional list
+          http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+          min_length: 20  # Optional
+          proxied: []  # Optional list
+          types: []  # Optional list
+          vary: false  # Optional
         ssl:
           cert: /etc/ssl/certs/default.crt
           key: /etc/ssl/private/default.key
@@ -247,59 +247,59 @@ nginx_config_http_template:
         http_demo_conf: false
         locations:
           - location: /
-            # app_protect:  # Optional -- Configure NGINX App Protect
-            #   enable: false  # Optional
-            #   policy_file: path  # Optional
-            #   security_log_enable: false  # Optional
-            #   security_log:  # Optional
-            #     path: path  # Required
-            #     destination: dest  # Required
-            # grpc_global:  # Optional -- Configure GRPC
-            #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-            #     address: $remote_addr  # Required
-            #     transparent: true  # Optional
-            #   buffer_size: 4k  # Optional
-            #   connect_timeout: 60s  # Optional
-            #   hide_header: []  # Optional list
-            #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-            #   intercept_errors: false  # Optional
-            #   next_upstream: []  # Optional list
-            #   next_upstream_timeout: 0  # Optional
-            #   next_upstream_tries: 0  # Optional
-            #   pass_header: []  # Optional list
-            #   read_timeout: 60s  # Optional
-            #   send_timeout: 60s  # Optional
-            #   set_header:  # Optional
-            #     - field: Accept-Encoding  # Required
-            #       value: '""'  # Required
-            #   socket_keepalive: false  # Optional
-            #   ssl_certificate: fileLocation  # Optional
-            #   ssl_certificate_key: fileLocation  # Optional
-            #   ssl_ciphers: DEFAULT  # Optional
-            #   ssl_conf_command: command  # Optional
-            #   ssl_crl: fileLocation  # Optional
-            #   ssl_name: serverName  # Optional
-            #   ssl_password_file: fileLocation  # Optional
-            #   ssl_protocols: []  # Optional list
-            #   ssl_server_name: false  # Optional
-            #   ssl_session_reuse: true  # Optional
-            #   ssl_trusted_certificate: fileLocation  # Optional
-            #   ssl_verify: false  # Optional
-            #   ssl_verify_depth: 1  # Optional
-            # grpc:  # Optional -- Configure GRPC
-            #   pass: localhost:9000  # Optional
-            # gzip:  # Optional -- Configure GZIP
-            #   enable: true  # Optional
-            #   buffers:  # Optional
-            #     number: 32  # Required
-            #     size: 4k  # Required
-            #   comp_level: 1  # Optional
-            #   disable: []  # Optional list
-            #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-            #   min_length: 20  # Optional
-            #   proxied: []  # Optional list
-            #   types: []  # Optional list
-            #   vary: false  # Optional
+            app_protect:  # Optional -- Configure NGINX App Protect
+              enable: false  # Optional
+              policy_file: path  # Optional
+              security_log_enable: false  # Optional
+              security_log:  # Optional
+                path: path  # Required
+                destination: dest  # Required
+            grpc_global:  # Optional -- Configure GRPC
+              bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+                address: $remote_addr  # Required
+                transparent: true  # Optional
+              buffer_size: 4k  # Optional
+              connect_timeout: 60s  # Optional
+              hide_header: []  # Optional list
+              ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+              intercept_errors: false  # Optional
+              next_upstream: []  # Optional list
+              next_upstream_timeout: 0  # Optional
+              next_upstream_tries: 0  # Optional
+              pass_header: []  # Optional list
+              read_timeout: 60s  # Optional
+              send_timeout: 60s  # Optional
+              set_header:  # Optional
+                - field: Accept-Encoding  # Required
+                  value: '""'  # Required
+              socket_keepalive: false  # Optional
+              ssl_certificate: fileLocation  # Optional
+              ssl_certificate_key: fileLocation  # Optional
+              ssl_ciphers: DEFAULT  # Optional
+              ssl_conf_command: command  # Optional
+              ssl_crl: fileLocation  # Optional
+              ssl_name: serverName  # Optional
+              ssl_password_file: fileLocation  # Optional
+              ssl_protocols: []  # Optional list
+              ssl_server_name: false  # Optional
+              ssl_session_reuse: true  # Optional
+              ssl_trusted_certificate: fileLocation  # Optional
+              ssl_verify: false  # Optional
+              ssl_verify_depth: 1  # Optional
+            grpc:  # Optional -- Configure GRPC
+              pass: localhost:9000  # Optional
+            gzip:  # Optional -- Configure GZIP
+              enable: true  # Optional
+              buffers:  # Optional
+                number: 32  # Required
+                size: 4k  # Required
+              comp_level: 1  # Optional
+              disable: []  # Optional list
+              http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+              min_length: 20  # Optional
+              proxied: []  # Optional list
+              types: []  # Optional list
+              vary: false  # Optional
             include_files: []
             proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
             add_headers:
@@ -417,18 +417,68 @@ nginx_config_http_template:
         - timeout
       proxy_ignore_headers:
         - Expires
-    upstreams:
-      - name: backend
-        lb_method: least_conn
-        zone_name: backend_mem_zone
-        zone_size: 64k
-        sticky_cookie: false
-        servers:
-          - address: localhost
-            port: 8081
-            weight: 1
-            health_check: max_fails=1 fail_timeout=10s
-        # custom_options: []
+    upstreams:  # Optional -- Configure NGINX Upstreams
+      - name: backend  # Required
+        servers:  # Optional -- Cannot be used if 'state' directive is defined
+          - address: localhost  # Required -- You can use an IP address, a Unix socket, or a domain -- include port details inline if necessary
+            weight: 1  # Optional
+            max_conns: 0  # Optional
+            max_fails: 1  # Optional
+            fail_timeout: 10s  # Optional
+            backup: false  # Optional
+            down: false  # Optional
+            resolve: false  # Optional -- Requires 'resolver' directive to be defined
+            route: a  # Optional -- Requires 'sticky route' directive to be defined
+            service: http  # Optional --  Requires 'resolve' parameter to be set
+            slow_start: 0s  # Optional
+            drain: false  # Optional
+        zone:  # Optional
+          name: backend_mem_zone  # Required
+          size: 64k  # Optional
+        state: /var/lib/nginx/state/servers.conf  # Optional -- Cannot be used if 'servers' directive is defined
+        hash:  # Optional -- You can only set one load balancing method -- 'round_robin' is used if no method is specified
+          key: key  # Required
+          consistent: false  # Optional
+        ip_hash: false  # Optional
+        least_conn: false  # Optional
+        least_time:  # Optional
+          response: last_byte  # Required -- One of 'header' or 'last_byte'
+          inflight: false  # Optional
+        random:  # Optional
+          two: true  # Optional
+          method: least_time=last_byte  # Optional -- Requires two to be set to true
+        queue:  # Optional
+          number: 10  # Required
+          timeout: 60s  # Optional
+        keepalive: 32  # Optional
+        keepalive_requests: 100  # Optional
+        keepalive_timeout: 60s  # Optional
+        ntlm: false  # Optional
+        resolver:  # Optional
+          address: []  # Required
+          valid: 30s  # Optional
+          ipv6: false  # Optional
+          status_zone: backend_mem_zone  # Optional
+        resolver_timeout: 30s  # Optional
+        sticky_cookie:  # Optional -- You can only set one type of sticky session affinity
+          name: cookie  # Required
+          expires: 1d  # Optional
+          domain: example.com  # Optional
+          httponly: false  # Optional
+          samesite: none  # Optional -- One of 'strict', 'lax' or 'none'
+          secure: true  # Optional
+          path: /  # Optional
+        sticky_route: []  # Optional
+        sticky_learn:  # Optional
+          create: []  # Required
+          lookup: []  # Required
+          zone:  # Required
+            name: client_sessions
+            size: 1m
+          timeout: 10m  # Optional
+          header: false  # Optional
+          sync: false  # Optional
+        custom_directives: []
       # custom_options: []
 
 # Enable NGINX 'stub_status' data.
