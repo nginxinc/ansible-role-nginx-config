@@ -12,6 +12,12 @@ BREAKING CHANGES:
 *   Refactor the config templates to simplify the creation of templates as well as development and maintenance moving forward:
     *   Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists, as well as modify the `nginx_config_html_demo_template` variable from a nested dictionary to a list. To update your templates, replace the aforementioned nested dictionary keys by lists (place a dash in front of the topmost nested value within each aforementioned nested dictionary).
     *   Remove/merge the `web_server` and `reverse_proxy` nested dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates, remove both keys and adjust your spacing accordingly.
+*   Refactor the `upstream` HTTP config template into its own separate file. The following variables have changed (check `defaults/main/template.yml` for example values):
+    *   `port` is no longer supported. Instead, include the port as part of your `address`.
+    *   `lb_method` is no longer supported. Instead, you will have to specifically set the method you want to use.
+    *   `zone_name` and `zone_size` have been modified into a dictionary.
+    *   `sticky_cookie` is no longer supported as is. You will now have to configure the `sticky_cookie` values.
+    *   The `health_check` parameter within the `server` dictionary is no longer supported. Instead, manually set `max_fails` and `fail_timeout`.
 *   Rename some NGINX template config parameters to align with NGINX directive names:
     *   Rename `proxy_hide_headers` to `proxy_hide_header`.
     *   Rename `html_file_location` to `root`.

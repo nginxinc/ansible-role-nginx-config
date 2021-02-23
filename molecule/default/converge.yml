@@ -264,33 +264,35 @@
                 - Expires
             upstreams:
               - name: frontend_servers
-                lb_method: least_conn
-                zone_name: frontend_mem_zone
-                zone_size: 64k
-                sticky_cookie: false
+                least_conn: true
+                zone:
+                  name: frontend_mem_zone
+                  size: 64k
+                keepalive: 32
+                keepalive_requests: 100
+                keepalive_timeout: 60s
                 servers:
-                  - address: 0.0.0.0
-                    port: 8081
+                  - address: 0.0.0.0:8081
                     weight: 1
-                    health_check: max_fails=3 fail_timeout=5s
+                    max_fails: 3
+                    fail_timeout: 5s
               - name: backend_servers
-                lb_method: least_conn
-                zone_name: backend_mem_zone
-                zone_size: 64k
-                sticky_cookie: false
+                least_conn: true
+                zone:
+                  name: backend_mem_zone
+                  size: 64k
                 servers:
-                  - address: 0.0.0.0
-                    port: 8082
+                  - address: 0.0.0.0:8082
                     weight: 1
-                    health_check: max_fails=3 fail_timeout=5s
+                    max_fails: 3
+                    fail_timeout: 5s
                   - address: unix:/var/run/control.unit.sock
                     weight: 1
-                    health_check: max_fails=3 fail_timeout=5s
-                  - address: 0.0.0.0
-                    port: 8083
+                    max_fails: 3
+                    fail_timeout: 5s
+                  - address: 0.0.0.0:8083
                     down: true
-                  - address: 0.0.0.0
-                    port: 8084
+                  - address: 0.0.0.0:8084
                     backup: true
           - template_file: http/default.conf.j2
             conf_file_name: frontend_default.conf
