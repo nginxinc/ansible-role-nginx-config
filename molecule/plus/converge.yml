@@ -238,7 +238,6 @@
                 zone:
                   name: frontend_mem_zone
                   size: 64k
-                state: /var/lib/nginx/state/servers.conf
                 least_time:
                   response: last_byte
                   inflight: false
@@ -252,7 +251,8 @@
                 sticky_route:
                   - $cookie_jsessionid
                   - $request_uri
-                servers: []
+                servers:
+                  - address: 0.0.0.0:8081
               - name: backend_servers
                 zone:
                   name: backend_mem_zone
