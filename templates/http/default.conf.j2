@@ -4,46 +4,15 @@
 {% from 'http/upstream.j2' import upstream with context %}
 {{ upstream(item.upstreams) }}
 {% endif %}
+{% if item.proxy_cache_path is defined %}
+{% from 'http/proxy.j2' import proxy_cache_path with context %}
+{{ proxy_cache_path(item.proxy_cache_path) }}
+{% endif %}
+{% if item.proxy is defined %}
+{% from 'http/proxy.j2' import proxy with context %}
+{{ proxy(item.proxy) }}
+{% endif %}
 
-{% if item.proxy_cache is defined %}
-{% if item.proxy_cache.proxy_cache_path is defined %}
-{% for proxy_cache_path in item.proxy_cache.proxy_cache_path %}
-proxy_cache_path {{ proxy_cache_path.path }} keys_zone={{ proxy_cache_path.keys_zone.name }}:{{ proxy_cache_path.keys_zone.size }}
-                levels={{ proxy_cache_path.levels }} max_size={{ proxy_cache_path.max_size }}
-                inactive={{ proxy_cache_path.inactive }} use_temp_path={{ proxy_cache_path.use_temp_path | ternary("on", "off") }};
-{% endfor %}
-{% if item.proxy_cache.proxy_cache_background_update is defined and item.proxy_cache.proxy_cache_background_update %}
-proxy_cache_background_update {{ item.proxy_cache.proxy_cache_background_update | ternary("on", "off") }};
-{% endif %}
-{% if item.proxy_cache.proxy_cache_lock is defined and item.proxy_cache.proxy_cache_lock %}
-proxy_cache_lock {{ item.proxy_cache.proxy_cache_lock | ternary("on", "off") }};
-{% endif %}
-{% if item.proxy_cache.proxy_cache_min_uses is defined %}
-proxy_cache_min_uses {{ item.proxy_cache.proxy_cache_min_uses }};
-{% endif %}
-{% if item.proxy_cache.proxy_cache_revalidate is defined and item.proxy_cache.proxy_cache_revalidate %}
-proxy_cache_revalidate {{ item.proxy_cache.proxy_cache_revalidate | ternary("on", "off") }};
-{% endif %}
-{% if item.proxy_cache.proxy_cache_use_stale is defined %}
-proxy_cache_use_stale {{ item.proxy_cache.proxy_cache_use_stale | join(" ") }};
-{% endif %}
-{% if item.proxy_cache.proxy_ignore_headers is defined %}
-proxy_ignore_headers {{ item.proxy_cache.proxy_ignore_headers | join(" ") }};
-{% endif %}
-{% if item.proxy_cache.proxy_temp_path is defined %}
-proxy_temp_path {{ item.proxy_cache.proxy_temp_path.path }} {{ item.proxy_cache.proxy_temp_path.level_1 | default("") }} {{ item.proxy_cache.proxy_temp_path.level_2 | default("") }} {{ item.proxy_cache.proxy_temp_path.level_3 | default("") }};
-{% endif %}
-{% if item.proxy_cache.proxy_cache_valid is defined %}
-{% for proxy_cache_valid in item.proxy_cache.proxy_cache_valid %}
-{% if proxy_cache_valid.code is defined %}
-proxy_cache_valid {{ proxy_cache_valid.code }} {{ proxy_cache_valid.time | default("10m") }};
-{% elif proxy_cache_valid.time is defined and proxy_cache_valid.code is not defined %}
-proxy_cache_valid {{ proxy_cache_valid.time }};
-{% endif %}
-{% endfor %}
-{% endif %}
-{% endif %}
-{% endif %}
 {% if item.auth_request_http is defined %}
 auth_request {{ item.auth_request_http }};
 {% endif %}
@@ -80,6 +49,12 @@ server {
 {% from 'http/gzip.j2' import gzip with context %}
 {% filter indent(4) %}
     {{ gzip(server.gzip) }}
+{% endfilter %}
+{% endif %}
+{% if server.proxy is defined %}
+{% from 'http/proxy.j2' import proxy with context %}
+{% filter indent(4) %}
+    {{ proxy(server.proxy) }}
 {% endfilter %}
 {% endif %}
 {% if server.ssl is defined %}
@@ -125,11 +100,6 @@ server {
 {% if server.include_files is defined and server.include_files | length %}
 {% for file in server.include_files %}
     include "{{ file }}";
-{% endfor %}
-{% endif %}
-{% if server.proxy_hide_header is defined %}
-{% for header in server.proxy_hide_header %}
-    proxy_hide_header {{ header }};
 {% endfor %}
 {% endif %}
 {% if server.add_headers is defined %}
@@ -216,6 +186,18 @@ server {
         {{ gzip(location.gzip) }}
 {% endfilter %}
 {% endif %}
+{% if location.proxy is defined %}
+{% from 'http/proxy.j2' import proxy with context %}
+{% filter indent(8) %}
+        {{ proxy(location.proxy) }}
+{% endfilter %}
+{% endif %}
+{% if location.proxy_pass is defined %}
+{% from 'http/proxy.j2' import proxy_pass with context %}
+{% filter indent(8) %}
+        {{ proxy_pass(location.proxy_pass) }}
+{% endfilter %}
+{% endif %}
 {% if location.root is defined %}
         root   {{ location.root }};
 {% endif %}
@@ -228,11 +210,6 @@ server {
 {% if location.include_files is defined and location.include_files | length %}
 {% for file in location.include_files %}
         include "{{ file }}";
-{% endfor %}
-{% endif %}
-{% if location.proxy_hide_header is defined %}
-{% for header in location.proxy_hide_header %}
-        proxy_hide_header {{ header }};
 {% endfor %}
 {% endif %}
 {% if location.add_headers is defined %}
@@ -261,31 +238,10 @@ server {
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if location.proxy_connect_timeout is defined %}
-        proxy_connect_timeout {{ location.proxy_connect_timeout }};
-{% endif %}
-{% if location.proxy_pass is defined %}
-        proxy_pass {{ location.proxy_pass }};
-{% endif %}
 {% if location.rewrites is defined %}
 {% for rewrite in location.rewrites %}
         rewrite {{ rewrite }};
 {% endfor %}
-{% endif %}
-{% if location.proxy_read_timeout is defined %}
-        proxy_read_timeout {{ location.proxy_read_timeout }};
-{% endif %}
-{% if location.proxy_send_timeout is defined %}
-        proxy_send_timeout {{ location.proxy_send_timeout }};
-{% endif %}
-{% if location.proxy_pass_request_body is defined %}
-        proxy_pass_request_body {{ location.proxy_pass_request_body }};
-{% endif %}
-{% if location.proxy_store is defined %}
-        proxy_store {{ location.proxy_store | ternary("on", "off") }};
-{% endif %}
-{% if location.proxy_store_access is defined %}
-        proxy_store_access {{ location.proxy_store_access }};
 {% endif %}
 {% if location.allows is defined %}
 {% for allow in location.allows %}
@@ -297,98 +253,11 @@ server {
         deny {{ deny }};
 {% endfor %}
 {% endif %}
-{% if location.proxy_set_header is defined %}
-{% for header in location.proxy_set_header %}
-        proxy_set_header {{ location.proxy_set_header[header].name }} {{ location.proxy_set_header[header].value }};
-{% endfor %}
-{% endif %}
-{% if location.proxy_http_version is defined %}
-        proxy_http_version {{ location.proxy_http_version }};
-{% endif %}
-{% if location.websocket is defined %}
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "Upgrade";
-{% endif %}
 {% if location.try_files is defined %}
         try_files {{ location.try_files }};
 {% endif %}
-
-{% if location.proxy_ssl is defined %}
-{% if location.proxy_ssl.cert is defined %}
-        proxy_ssl_certificate {{ location.proxy_ssl.cert }};
-{% endif %}
-{% if location.proxy_ssl.key is defined %}
-        proxy_ssl_certificate_key {{ location.proxy_ssl.key }};
-{% endif %}
-{% if location.proxy_ssl.trusted_cert is defined %}
-        proxy_ssl_trusted_certificate {{ location.proxy_ssl.trusted_cert }};
-{% endif %}
-{% if location.proxy_ssl.server_name is defined %}
-        proxy_ssl_server_name {{ location.proxy_ssl.server_name | ternary("on", "off") }};
-{% endif %}
-{% if location.proxy_ssl.name is defined %}
-        proxy_ssl_name {{ location.proxy_ssl.name }};
-{% endif %}
-{% if location.proxy_ssl.protocols is defined %}
-        proxy_ssl_protocols {{ location.proxy_ssl.protocols }};
-{% endif %}
-{% if location.proxy_ssl.ciphers is defined %}
-        proxy_ssl_ciphers {{ location.proxy_ssl.ciphers }};
-{% endif %}
-{% if location.proxy_ssl.verify is defined %}
-        proxy_ssl_verify {{ location.proxy_ssl.verify | ternary("on", "off") }};
-{% endif %}
-{% if location.proxy_ssl.verify_depth is defined %}
-        proxy_ssl_verify_depth {{ location.proxy_ssl.verify_depth }};
-{% endif %}
-{% if location.proxy_ssl.session_reuse is defined %}
-        proxy_ssl_session_reuse {{ location.proxy_ssl.session_reuse | ternary("on", "off") }};
-{% endif %}
-{% endif %}
-{% if location.proxy_redirect is defined %}
-        proxy_redirect {{ location.proxy_redirect | ternary(location.proxy_redirect, "off") }};
-{% endif %}
-{% if location.proxy_cache is defined %}
-        proxy_cache {{ location.proxy_cache }};
-{% endif %}
-{% if location.proxy_cache_valid is defined %}
-{% for proxy_cache_valid in location.proxy_cache_valid %}
-{% if proxy_cache_valid.code is defined %}
-        proxy_cache_valid {{ proxy_cache_valid.code }} {{ proxy_cache_valid.time | default("10m") }};
-{% elif proxy_cache_valid.time is defined and proxy_cache_valid.code is not defined %}
-        proxy_cache_valid {{ proxy_cache_valid.time }};
-{% endif %}
-{% endfor %}
-{% endif %}
-{% if location.proxy_cache_background_update is defined %}
-        proxy_cache_background_update {{ location.proxy_cache_background_update | ternary("on", "off") }};
-{% endif %}
-{% if location.proxy_cache_lock is defined %}
-        proxy_cache_lock {{ location.proxy_cache_lock | ternary("on", "off") }};
-{% endif %}
-{% if location.proxy_cache_min_uses is defined %}
-        proxy_cache_min_uses {{ location.proxy_cache_min_uses }};
-{% endif %}
-{% if location.proxy_cache_revalidate is defined %}
-        proxy_cache_revalidate {{ location.proxy_cache_revalidate | ternary("on", "off") }};
-{% endif %}
-{% if location.proxy_cache_use_stale is defined %}
-        proxy_cache_use_stale {{ location.proxy_cache_use_stale | join(" ") }};
-{% endif %}
-{% if location.proxy_temp_path is defined %}
-        proxy_temp_path {{ location.proxy_temp_path.path }} {{ location.proxy_temp_path.level_1 | default("") }} {{ location.proxy_temp_path.level_2 | default("") }} {{ location.proxy_temp_path.level_3 | default("") }};
-{% endif %}
-{% if location.proxy_ignore_headers is defined %}
-        proxy_ignore_headers {{ location.proxy_ignore_headers | join(" ") }};
-{% endif %}
 {% if location.client_max_body_size is defined %}
         client_max_body_size {{ location.client_max_body_size }};
-{% endif %}
-{% if location.proxy_cookie_path is defined %}
-        proxy_cookie_path {{ location.proxy_cookie_path.path }} {{ location.proxy_cookie_path.replacement }};
-{% endif %}
-{% if location.proxy_buffering is defined %}
-        proxy_buffering {{ location.proxy_buffering | ternary("on", "off") }};
 {% endif %}
 {% if location.sub_filter.sub_filters is defined and location.sub_filter.sub_filters | length %}
 {% for sub_filter in location.sub_filter.sub_filters %}

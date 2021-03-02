@@ -18,7 +18,7 @@ nginx_config_main_template:
   #   - modules/ngx_http_js_module.so
   user: nginx
   worker_processes: auto
-  # worker_rlimit_nofile: 1024
+  worker_rlimit_nofile: 1024
   pid: /var/run/nginx.pid
   error_log:
     location: /var/log/nginx/error.log
@@ -39,21 +39,21 @@ nginx_config_main_template:
       request_buffer_overflow_action: pass  # Optional -- 'pass' or 'drop'
       user_defined_signatures: []  # Optional list
     app_protect:  # Optional -- Configure NGINX App Protect
-      enable: false  # Optional
+      enable: false  # Optional boolean
       policy_file: path  # Optional
-      security_log_enable: false  # Optional
+      security_log_enable: false  # Optional boolean
       security_log:  # Optional
         path: path  # Required
         destination: dest  # Required
     grpc_global:  # Optional -- Configure GRPC
       bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
         address: $remote_addr  # Required
-        transparent: true  # Optional
+        transparent: true  # Optional boolean
       buffer_size: 4k  # Optional
       connect_timeout: 60s  # Optional
       hide_header: []  # Optional list
       ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-      intercept_errors: false  # Optional
+      intercept_errors: false  # Optional boolean
       next_upstream: []  # Optional list
       next_upstream_timeout: 0  # Optional
       next_upstream_tries: 0  # Optional
@@ -63,22 +63,22 @@ nginx_config_main_template:
       set_header:  # Optional
         - field: Accept-Encoding  # Required
           value: '""'  # Required
-      socket_keepalive: false  # Optional
-      ssl_certificate: fileLocation  # Optional
-      ssl_certificate_key: fileLocation  # Optional
+      socket_keepalive: false  # Optional boolean
+      ssl_certificate: /path/to/file  # Optional
+      ssl_certificate_key: /path/to/file  # Optional
       ssl_ciphers: DEFAULT  # Optional
-      ssl_conf_command: command  # Optional
-      ssl_crl: fileLocation  # Optional
+      ssl_conf_command: 'command'  # Optional
+      ssl_crl: /path/to/file  # Optional
       ssl_name: serverName  # Optional
-      ssl_password_file: fileLocation  # Optional
+      ssl_password_file: /path/to/file  # Optional
       ssl_protocols: []  # Optional list
-      ssl_server_name: false  # Optional
-      ssl_session_reuse: true  # Optional
-      ssl_trusted_certificate: fileLocation  # Optional
-      ssl_verify: false  # Optional
+      ssl_server_name: false  # Optional boolean
+      ssl_session_reuse: true  # Optional boolean
+      ssl_trusted_certificate: /path/to/file  # Optional
+      ssl_verify: false  # Optional boolean
       ssl_verify_depth: 1  # Optional
     gzip:  # Optional -- Configure GZIP
-      enable: true  # Optional
+      enable: true  # Optional boolean
       buffers:  # Optional
         number: 32  # Required
         size: 4k  # Required
@@ -88,7 +88,146 @@ nginx_config_main_template:
       min_length: 20  # Optional
       proxied: []  # Optional list
       types: []  # Optional list
-      vary: false  # Optional
+      vary: false  # Optional boolean
+    proxy_cache_path:  # Optional -- Configure Proxy Cache Path
+      - path: /var/cache/nginx/proxy  # Required
+        levels: "1:1"  # Optional
+        use_temp_path: false  # Optional boolean
+        inactive: 10m  # Optional
+        keys_zone:  # Required
+          name: proxy_cache  # Required
+          size: 10m  # Required
+        max_size: 2g  # Optional
+        min_free: 1g  # Optional
+        manager_files: 100  # Optional
+        manager_sleep: 500ms  # Optional
+        manager_threshold: 200ms  # Optional
+        loader_files: 100  # Optional
+        loader_sleep: 50ms  # Optional
+        loader_threshold: 200ms  # Optional
+        purger: false  # Optional boolean -- NGINX Plus
+        purger_files: 10  # Optional -- NGINX Plus
+        purger_sleep: 50ms  # Optional -- NGINX Plus
+        purger_threshold: 50ms  # Optional -- NGINX Plus
+    proxy:  # Optional -- Configure Proxy
+      bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_bind
+        address: 0.0.0.0  # Required
+        transparent: false  # Optional boolean
+      buffer_size: 4k  # Optional
+      buffering: true  # Optional boolean
+      buffers:  # Optional
+        number: 8  # Required
+        size: 4k  # Required
+      busy_buffers_size: 8k  # Optional
+      cache: false  # Optional -- Set to 'false' or specify cache zone
+      cache_background_update: false  # Optional boolean
+      cache_bypass: $cookie_seed  # Optional nested list, list, or single value
+        # - - $cookie_nocache
+        #   - $arg_nocache$arg_comment
+        # - $cookie_path
+      cache_convert_head: true  # Optional boolean
+      cache_key: $scheme$proxy_host$request_uri  # Optional
+      cache_lock: false  # Optional boolean
+      cache_lock_age: 5s  # Optional
+      cache_lock_timeout: 5s  # Optional
+      cache_max_range_offset: 1  # Optional
+      cache_methods: []  # Optional list
+        # - GET
+        # - HEAD
+      cache_min_uses: 1  # Optional
+      cache_purge: sample  # Optional list or string
+        # - cache_key
+        # - cache_purge
+      cache_revalidate: false  # Optional boolean
+      cache_use_stale: false  # Optional list
+        # - error
+        # - timeout
+      cache_valid:  # Optional list of codes
+        - code: 200  # Optional list or string
+          # - 201
+          # - 202
+          time: 10m  # Required
+      connect_timeout: 60s  # Optional
+      cookie_domain: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain
+        # - domain: localhost  # Required
+        #   replacement: example.org  # Required
+      cookie_flags: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_flags
+        # cookie: one  # Required
+        # flag: []  # Optional list
+        #   - httponly
+      cookie_path: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_path
+        # - path: $uri  # Required
+        #   replacement: $someuri  # Required
+      force_ranges: false  # Optional boolean
+      headers_hash_bucket_size: 64  # Optional
+      headers_hash_max_size: 512  # Optional
+      hide_header: Date  # Optional list or string
+        # - Date
+        # - X-Accel-Redirect
+      http_version: 1.1  # Optional
+      ignore_client_abort: false  # Optional boolean
+      ignore_headers: X-Accel-Redirect  # Optional list or string
+        # - Date
+        # - X-Accel-Redirect
+      intercept_errors: false  # Optional boolean
+      limit_rate: 0  # Optional
+      max_temp_file_size: 1024m  # Optional
+      method: GET  # Optional
+      next_upstream: false  # Optional -- Set to 'false' to disable proxy_next_upstream or include a variables list or string
+        # - error
+        # - timeout
+      next_upstream_timeout: 0  # Optional
+      next_upstream_tries: 0  # Optional
+      no_cache: $cookie_nocache  # Optional list or string
+        # - $cookie_nocache
+        # - $arg_nocache$arg_comment
+      pass_header: Date  # Optional list or string
+        # - Date
+        # - X-Accel-Redirect
+      pass_request_body: false  # Optional boolean
+      pass_request_headers: true  # Optional boolean
+      read_timeout: 60s  # Optional
+      redirect: false  # Optional -- Set to 'false' to disable proxy_redirect
+        # - original: http://upstream:port/two/
+        #   replacement: /one/
+        # - default
+      request_buffering: false  # Optional boolean
+      send_lowat: 0  # Optional
+      send_timeout: 60s  # Optional
+      set_body: body  # Optional
+      set_header: []  # Optional list
+        # - field: Host
+        #   value: $proxy_host
+        # - field: Connection
+        #   value: close
+      socket_keepalive: false  # Optional boolean
+      ssl_certificate: /path/to/file  # Optional
+      ssl_certificate_key: /path/to/file  # Optional
+      ssl_ciphers: DEFAULT  # Optional list or string
+        # - DEFAULT
+      ssl_conf_command: 'command'  # Optional list or string
+        # - 'command'
+      ssl_crl: /path/to/file  # Optional
+      ssl_name: $proxy_host  # Optional
+      ssl_password_file: /path/to/file  # Optional
+      ssl_protocols: TLSv1  # Optional list or string
+        # - TLSv1
+        # - TLSv1.1
+        # - TLSv1.2
+      ssl_server_name: false  # Optional boolean
+      ssl_session_reuse: true  # Optional boolean
+      ssl_trusted_certificate: /path/to/file  # Optional
+      ssl_verify: false  # Optional boolean
+      ssl_verify_depth: 1  # Optional
+      store: false  # Optional boolean
+      store_access:  # Optional
+        user: rw  # Optional
+        group: rw  # Optional
+        all: r  # Optional
+      temp_file_write_size: 8k  # Optional
+      temp_path:  # Optional
+        path: /var/cache/nginx/proxy/temp  # Required
+        level: 2  # Optional -- One of '1', '2' or '3'
     access_log_format:
       - name: main
         format: |-
@@ -105,7 +244,7 @@ nginx_config_main_template:
     cache: false
     rate_limit: false
     keyval: false
-    # server_tokens: "off"
+    server_tokens: "off"
   http_global_autoindex: false
   sub_filter:
     # sub_filters: []
@@ -163,17 +302,17 @@ nginx_config_http_template:
             - field: Accept-Encoding  # Required
               value: '""'  # Required
           socket_keepalive: false  # Optional
-          ssl_certificate: fileLocation  # Optional
-          ssl_certificate_key: fileLocation  # Optional
+          ssl_certificate: /path/to/file  # Optional
+          ssl_certificate_key: /path/to/file  # Optional
           ssl_ciphers: DEFAULT  # Optional
-          ssl_conf_command: command  # Optional
-          ssl_crl: fileLocation  # Optional
-          ssl_name: serverName  # Optional
-          ssl_password_file: fileLocation  # Optional
+          ssl_conf_command: 'command'  # Optional
+          ssl_crl: /path/to/file  # Optional
+          ssl_name: $host  # Optional
+          ssl_password_file: /path/to/file  # Optional
           ssl_protocols: []  # Optional list
           ssl_server_name: false  # Optional
           ssl_session_reuse: true  # Optional
-          ssl_trusted_certificate: fileLocation  # Optional
+          ssl_trusted_certificate: /path/to/file  # Optional
           ssl_verify: false  # Optional
           ssl_verify_depth: 1  # Optional
         gzip:  # Optional -- Configure GZIP
@@ -188,6 +327,125 @@ nginx_config_http_template:
           proxied: []  # Optional list
           types: []  # Optional list
           vary: false  # Optional
+        proxy:  # Optional -- Configure Proxy
+          bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_bind
+            address: 0.0.0.0  # Required
+            transparent: false  # Optional boolean
+          buffer_size: 4k  # Optional
+          buffering: true  # Optional boolean
+          buffers:  # Optional
+            number: 8  # Required
+            size: 4k  # Required
+          busy_buffers_size: 8k  # Optional
+          cache: false  # Optional -- Set to 'false' or specify cache zone
+          cache_background_update: false  # Optional boolean
+          cache_bypass: $cookie_seed  # Optional nested list, list, or single value
+            # - - $cookie_nocache
+            #   - $arg_nocache$arg_comment
+            # - $cookie_path
+          cache_convert_head: true  # Optional boolean
+          cache_key: $scheme$proxy_host$request_uri  # Optional
+          cache_lock: false  # Optional boolean
+          cache_lock_age: 5s  # Optional
+          cache_lock_timeout: 5s  # Optional
+          cache_max_range_offset: 1  # Optional
+          cache_methods: []  # Optional list
+            # - GET
+            # - HEAD
+          cache_min_uses: 1  # Optional
+          cache_purge: sample  # Optional list or string
+            # - cache_key
+            # - cache_purge
+          cache_revalidate: false  # Optional boolean
+          cache_use_stale: false  # Optional list
+            # - error
+            # - timeout
+          cache_valid:  # Optional list of codes
+            - code: 200  # Optional list or string
+              # - 201
+              # - 202
+              time: 10m  # Required
+          connect_timeout: 60s  # Optional
+          cookie_domain: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain
+            # - domain: localhost  # Required
+            #   replacement: example.org  # Required
+          cookie_flags: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_flags
+            # cookie: one  # Required
+            # flag: []  # Optional list
+            #   - httponly
+          cookie_path: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_path
+            # - path: $uri  # Required
+            #   replacement: $someuri  # Required
+          force_ranges: false  # Optional boolean
+          headers_hash_bucket_size: 64  # Optional
+          headers_hash_max_size: 512  # Optional
+          hide_header: Date  # Optional list or string
+            # - Date
+            # - X-Accel-Redirect
+          http_version: 1.1  # Optional
+          ignore_client_abort: false  # Optional boolean
+          ignore_headers: X-Accel-Redirect  # Optional list or string
+            # - Date
+            # - X-Accel-Redirect
+          intercept_errors: false  # Optional boolean
+          limit_rate: 0  # Optional
+          max_temp_file_size: 1024m  # Optional
+          method: GET  # Optional
+          next_upstream: false  # Optional -- Set to 'false' to disable proxy_next_upstream or include a variables list or string
+            # - error
+            # - timeout
+          next_upstream_timeout: 0  # Optional
+          next_upstream_tries: 0  # Optional
+          no_cache: $cookie_nocache  # Optional list or string
+            # - $cookie_nocache
+            # - $arg_nocache$arg_comment
+          pass_header: Date  # Optional list or string
+            # - Date
+            # - X-Accel-Redirect
+          pass_request_body: false  # Optional boolean
+          pass_request_headers: true  # Optional boolean
+          read_timeout: 60s  # Optional
+          redirect: false  # Optional -- Set to 'false' to disable proxy_redirect
+            # - original: http://upstream:port/two/
+            #   replacement: /one/
+            # - default
+          request_buffering: false  # Optional boolean
+          send_lowat: 0  # Optional
+          send_timeout: 60s  # Optional
+          set_body: body  # Optional
+          set_header: []  # Optional list
+            # - field: Host
+            #   value: $proxy_host
+            # - field: Connection
+            #   value: close
+          socket_keepalive: false  # Optional boolean
+          ssl_certificate: /path/to/file  # Optional
+          ssl_certificate_key: /path/to/file  # Optional
+          ssl_ciphers: DEFAULT  # Optional list or string
+            # - DEFAULT
+          ssl_conf_command: 'command'  # Optional list or string
+            # - 'command'
+          ssl_crl: /path/to/file  # Optional
+          ssl_name: $proxy_host  # Optional
+          ssl_password_file: /path/to/file  # Optional
+          ssl_protocols: TLSv1  # Optional list or string
+            # - TLSv1
+            # - TLSv1.1
+            # - TLSv1.2
+          ssl_server_name: false  # Optional boolean
+          ssl_session_reuse: true  # Optional boolean
+          ssl_trusted_certificate: /path/to/file  # Optional
+          ssl_verify: false  # Optional boolean
+          ssl_verify_depth: 1  # Optional
+          store: false  # Optional boolean
+          store_access:  # Optional
+            user: rw  # Optional
+            group: rw  # Optional
+            all: r  # Optional
+          temp_file_write_size: 8k  # Optional
+          temp_path:  # Optional
+            path: /var/cache/nginx/proxy/temp  # Required
+            level: 2  # Optional -- One of '1', '2' or '3'
         ssl:
           cert: /etc/ssl/certs/default.crt
           key: /etc/ssl/private/default.key
@@ -226,7 +484,6 @@ nginx_config_http_template:
         #   name: $auth_user
         #   value: $upstream_http_x_user
         client_max_body_size: 1m
-        proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
         add_headers:
           strict_transport_security:
             name: Strict-Transport-Security
@@ -236,7 +493,6 @@ nginx_config_http_template:
           #   name: Header-X
           #   value: Value-X
           #   always: false
-
         sub_filter:
           # sub_filters: []
           last_modified: false
@@ -300,8 +556,127 @@ nginx_config_http_template:
               proxied: []  # Optional list
               types: []  # Optional list
               vary: false  # Optional
+            proxy_pass: localhost:9000  # Optional -- Configure Proxy Pass
+            proxy:  # Optional -- Configure Proxy
+              bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_bind
+                address: 0.0.0.0  # Required
+                transparent: false  # Optional boolean
+              buffer_size: 4k  # Optional
+              buffering: true  # Optional boolean
+              buffers:  # Optional
+                number: 8  # Required
+                size: 4k  # Required
+              busy_buffers_size: 8k  # Optional
+              cache: false  # Optional -- Set to 'false' or specify cache zone
+              cache_background_update: false  # Optional boolean
+              cache_bypass: $cookie_seed  # Optional nested list, list, or single value
+                # - - $cookie_nocache
+                #   - $arg_nocache$arg_comment
+                # - $cookie_path
+              cache_convert_head: true  # Optional boolean
+              cache_key: $scheme$proxy_host$request_uri  # Optional
+              cache_lock: false  # Optional boolean
+              cache_lock_age: 5s  # Optional
+              cache_lock_timeout: 5s  # Optional
+              cache_max_range_offset: 1  # Optional
+              cache_methods: []  # Optional list
+                # - GET
+                # - HEAD
+              cache_min_uses: 1  # Optional
+              cache_purge: sample  # Optional list or string
+                # - cache_key
+                # - cache_purge
+              cache_revalidate: false  # Optional boolean
+              cache_use_stale: false  # Optional list
+                # - error
+                # - timeout
+              cache_valid:  # Optional list of codes
+                - code: 200  # Optional list or string
+                  # - 201
+                  # - 202
+                  time: 10m  # Required
+              connect_timeout: 60s  # Optional
+              cookie_domain: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain
+                # - domain: localhost  # Required
+                #   replacement: example.org  # Required
+              cookie_flags: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_flags
+                # cookie: one  # Required
+                # flag: []  # Optional list
+                #   - httponly
+              cookie_path: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_path
+                # - path: $uri  # Required
+                #   replacement: $someuri  # Required
+              force_ranges: false  # Optional boolean
+              headers_hash_bucket_size: 64  # Optional
+              headers_hash_max_size: 512  # Optional
+              hide_header: Date  # Optional list or string
+                # - Date
+                # - X-Accel-Redirect
+              http_version: 1.1  # Optional
+              ignore_client_abort: false  # Optional boolean
+              ignore_headers: X-Accel-Redirect  # Optional list or string
+                # - Date
+                # - X-Accel-Redirect
+              intercept_errors: false  # Optional boolean
+              limit_rate: 0  # Optional
+              max_temp_file_size: 1024m  # Optional
+              method: GET  # Optional
+              next_upstream: false  # Optional -- Set to 'false' to disable proxy_next_upstream or include a variables list or string
+                # - error
+                # - timeout
+              next_upstream_timeout: 0  # Optional
+              next_upstream_tries: 0  # Optional
+              no_cache: $cookie_nocache  # Optional list or string
+                # - $cookie_nocache
+                # - $arg_nocache$arg_comment
+              pass_header: Date  # Optional list or string
+                # - Date
+                # - X-Accel-Redirect
+              pass_request_body: false  # Optional boolean
+              pass_request_headers: true  # Optional boolean
+              read_timeout: 60s  # Optional
+              redirect: false  # Optional -- Set to 'false' to disable proxy_redirect
+                # - original: http://upstream:port/two/
+                #   replacement: /one/
+                # - default
+              request_buffering: false  # Optional boolean
+              send_lowat: 0  # Optional
+              send_timeout: 60s  # Optional
+              set_body: body  # Optional
+              set_header: []  # Optional list
+                # - field: Host
+                #   value: $proxy_host
+                # - field: Connection
+                #   value: close
+              socket_keepalive: false  # Optional boolean
+              ssl_certificate: /path/to/file  # Optional
+              ssl_certificate_key: /path/to/file  # Optional
+              ssl_ciphers: DEFAULT  # Optional list or string
+                # - DEFAULT
+              ssl_conf_command: 'command'  # Optional list or string
+                # - 'command'
+              ssl_crl: /path/to/file  # Optional
+              ssl_name: $proxy_host  # Optional
+              ssl_password_file: /path/to/file  # Optional
+              ssl_protocols: TLSv1  # Optional list or string
+                # - TLSv1
+                # - TLSv1.1
+                # - TLSv1.2
+              ssl_server_name: false  # Optional boolean
+              ssl_session_reuse: true  # Optional boolean
+              ssl_trusted_certificate: /path/to/file  # Optional
+              ssl_verify: false  # Optional boolean
+              ssl_verify_depth: 1  # Optional
+              store: false  # Optional boolean
+              store_access:  # Optional
+                user: rw  # Optional
+                group: rw  # Optional
+                all: r  # Optional
+              temp_file_write_size: 8k  # Optional
+              temp_path:  # Optional
+                path: /var/cache/nginx/proxy/temp  # Required
+                level: 2  # Optional -- One of '1', '2' or '3'
             include_files: []
-            proxy_hide_header: []  # A list of headers which shouldn't be passed to the application
             add_headers:
               strict_transport_security:
                 name: Strict-Transport-Security
@@ -331,8 +706,6 @@ nginx_config_http_template:
             #     code: 302
             #     url: https://sso.somehost.local/?url=https://$http_host$request_uri
             # custom_options: []
-            proxy_connect_timeout: null
-            proxy_pass: http://backend
             # rewrites:
             #   - /foo(.*) /$1 break
             # proxy_pass_request_body: off
@@ -340,46 +713,7 @@ nginx_config_http_template:
             #   - 192.168.1.0/24
             # denies:
             #   - all
-            proxy_set_header:
-              header_host:
-                name: Host
-                value: $host
             internal: false
-            proxy_store: off
-            proxy_store_acccess: user:rw
-            proxy_read_timeout: null
-            proxy_send_timeout: null
-            proxy_ssl:
-              cert: /etc/ssl/certs/proxy_default.crt
-              key: /etc/ssl/private/proxy_default.key
-              trusted_cert: /etc/ssl/certs/proxy_ca.crt
-              protocols: TLSv1 TLSv1.1 TLSv1.2
-              ciphers: HIGH:!aNULL:!MD5
-              verify: false
-              verify_depth: 1
-              session_reuse: true
-            proxy_cache: backend_proxy_cache
-            proxy_cache_valid:
-              - code: 200
-                time: 10m
-              - code: 301
-                time: 1m
-            proxy_temp_path:
-              path: /var/cache/nginx/proxy/backend/temp
-            proxy_cache_lock: false
-            proxy_cache_min_uses: 3
-            proxy_cache_revalidate: false
-            proxy_cache_use_stale:
-              - http_403
-              - http_404
-            proxy_ignore_headers:
-              - Vary
-              - Cache-Control
-            proxy_cookie_path:
-              path: /web/
-              replacement: /
-            proxy_buffering: false
-            proxy_http_version: 1.0
             websocket: false
             sub_filter:
               # sub_filters: []
@@ -392,31 +726,145 @@ nginx_config_http_template:
             location: /
             code: 301
             value: http://$host$request_uri
-    proxy_cache:
-      proxy_cache_path:
-        - path: /var/cache/nginx/proxy/backend
-          keys_zone:
-            name: backend_proxy_cache
-            size: 10m
-          levels: "1:2"
-          max_size: 10g
-          inactive: 60m
-          use_temp_path: true
-      proxy_temp_path:
-        path: /var/cache/nginx/proxy/temp
-      proxy_cache_valid:
-        - code: 200
-          time: 10m
-        - code: 301
-          time: 1m
-      proxy_cache_lock: true
-      proxy_cache_min_uses: 5
-      proxy_cache_revalidate: true
-      proxy_cache_use_stale:
-        - error
-        - timeout
-      proxy_ignore_headers:
-        - Expires
+    proxy_cache_path:  # Optional -- Configure Proxy Cache Path
+      - path: /var/cache/nginx/proxy/backend  # Required
+        levels: "1:1"  # Optional
+        use_temp_path: false  # Optional boolean
+        inactive: 10m  # Optional
+        keys_zone:  # Required
+          name: backend_proxy_cache  # Required
+          size: 10m  # Required
+        max_size: 2g  # Optional
+        min_free: 1g  # Optional
+        manager_files: 100  # Optional
+        manager_sleep: 500ms  # Optional
+        manager_threshold: 200ms  # Optional
+        loader_files: 100  # Optional
+        loader_sleep: 50ms  # Optional
+        loader_threshold: 200ms  # Optional
+        purger: false  # Optional boolean
+        purger_files: 10  # Optional
+        purger_sleep: 50ms  # Optional
+        purger_threshold: 50ms  # Optional
+    proxy:  # Optional -- Configure Proxy
+      bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_bind
+        address: 0.0.0.0  # Required
+        transparent: false  # Optional boolean
+      buffer_size: 4k  # Optional
+      buffering: true  # Optional boolean
+      buffers:  # Optional
+        number: 8  # Required
+        size: 4k  # Required
+      busy_buffers_size: 8k  # Optional
+      cache: false  # Optional -- Set to 'false' or specify cache zone
+      cache_background_update: false  # Optional boolean
+      cache_bypass: $cookie_seed  # Optional nested list, list, or single value
+        # - - $cookie_nocache
+        #   - $arg_nocache$arg_comment
+        # - $cookie_path
+      cache_convert_head: true  # Optional boolean
+      cache_key: $scheme$proxy_host$request_uri  # Optional
+      cache_lock: false  # Optional boolean
+      cache_lock_age: 5s  # Optional
+      cache_lock_timeout: 5s  # Optional
+      cache_max_range_offset: 1  # Optional
+      cache_methods: []  # Optional list
+        # - GET
+        # - HEAD
+      cache_min_uses: 1  # Optional
+      cache_purge: sample  # Optional list or string
+        # - cache_key
+        # - cache_purge
+      cache_revalidate: false  # Optional boolean
+      cache_use_stale: false  # Optional list
+        # - error
+        # - timeout
+      cache_valid:  # Optional list of codes
+        - code: 200  # Optional list or string
+          # - 201
+          # - 202
+          time: 10m  # Required
+      connect_timeout: 60s  # Optional
+      cookie_domain: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain
+        # - domain: localhost  # Required
+        #   replacement: example.org  # Required
+      cookie_flags: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_flags
+        # cookie: one  # Required
+        # flag: []  # Optional list
+        #   - httponly
+      cookie_path: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_path
+        # - path: $uri  # Required
+        #   replacement: $someuri  # Required
+      force_ranges: false  # Optional boolean
+      headers_hash_bucket_size: 64  # Optional
+      headers_hash_max_size: 512  # Optional
+      hide_header: Date  # Optional list or string
+        # - Date
+        # - X-Accel-Redirect
+      http_version: 1.1  # Optional
+      ignore_client_abort: false  # Optional boolean
+      ignore_headers: X-Accel-Redirect  # Optional list or string
+        # - Date
+        # - X-Accel-Redirect
+      intercept_errors: false  # Optional boolean
+      limit_rate: 0  # Optional
+      max_temp_file_size: 1024m  # Optional
+      method: GET  # Optional
+      next_upstream: false  # Optional -- Set to 'false' to disable proxy_next_upstream or include a variables list or string
+        # - error
+        # - timeout
+      next_upstream_timeout: 0  # Optional
+      next_upstream_tries: 0  # Optional
+      no_cache: $cookie_nocache  # Optional list or string
+        # - $cookie_nocache
+        # - $arg_nocache$arg_comment
+      pass_header: Date  # Optional list or string
+        # - Date
+        # - X-Accel-Redirect
+      pass_request_body: false  # Optional boolean
+      pass_request_headers: true  # Optional boolean
+      read_timeout: 60s  # Optional
+      redirect: false  # Optional -- Set to 'false' to disable proxy_redirect
+        # - original: http://upstream:port/two/
+        #   replacement: /one/
+        # - default
+      request_buffering: false  # Optional boolean
+      send_lowat: 0  # Optional
+      send_timeout: 60s  # Optional
+      set_body: body  # Optional
+      set_header: []  # Optional list
+        # - field: Host
+        #   value: $proxy_host
+        # - field: Connection
+        #   value: close
+      socket_keepalive: false  # Optional boolean
+      ssl_certificate: /path/to/file  # Optional
+      ssl_certificate_key: /path/to/file  # Optional
+      ssl_ciphers: DEFAULT  # Optional list or string
+        # - DEFAULT
+      ssl_conf_command: 'command'  # Optional list or string
+        # - 'command'
+      ssl_crl: /path/to/file  # Optional
+      ssl_name: $proxy_host  # Optional
+      ssl_password_file: /path/to/file  # Optional
+      ssl_protocols: TLSv1  # Optional list or string
+        # - TLSv1
+        # - TLSv1.1
+        # - TLSv1.2
+      ssl_server_name: false  # Optional boolean
+      ssl_session_reuse: true  # Optional boolean
+      ssl_trusted_certificate: /path/to/file  # Optional
+      ssl_verify: false  # Optional boolean
+      ssl_verify_depth: 1  # Optional
+      store: false  # Optional boolean
+      store_access:  # Optional
+        user: rw  # Optional
+        group: rw  # Optional
+        all: r  # Optional
+      temp_file_write_size: 8k  # Optional
+      temp_path:  # Optional
+        path: /var/cache/nginx/proxy/temp  # Required
+        level: 2  # Optional -- One of '1', '2' or '3'
     upstreams:  # Optional -- Configure NGINX Upstreams
       - name: backend  # Required
         servers:  # Optional -- Cannot be used if 'state' directive is defined
