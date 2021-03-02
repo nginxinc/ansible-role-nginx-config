@@ -62,6 +62,12 @@ http {
     {{ grpc_global(nginx_config_main_template.http_settings.grpc_global) }}
 {% endfilter %}
 {% endif %}
+{% if nginx_config_main_template.http_settings.gzip is defined %}
+{% from 'http/gzip.j2' import gzip with context %}
+{% filter indent(4) %}
+    {{ gzip(nginx_config_main_template.http_settings.gzip) }}
+{% endfilter %}
+{% endif %}
 {% for access_log in nginx_config_main_template.http_settings.access_log_format %}
     log_format  {{ access_log.name }}  {{ access_log.format }};
 {% endfor %}
@@ -75,7 +81,7 @@ http {
 {% endif %}
 {% endif %}
 {% if nginx_config_main_template.http_settings.sendfile is defined and nginx_config_main_template.http_settings.sendfile %}
-sendfile        on;
+    sendfile        on;
 {% endif %}
 {% if nginx_config_main_template.http_settings.tcp_nopush is defined and nginx_config_main_template.http_settings.tcp_nopush %}
     tcp_nopush      on;
@@ -87,15 +93,6 @@ sendfile        on;
     server_tokens {{ nginx_config_main_template.http_settings.server_tokens }};
 {% endif %}
     keepalive_timeout  {{ nginx_config_main_template.http_settings.keepalive_timeout }};
-{% if nginx_config_main_template.http_settings.gzip is defined %}
-{% from 'http/gzip.j2' import gzip with context %}
-{% filter indent(4) %}
-    {{ gzip(nginx_config_main_template.http_settings.gzip) }}
-{% endfilter %}
-{% endif %}
-{% if nginx_config_main_template.http_settings.cache is defined %}
-    proxy_cache_path /tmp/cache keys_zone=one:10m;
-{% endif %}
 {% if nginx_config_main_template.http_settings.rate_limit is defined %}
     limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
 {% endif %}

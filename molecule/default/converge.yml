@@ -12,6 +12,14 @@
         nginx_config_selinux_tcp_ports:
           - 80
 
+        nginx_config_upload_ssl_enable: true
+        nginx_config_upload_ssl_crt:
+          - src: ../common/files/ssl/molecule.crt
+            dest: /etc/ssl/certs
+        nginx_config_upload_ssl_key:
+          - src: ../common/files/ssl/molecule.key
+            dest: /etc/ssl/private
+
         nginx_config_main_template_enable: true
         nginx_config_main_template:
           template_file: nginx.conf.j2
@@ -134,8 +142,6 @@
                   - name: main
                     location: /var/log/nginx/access.log
                 client_max_body_size: 512k
-                proxy_hide_header:
-                  - X-Powered-By
                 add_headers:
                   strict_transport_security:
                     name: Strict-Transport-Security
@@ -148,8 +154,6 @@
                   - location: /
                     grpc:
                       pass: localhost:9000
-                    proxy_hide_header:
-                      - X-Powered-By
                     add_headers:
                       strict_transport_security:
                         name: Strict-Transport-Security
@@ -162,112 +166,167 @@
                     rewrites:
                       - (.*).html(.*) $1$2
                     proxy_pass: http://frontend_servers/
-                    proxy_cache: frontend_proxy_cache
-                    proxy_cache_valid:
-                      - code: 200
-                        time: 10m
-                      - code: 301
-                        time: 1m
-                    proxy_temp_path:
-                      path: /var/cache/nginx/proxy/frontend/temp
-                    proxy_cache_lock: false
-                    proxy_cache_min_uses: 3
-                    proxy_cache_revalidate: false
-                    proxy_cache_use_stale:
-                      - http_403
-                      - http_404
-                    proxy_ignore_headers:
-                      - Vary
-                      - Cache-Control
-                    proxy_redirect: false
-                    proxy_set_header:
-                      header_host:
-                        name: Host
-                        value: $host
-                      header_x_real_ip:
-                        name: X-Real-IP
-                        value: $remote_addr
-                      header_x_forwarded_for:
-                        name: X-Forwarded-For
-                        value: $proxy_add_x_forwarded_for
-                      header_x_forwarded_proto:
-                        name: X-Forwarded-Proto
-                        value: $scheme
-                    proxy_buffering: false
+                    proxy:
+                      bind: false
+                      buffer_size: 4k
+                      buffering: true
+                      buffers:
+                        number: 8
+                        size: 4k
+                      busy_buffers_size: 8k
+                      cache: false
+                      cache_background_update: false
+                      cache_bypass:
+                        - - $cookie_nocache
+                          - $arg_nocache$arg_comment
+                        - $cookie_test
+                      cache_convert_head: true
+                      cache_key: $scheme$proxy_host$request_uri
+                      cache_lock: false
+                      cache_lock_age: 5s
+                      cache_lock_timeout: 5s
+                      cache_max_range_offset: 1
+                      cache_methods:
+                        - GET
+                        - HEAD
+                      cache_min_uses: 1
+                      cache_revalidate: false
+                      cache_use_stale: false
+                      cache_valid:
+                        - code: 200
+                          time: 10m
+                        - code:
+                            - 201
+                            - 202
+                          time: 10m
+                        - time: 1m
+                      connect_timeout: 60s
+                      cookie_domain:
+                        - domain: localhost
+                          replacement: example.com
+                      cookie_flags: false
+                      cookie_path: false
+                      force_ranges: false
+                      headers_hash_bucket_size: 64
+                      headers_hash_max_size: 512
+                      hide_header:
+                        - Date
+                        - X-Accel-Redirect
+                      http_version: 1.1
+                      ignore_client_abort: false
+                      ignore_headers:
+                        - X-Accel-Redirect
+                      intercept_errors: false
+                      limit_rate: 0
+                      max_temp_file_size: 1024m
+                      method: GET
+                      next_upstream:
+                        - error
+                        - timeout
+                      next_upstream_timeout: 0
+                      next_upstream_tries: 0
+                      no_cache:
+                        - $cookie_nocache
+                        - $arg_nocache$arg_comment
+                      pass_header:
+                        - Date
+                        - X-Accel-Redirect
+                      pass_request_body: false
+                      pass_request_headers: true
+                      read_timeout: 60s
+                      redirect: false
+                      request_buffering: false
+                      # send_lowat: 0  # not supported on linux
+                      send_timeout: 60s
+                      set_body: body
+                      set_header:
+                        - field: Host
+                          value: $proxy_host
+                        - field: Connection
+                          value: close
+                      socket_keepalive: false
+                      ssl_certificate: /etc/ssl/certs/molecule.crt
+                      ssl_certificate_key: /etc/ssl/private/molecule.key
+                      ssl_ciphers:
+                        - DEFAULT
+                      ssl_conf_command: Options PrioritizeChaCha?
+                      # ssl_crl: /path/to/file
+                      ssl_name: $proxy_host
+                      # ssl_password_file: /path/to/file
+                      ssl_protocols:
+                        - TLSv1
+                        - TLSv1.1
+                        - TLSv1.2
+                        - TLSv1.3
+                      ssl_server_name: false
+                      ssl_session_reuse: true
+                      # ssl_trusted_certificate: /path/to/file
+                      ssl_verify: false
+                      ssl_verify_depth: 1
+                      store: false
+                      store_access:
+                        user: rw
+                        group: rw
+                        all: r
+                      temp_file_write_size: 8k
+                      temp_path:
+                        path: /var/cache/nginx/proxy
+                        level: 2
                     client_max_body_size: 5m
                     sub_filter:
                       last_modified: false
                       once: true
                   - location: /backend
                     proxy_pass: http://backend_servers/
-                    proxy_cache: backend_proxy_cache
-                    proxy_cache_valid:
-                      - time: 10m
-                    proxy_temp_path:
-                      path: /var/cache/nginx/proxy/backend/temp
-                    proxy_cache_lock: true
-                    proxy_cache_min_uses: 2
-                    proxy_cache_revalidate: true
-                    proxy_cache_use_stale:
-                      - http_500
-                      - http_502
-                      - http_503
-                    proxy_redirect: default
-                    proxy_set_header:
-                      header_host:
-                        name: Host
-                        value: $host
-                      header_x_real_ip:
-                        name: X-Real-IP
-                        value: $remote_addr
-                      header_x_forwarded_for:
-                        name: X-Forwarded-For
-                        value: $proxy_add_x_forwarded_for
-                      header_x_forwarded_proto:
-                        name: X-Forwarded-Proto
-                        value: $scheme
-                    proxy_cookie_path:
-                      path: /web/
-                      replacement: /
+                    proxy:
+                      set_header:
+                        - field: Host
+                          value: $host
+                        - field: X-Real-IP
+                          value: $remote_addr
+                        - field: X-Forwarded-For
+                          value: $proxy_add_x_forwarded_for
+                        - field: X-Forwarded-Proto
+                          value: $scheme
                 returns:
                   return301:
                     location: ^~ /old-path
                     code: 301
                     value: http://$host/new-path
-            proxy_cache:
-              proxy_cache_path:
-                - path: /var/cache/nginx/proxy/frontend
-                  keys_zone:
-                    name: frontend_proxy_cache
-                    size: 5m
-                  levels: "1:2"
-                  max_size: 5g
-                  inactive: 30m
-                  use_temp_path: true
-                - path: /var/cache/nginx/proxy/backend
-                  keys_zone:
-                    name: backend_proxy_cache
-                    size: 10m
-                  levels: "1:2"
-                  max_size: 10g
-                  inactive: 60m
-                  use_temp_path: true
-              proxy_temp_path:
-                path: /var/cache/nginx/proxy/temp
-              proxy_cache_lock: true
-              proxy_cache_min_uses: 5
-              proxy_cache_revalidate: true
-              proxy_cache_use_stale:
-                - error
-                - timeout
-              proxy_ignore_headers:
-                - Expires
+            proxy_cache_path:
+              - path: /var/cache/nginx/proxy/frontend
+                levels: "1:1"
+                use_temp_path: false
+                inactive: 10m
+                keys_zone:
+                  name: frontend_proxy_cache
+                  size: 10m
+                max_size: 2g
+                min_free: 1g
+                manager_files: 100
+                manager_sleep: 500ms
+                manager_threshold: 200ms
+                loader_files: 100
+                loader_sleep: 50ms
+                loader_threshold: 200ms
+                # purger: false  # NGINX Plus only
+                # purger_files: 10
+                # purger_sleep: 50ms
+                # purger_threshold: 50ms
+              - path: /var/cache/nginx/proxy/backend
+                levels: "1:2"
+                use_temp_path: true
+                keys_zone:
+                  name: backend_proxy_cache
+                  size: 10m
+                inactive: 60m
+                max_size: 10g
             upstreams:
               - name: frontend_servers
-                least_conn: true
                 zone:
                   name: frontend_mem_zone
                   size: 64k
+                least_conn: true
                 keepalive: 32
                 keepalive_requests: 100
                 keepalive_timeout: 60s
@@ -277,10 +336,10 @@
                     max_fails: 3
                     fail_timeout: 5s
               - name: backend_servers
-                least_conn: true
                 zone:
                   name: backend_mem_zone
                   size: 64k
+                least_conn: true
                 servers:
                   - address: 0.0.0.0:8082
                     weight: 1
@@ -319,10 +378,9 @@
                     - "'proxied_for_ip' '$http_x_forwarded_for'"
                   last_modified: false
                   once: false
+                  types: "text/html"
                 locations:
                   - location: /
-                    proxy_hide_header:
-                      - X-Powered-By
                     root: /usr/share/nginx/html
                     index: frontend_index.html
                     autoindex: false
