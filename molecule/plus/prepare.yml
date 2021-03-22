@@ -26,8 +26,8 @@
       vars:
         nginx_type: plus
         nginx_license:
-          certificate: ../files/license/nginx-repo.crt
-          key: ../files/license/nginx-repo.key
+          certificate: ../common/files/license/nginx-repo.crt
+          key: ../common/files/license/nginx-repo.key
         nginx_remove_license: false
 
     - name: Install NGINX App Protect
