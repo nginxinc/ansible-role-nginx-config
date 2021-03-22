@@ -6,7 +6,7 @@
 
 {% macro grpc_global(grpc) %}
 {% if grpc['bind'] is defined %}
-grpc_bind{{ ' off' if not grpc['bind'] }}{{ (' ' + grpc['bind']['address']) if grpc['bind']['address'] is defined }}{{' transparent' if (grpc['bind']['transparent'] is defined and grpc['bind']['transparent']) }};
+grpc_bind{{ ' off' if not grpc['bind'] }}{{ (' ' + grpc['bind']['address']) if grpc['bind']['address'] is defined }}{{' transparent' if (grpc['bind']['transparent'] is defined and grpc['bind']['transparent']) | bool }};
 {% endif %}
 {% if grpc['buffer_size'] is defined %}
 grpc_buffer_size {{ grpc['buffer_size'] }};
