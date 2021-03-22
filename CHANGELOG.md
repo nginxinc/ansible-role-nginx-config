@@ -48,14 +48,15 @@ Replace Ansible community distribution with Ansible base and add the necessary e
 ENHANCEMENTS:
 
 *   Add support for NGINX's `index` directive to the `server` block within the template config parameters.
-*   Update Ansible base to `2.10.7`, Molecule to `3.2.4`, yamllint to `1.26.0` and Docker Python SDK to `4.4.4`.
+*   Update Ansible base to `2.10.7`, Ansible Lint to `5.0.4`, Molecule to `3.2.4`, yamllint to `1.26.0` and Docker Python SDK to `4.4.4`.
+*   Consolidate Molecule testing scenarios to address changes introduced in Ansible Lint `5.*`.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
 
 BUG FIXES:
 
 *   Add `state` parameter to package module in Molecule verification tests.
-*   In App Protect environments on SELinux enforced systems, the `nginx -t` handler fails when run from a directory that the nginx process' user does not have access to.
+*   In NGINX App Protect environments on SELinux enforced systems, the `nginx -t` handler fails when run from a directory that the NGINX process' user does not have access to.
 *   Fix missing GRPC boolean check in GRPC template.
 
 ## 0.3.3 (January 28, 2021)
