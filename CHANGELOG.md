@@ -57,6 +57,7 @@ BUG FIXES:
 
 *   Add `state` parameter to package module in Molecule verification tests.
 *   In NGINX App Protect environments on SELinux enforced systems, the `nginx -t` handler fails when run from a directory that the NGINX process' user does not have access to.
+*   Fix missing GRPC boolean check in GRPC template.
 
 ## 0.3.3 (January 28, 2021)
 
