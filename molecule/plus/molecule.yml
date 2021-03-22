@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
   options:
-    role-file: molecule/common/playbooks/plus_requirements.yml
+    role-file: molecule/common/requirements/plus_requirements.yml
 driver:
   name: docker
 lint: |
@@ -34,4 +34,6 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
-    prepare: ../common/playbooks/plus_prepare.yml
+    prepare: prepare.yml
+    converge: converge.yml
+    verify: verify.yml

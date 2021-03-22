@@ -6,14 +6,14 @@
     - name: Create ephemeral license certificate file from b64 decoded env var
       copy:
         content: "{{ lookup('env','NGINX_CRT') | b64decode }}"
-        dest: ../files/license/nginx-repo.crt
+        dest: ../common/files/license/nginx-repo.crt
         force: no
         mode: 0444
 
     - name: Create ephemeral license key file from b64 decoded env var
       copy:
         content: "{{ lookup('env','NGINX_KEY') | b64decode }}"
-        dest: ../files/license/nginx-repo.key
+        dest: ../common/files/license/nginx-repo.key
         force: no
         mode: 0444
 

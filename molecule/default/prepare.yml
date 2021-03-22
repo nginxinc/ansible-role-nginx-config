@@ -1,0 +1,10 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Install NGINX
+      include_role:
+        name: nginxinc.nginx
+      vars:
+        nginx_modules:
+          - njs
