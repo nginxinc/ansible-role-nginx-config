@@ -12,3 +12,4 @@
     - name: Create mock NGINX configuration file
       file:
         path: /etc/nginx/conf.d/mock.conf
+        state: touch
