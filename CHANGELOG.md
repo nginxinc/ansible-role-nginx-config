@@ -42,8 +42,14 @@ The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_confi
 FEATURES:
 
 Replace Ansible community distribution with Ansible base and add the necessary extra collections as a dependency requirement. For reference, these are:
-*   `community.general`
-*   `ansible.posix`
+```yaml
+---
+collections:
+  - name: community.general
+    version: 2.3.0
+  - name: ansible.posix
+    version: 1.2.0
+```
 
 ENHANCEMENTS:
 
