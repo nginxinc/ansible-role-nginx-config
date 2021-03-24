@@ -58,11 +58,11 @@ Alpine:
   - 3.10
   - 3.11
   - 3.12
+  - 3.13
 CentOS:
   - 7.4+
   - 8
 Debian:
-  - stretch
   - buster
 RedHat:
   - 7.4+
@@ -84,6 +84,7 @@ Alpine:
   - 3.10
   - 3.11
   - 3.12
+  - 3.13
 Amazon Linux:
   - 2018.03
 Amazon Linux 2:
@@ -92,7 +93,6 @@ CentOS:
   - 7.4+
   - 8
 Debian:
-  - stretch
   - buster
 FreeBSD:
   - 11.2+
