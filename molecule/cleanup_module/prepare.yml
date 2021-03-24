@@ -13,3 +13,4 @@
       file:
         path: /etc/nginx/conf.d/mock.conf
         state: touch
+        mode: 0644
