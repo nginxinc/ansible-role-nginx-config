@@ -31,7 +31,10 @@
         url: http://localhost/?v=<script>
         return_content: yes
       register: this
-      failed_when: "'Request Rejected' not in this.content"
+      until: "'Request Rejected' not in this.content"
+      retries: 15
+      delay: 10
+      # failed_when: "'Request Rejected' not in this.content"
 
     - name: Check default.conf exists
       stat:
