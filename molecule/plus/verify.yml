@@ -19,22 +19,28 @@
       register: service
       failed_when: (service is changed) or (service is failed)
 
-    - name: Check that a page returns a status 200 and fail if the words Hello World are not in the page contents
-      uri:
-        url: http://localhost
-        return_content: yes
-      register: this
-      failed_when: "'Hello World' not in this.content"
+    - name: Functional tests
+      block:
+        - name: Check that a page returns a status 200 and fail if the words Hello World are not in the page contents
+          uri:
+            url: "http://localhost"
+            return_content: yes
+          register: this
+          failed_when: "'Hello World' not in this.content"
 
-    - name: Check that a page returns a status 200 and fail if the words Request Rejected are not in the page contents
-      uri:
-        url: http://localhost/?v=<script>
-        return_content: yes
-      register: this
-      until: "'Request Rejected' not in this.content"
-      retries: 15
-      delay: 10
-      # failed_when: "'Request Rejected' not in this.content"
+        - name: Check that a page returns a status 200 and fail if the words Request Rejected are not in the page contents
+          uri:
+            url: "http://localhost/?v=<script>"
+            return_content: yes
+          register: this
+          failed_when: "'Request Rejected' not in this.content"
+
+        - name: Ensure /var/log/messages contains block event from above test
+          shell: grep -c "Non-browser Client,Abuse of Functionality,Cross Site Scripting (XSS)" /var/log/messages || true
+          register: event
+          changed_when: false
+          failed_when: event.stdout == "0"
+      when: ansible_os_family != "Alpine"
 
     - name: Check default.conf exists
       stat:
