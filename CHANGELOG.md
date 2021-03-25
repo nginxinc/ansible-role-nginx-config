@@ -59,6 +59,7 @@ ENHANCEMENTS:
 *   Consolidate Molecule testing scenarios to address changes introduced in Ansible Lint `5.*`.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
+*   Replace Molecule tests using Alpine 3.11 with Alpine 3.10 (to test NGINX App Protect configurations), Debian stretch with Debian buster (stretch has reached its EoL), and update list of supported platforms.
 
 BUG FIXES:
 

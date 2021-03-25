@@ -10,8 +10,8 @@ lint: |
   yamllint .
   ansible-lint --force-color
 platforms:
-  - name: alpine-3.11
-    image: alpine:3.11
+  - name: alpine-3.10
+    image: alpine:3.10
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     volumes:
@@ -24,8 +24,8 @@ platforms:
     volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
     command: "/usr/sbin/init"
-  - name: debian-stretch
-    image: debian:stretch-slim
+  - name: debian-buster
+    image: debian:buster-slim
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     volumes:
