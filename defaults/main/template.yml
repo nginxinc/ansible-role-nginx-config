@@ -43,8 +43,8 @@ nginx_config_main_template:
       policy_file: path  # Optional
       security_log_enable: false  # Optional boolean
       security_log:  # Optional
-        path: path  # Required
-        destination: dest  # Required
+        - path: path  # Required
+          destination: dest  # Required
     grpc_global:  # Optional -- Configure GRPC
       bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
         address: $remote_addr  # Required
@@ -142,8 +142,8 @@ nginx_config_http_template:
           policy_file: path  # Optional
           security_log_enable: false  # Optional
           security_log:  # Optional
-            path: path  # Required
-            destination: dest  # Required
+            - path: path  # Required
+              destination: dest  # Required
         grpc_global:  # Optional -- Configure GRPC
           bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
             address: $remote_addr  # Required
@@ -369,8 +369,8 @@ nginx_config_http_template:
               policy_file: path  # Optional
               security_log_enable: false  # Optional
               security_log:  # Optional
-                path: path  # Required
-                destination: dest  # Required
+                - path: path  # Required
+                  destination: dest  # Required
             grpc_global:  # Optional -- Configure GRPC
               bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
                 address: $remote_addr  # Required

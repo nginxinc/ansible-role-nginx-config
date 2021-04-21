@@ -41,6 +41,8 @@ app_protect_policy_file {{ app_protect['policy_file'] }};
 app_protect_security_log_enable {{ app_protect['security_log_enable'] | ternary('on', 'off') }};
 {% endif %}
 {% if app_protect['security_log'] is defined %}
-app_protect_security_log {{ app_protect['security_log']['path'] }} {{ app_protect['security_log']['dest'] }};
+{% for security_log in app_protect['security_log'] %}
+app_protect_security_log {{ security_log['path'] }} {{ security_log['dest'] }};
+{% endfor %}
 {% endif %}
 {% endmacro %}
