@@ -142,7 +142,7 @@
                 server_name: localhost
                 app_protect:
                   enable: true
-                  policy_file: /etc/app_protect/conf/app-protect-security-policy.json
+                  policy_file: /etc/app_protect/conf/NginxDefaultPolicy.json
                   security_log_enable: true
                   security_log:
                     - path: /etc/app_protect/conf/app-protect-log-policy.json
@@ -170,7 +170,7 @@
                   - location: /
                     app_protect:
                       enable: true
-                      policy_file: /etc/app_protect/conf/app-protect-security-policy.json
+                      policy_file: /etc/app_protect/conf/NginxDefaultPolicy.json
                       security_log_enable: true
                       security_log:
                         - path: /etc/app_protect/conf/app-protect-log-policy.json
