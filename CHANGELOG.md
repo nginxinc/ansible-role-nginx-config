@@ -34,6 +34,7 @@ BREAKING CHANGES:
     *   Rename `proxy_hide_headers` to `proxy_hide_header`.
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.
+*   Add [`server_names_hash_bucket_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_bucket_size) and [`server_names_hash_max_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_max_size) directives.
 
 DEPRECATION WARNINGS:
 
