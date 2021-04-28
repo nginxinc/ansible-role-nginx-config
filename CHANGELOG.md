@@ -34,7 +34,6 @@ BREAKING CHANGES:
     *   Rename `proxy_hide_headers` to `proxy_hide_header`.
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.
-
 *   NGINX App Protect 3.2 supports multiple log destinations per scope. Changing the `security_log` variable from a dictionary to a list of objects in order to support this.
 
 DEPRECATION WARNINGS:
