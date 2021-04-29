@@ -1,0 +1,106 @@
+---
+name-template: "$RESOLVED_VERSION"
+tag-template: "$RESOLVED_VERSION"
+categories:
+  - title: "💣 Breaking Changes"
+    labels:
+      - "breaking change"
+  - title: "🔔 Deprecation Warnings"
+    labels:
+      - "deprecation"
+  - title: "🚀 Features"
+    labels:
+      - "feature"
+  - title: "🎉 Enhancements"
+    labels:
+      - "enhancement"
+  - title: "🐛 Bug Fixes"
+    labels:
+      - "bug"
+  - title: "📝 Documentation"
+    labels:
+      - "documentation"
+  - title: "⬆️ Dependencies"
+    labels:
+      - "dependencies"
+exclude-labels:
+  - "skip-changelog"
+version-resolver:
+  minor:
+    labels:
+      - "breaking change"
+      - "deprecation"
+  patch:
+    labels:
+      - "bug"
+      - "dependencies"
+      - "documentation"
+      - "feature"
+      - "enhancement"
+  default: patch
+autolabeler:
+  - label: "breaking change"
+    body:
+      - "/breaking/i"
+  - label: "deprecation"
+    branch:
+      - "/deprecate\/.+/"
+    title:
+      - "/deprecate/i"
+  - label: "feature"
+    branch:
+      - "/feat\/.+/"
+      - "/feature\/.+/"
+      - "/implement\/.+/"
+    title:
+      - "/feat/i"
+      - "/feature/i"
+      - "/implement/i"
+  - label: "enhancement"
+    branch:
+      - "/add\/.+/"
+      - "/enhancement\/.+/"
+    title:
+      - "/add/i"
+      - "/enhancement/i"
+  - label: "bug"
+    branch:
+      - "/fix\/.+/"
+    title:
+      - "/fix/i"
+  - label: "documentation"
+    branch:
+      - "/docs\/.+/"
+    files:
+      - "*.md"
+    title:
+      - "/docs/i"
+      - "/documentation/i"
+  - label: "dependencies"
+    files:
+      - ".github/workflows/requirements/*"
+    branch:
+      - "/bump\/.+/"
+      - "/update\/.+/"
+    title:
+      - "/bump/i"
+      - "/update/i"
+template: |
+  👾 *Help make the NGINX config Ansible role better by participating in our [survey](https://forms.office.com/Pages/ResponsePage.aspx?id=L_093Ttq0UCb4L-DJ9gcUKLQ7uTJaE1PitM_37KR881UM0NCWkY5UlE5MUYyWU1aTUcxV0NRUllJSC4u)!* 👾
+
+  ## What's new in NGINX's config Ansible role $RESOLVED_VERSION!
+
+  $CHANGES
+
+  ## Install & Upgrade
+
+  *   To install the Ansible NGINX config role on a fresh environment, run `ansible-galaxy install nginxinc.nginx_config`.
+  *   To upgrade the Ansible NGINX  configrole to the latest release, run `ansible-galaxy install -f nginxinc.nginx_config`.
+  *   To install or upgrade to this specific Ansible NGINX config role release ($RESOLVED_VERSION), run `ansible-galaxy install -f nginxinc.nginx_config,v$RESOLVED_VERSION`.
+
+  ## Resources
+
+  *   Functional configuration examples (check `converge.yml` under each `molecule` scenario) -- [github.com/nginxinc/ansible-role-nginx-config/tree/$RESOLVED_VERSION/molecule](https://github.com/nginxinc/ansible-role-nginx-config/tree/$RESOLVED_VERSION/molecule).
+  *   Ansible Galaxy repository -- [galaxy.ansible.com/nginxinc/nginx](https://galaxy.ansible.com/nginxinc/nginx_config).
+  *   NGINX Ansible role & collection introductory blog -- [nginx.com/blog/announcing-nginx-core-collection-ansible](https://www.nginx.com/blog/announcing-nginx-core-collection-ansible).
+  *   NGINX: Better with Ansible demo -- [github.com/alessfg/nginx-ansible-demo](https://github.com/alessfg/nginx-ansible-demo).

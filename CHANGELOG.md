@@ -52,6 +52,7 @@ FEATURES:
         version: 1.2.0
     ```
 *   Explicitly list Jinja2 `2.11.3` as a requirement, as well as detail the minimum supported version (`2.11.x`).
+*   Implement Release Drafter.
 
 ENHANCEMENTS:
 
