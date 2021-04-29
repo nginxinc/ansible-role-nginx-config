@@ -144,7 +144,13 @@
                 server_name: localhost
                 app_protect:
                   enable: true
-                  policy_file: /etc/nginx/app-protect-security-policy.json
+                  policy_file: /etc/app_protect/conf/NginxDefaultPolicy.json
+                  security_log_enable: true
+                  security_log:
+                    - path: /etc/app_protect/conf/log_default.json
+                      dest: syslog:server=10.1.1.1:514
+                    - path: /etc/app_protect/conf/log_default.json
+                      dest: syslog:server=10.1.1.2:514
                 http_error_pages:
                   404: /404.html
                 error_page: /usr/share/nginx/html
@@ -166,7 +172,13 @@
                   - location: /
                     app_protect:
                       enable: true
-                      policy_file: /etc/nginx/app-protect-security-policy.json
+                      policy_file: /etc/app_protect/conf/NginxDefaultPolicy.json
+                      security_log_enable: true
+                      security_log:
+                        - path: /etc/app_protect/conf/log_default.json
+                          dest: syslog:server=10.1.1.1:514
+                        - path: /etc/app_protect/conf/log_default.json
+                          dest: syslog:server=10.1.1.2:514
                     proxy_hide_header:
                       - X-Powered-By
                     grpc:
