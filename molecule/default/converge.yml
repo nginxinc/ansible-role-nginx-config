@@ -89,6 +89,8 @@
             rate_limit: false
             keyval: false
             server_tokens: "off"
+            server_names_hash_bucket_size: 64
+            server_names_hash_max_size: 512
           sub_filter:
             last_modified: false
             once: true

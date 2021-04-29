@@ -106,6 +106,8 @@ nginx_config_main_template:
     rate_limit: false
     keyval: false
     server_tokens: "off"
+    server_names_hash_bucket_size: 64
+    server_names_hash_max_size: 512
   http_global_autoindex: false
   sub_filter:
     # sub_filters: []

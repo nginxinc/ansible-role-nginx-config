@@ -61,6 +61,7 @@ ENHANCEMENTS:
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
 *   Replace Molecule tests using Alpine 3.11 with Alpine 3.10 (to test NGINX App Protect configurations), Debian stretch with Debian buster (stretch has reached its EoL), and update list of supported platforms.
+*   Add [`server_names_hash_bucket_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_bucket_size) and [`server_names_hash_max_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_max_size) directives.
 
 BUG FIXES:
 
