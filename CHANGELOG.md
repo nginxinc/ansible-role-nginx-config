@@ -30,8 +30,10 @@ BREAKING CHANGES:
         - field: Connection
           value: Upgrade
     ```
+*   Refactor the `ssl` HTTP config template into its own separate file. Almost all variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
+    *   All `ssl` variables still live within an `ssl` dictionary, but the names have changed to better reflect the official NGINX directive names.
+    *   `ssl` configs are now supported within both the `http` and `server` contexts.
 *   Rename some NGINX template config parameters to align with NGINX directive names:
-    *   Rename `proxy_hide_headers` to `proxy_hide_header`.
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.
 *   NGINX App Protect 3.2 supports multiple log destinations per scope. Changing the `security_log` variable from a dictionary to a list of objects in order to support this.

@@ -152,6 +152,39 @@
                 sub_filter:
                   last_modified: false
                   once: true
+                ssl:
+                  buffer_size: 16k
+                  certificate: /etc/ssl/certs/molecule.crt
+                  certificate_key: /etc/ssl/private/molecule.key
+                  ciphers:
+                    - HIGH
+                    - "!aNull"
+                    - "!MD5"
+                  conf_command: Protocol TLSv1.2
+                  early_data: false
+                  ecdh_curve: auto
+                  ocsp: false
+                  ocsp_cache:
+                    name: cache1
+                    size: 1m
+                  ocsp_responder: false
+                  prefer_server_ciphers: false
+                  protocols:
+                    - TLSv1
+                    - TLSv1.1
+                    - TLSv1.2
+                    # - TLSv1.3
+                  reject_handshake: false
+                  session_cache:
+                    builtin:
+                      enable: true
+                      size: 20480
+                  session_tickets: true
+                  session_timeout: 5m
+                  stapling: false
+                  stapling_verify: false
+                  verify_client: false
+                  verify_depth: 1
                 locations:
                   - location: /
                     grpc:
@@ -247,24 +280,6 @@
                         - field: Connection
                           value: close
                       socket_keepalive: false
-                      ssl_certificate: /etc/ssl/certs/molecule.crt
-                      ssl_certificate_key: /etc/ssl/private/molecule.key
-                      ssl_ciphers:
-                        - DEFAULT
-                      ssl_conf_command: Options PrioritizeChaCha?
-                      # ssl_crl: /path/to/file
-                      ssl_name: $proxy_host
-                      # ssl_password_file: /path/to/file
-                      ssl_protocols:
-                        - TLSv1
-                        - TLSv1.1
-                        - TLSv1.2
-                        - TLSv1.3
-                      ssl_server_name: false
-                      ssl_session_reuse: true
-                      # ssl_trusted_certificate: /path/to/file
-                      ssl_verify: false
-                      ssl_verify_depth: 1
                       store: false
                       store_access:
                         user: rw

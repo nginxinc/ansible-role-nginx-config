@@ -1,0 +1,99 @@
+{{ ansible_managed | comment }}
+{# NGINX SSL template -- Add directives under its corresponding block #}
+{# Format is as follows #}
+{# Left side (context module_name) -- Right side (module name) #}
+{# HTTP NGINX SSL -- ngx_http_ssl_module #}
+
+{% macro ssl(ssl) %}
+{% if ssl['buffer_size'] is defined %}
+ssl_buffer_size {{ ssl['buffer_size'] }};
+{% endif %}
+{% if ssl['certificate'] is defined %}
+ssl_certificate {{ ssl['certificate'] }};
+{% endif %}
+{% if ssl['certificate_key'] is defined %}
+ssl_certificate_key {{ ssl['certificate_key'] }};
+{% endif %}
+{% if ssl['ciphers'] is defined %}
+ssl_ciphers {{ ssl['ciphers'] if ssl['ciphers'] is string else ssl['ciphers'] | join(':') }};
+{% endif %}
+{% if ssl['client_certificate'] is defined %}
+ssl_client_certificate {{ ssl['client_certificate'] }};
+{% endif %}
+{% if ssl['conf_command'] is defined and ssl['conf_command'] is iterable and ssl['conf_command'] is not string %}
+{% for command in ssl['conf_command'] %}
+ssl_conf_command {{ command }};
+{% endfor %}
+{% elif ssl['conf_command'] is defined and ssl['conf_command'] is string %}
+ssl_conf_command {{ ssl['conf_command'] }};
+{% endif %}
+{% if ssl['crl'] is defined %}
+ssl_crl {{ ssl['crl'] }};
+{% endif %}
+{% if ssl['dhparam'] is defined %}
+ssl_dhparam {{ ssl['dhparam'] }};
+{% endif %}
+{% if ssl['early_data'] is defined and ssl['early_data'] is boolean %}
+ssl_early_data {{ ssl['early_data'] | ternary('on', 'off') }};
+{% endif %}
+{% if ssl['ecdh_curve'] is defined %}
+ssl_ecdh_curve {{ ssl['ecdh_curve'] if ssl['ecdh_curve'] is string else ssl['ecdh_curve'] | join(':') }};
+{% endif %}
+{% if ssl['ocsp'] is defined %}
+ssl_ocsp {{ (ssl['ocsp'] | ternary('on', 'off')) if ssl['ocsp'] is boolean else ssl['ocsp'] if ssl['ocsp'] == 'leaf' }};
+{% endif %}
+{% if ssl['ocsp_cache'] is defined %}
+ssl_ocsp_cache {{ 'off' if not ssl['ocsp_cache'] }}{{ ('shared:' + ssl['ocsp_cache']['name'] + ':' + ssl['ocsp_cache']['size'] | string) if ssl['ocsp_cache']['name'] is defined and ssl['ocsp_cache']['size'] is defined }};
+{% endif %}
+{% if ssl['ocsp_responder'] is defined %}
+ssl_ocsp_responder {{ ssl['ocsp_responder'] }};
+{% endif %}
+{% if ssl['password_file'] is defined %}
+ssl_password_file {{ ssl['password_file'] }};
+{% endif %}
+{% if ssl['prefer_server_ciphers'] is defined and ssl['prefer_server_ciphers'] is boolean %}
+ssl_prefer_server_ciphers {{ ssl['prefer_server_ciphers'] | ternary('on', 'off') }};
+{% endif %}
+{% if ssl['protocols'] is defined %}
+ssl_protocols {{ ssl['protocols'] if ssl['protocols'] is string else ssl['protocols'] | join(' ') }};
+{% endif %}
+{% if ssl['reject_handshake'] is defined and ssl['reject_handshake'] is boolean %}
+ssl_reject_handshake {{ ssl['reject_handshake'] | ternary('on', 'off') }};
+{% endif %}
+{% if ssl['session_cache'] is defined %}
+ssl_session_cache {{ 'off' if not ssl['session_cache'] -}}
+{{- 'none' if ssl['session_cache'] == 'none' -}}
+{{- ('builtin' if ssl['session_cache']['builtin']['enable'] is defined and ssl['session_cache']['builtin']['enable'] | bool) + (':' + ssl['session_cache']['builtin']['size'] | string) if ssl['session_cache']['builtin']['size'] is defined -}}
+{{- ('shared:' + ssl['session_cache']['shared']['name'] + ':' + ssl['session_cache']['shared']['size'] | string) if ssl['session_cache']['shared']['name'] is defined and ssl['session_cache']['shared']['size'] is defined }};
+{% endif %}
+{% if ssl['session_ticket_key'] is defined %}
+ssl_session_ticket_key {{ ssl['session_ticket_key'] }};
+{% endif %}
+{% if ssl['session_tickets'] is defined and ssl['session_tickets'] is boolean %}
+ssl_session_tickets {{ ssl['session_tickets'] | ternary('on', 'off') }};
+{% endif %}
+{% if ssl['session_timeout'] is defined %}
+ssl_session_timeout {{ ssl['session_timeout'] }};
+{% endif %}
+{% if ssl['stapling'] is defined and ssl['stapling'] is boolean %}
+ssl_stapling {{ ssl['stapling'] | ternary('on', 'off') }};
+{% endif %}
+{% if ssl['stapling_file'] is defined %}
+ssl_stapling_file {{ ssl['stapling_file'] }};
+{% endif %}
+{% if ssl['stapling_responder'] is defined %}
+ssl_stapling_responder {{ ssl['stapling_responder'] }};
+{% endif %}
+{% if ssl['stapling_verify'] is defined and ssl['stapling_verify'] is boolean %}
+ssl_stapling_verify {{ ssl['stapling_verify'] | ternary('on', 'off') }};
+{% endif %}
+{% if ssl['trusted_certificate'] is defined %}
+ssl_trusted_certificate {{ ssl['trusted_certificate'] }};
+{% endif %}
+{% if ssl['verify_client'] is defined %}
+ssl_verify_client {{ (ssl['verify_client'] | ternary('on', 'off')) if ssl['verify_client'] is boolean else ssl['verify_client'] }};
+{% endif %}
+{% if ssl['verify_depth'] is defined %}
+ssl_verify_depth {{ ssl['verify_depth'] }};
+{% endif %}
+{% endmacro %}
