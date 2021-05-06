@@ -12,6 +12,10 @@
 {% from 'http/proxy.j2' import proxy with context %}
 {{ proxy(item.proxy) }}
 {% endif %}
+{% if item.ssl is defined %}
+{% from 'http/ssl.j2' import ssl with context %}
+{{ ssl(item.ssl) }}
+{% endif %}
 
 {% if item.auth_request_http is defined %}
 auth_request {{ item.auth_request_http }};
@@ -33,6 +37,12 @@ server {
     listen {% if listen.ip is defined and listen.ip | length %}{{ listen.ip }}:{% endif %}{{ listen.port }}{% if listen.ssl is defined and listen.ssl %} ssl{% endif %}{% if listen.opts is defined and listen.opts | length %} {{ listen.opts | join(" ") }}{% endif %};
 {% endfor %}
     server_name {{ server.server_name | default('localhost') }};
+{% if server.ssl is defined %}
+{% from 'http/ssl.j2' import ssl with context %}
+{% filter indent(4) %}
+    {{ ssl(server.ssl) }}
+{% endfilter %}
+{% endif %}
 {% if server.app_protect is defined %}
 {% from 'http/app_protect.j2' import app_protect_local with context %}
 {% filter indent(4) %}
@@ -56,46 +66,6 @@ server {
 {% filter indent(4) %}
     {{ proxy(server.proxy) }}
 {% endfilter %}
-{% endif %}
-{% if server.ssl is defined %}
-    ssl_certificate {{ server.ssl.cert }};
-    ssl_certificate_key {{ server.ssl.key }};
-{% if server.ssl.trusted_cert is defined %}
-    ssl_trusted_certificate {{ server.ssl.trusted_cert }};
-{% endif %}
-{% if server.ssl.dhparam is defined %}
-    ssl_dhparam {{ server.ssl.dhparam }};
-{% endif %}
-{% if server.ssl.protocols is defined %}
-    ssl_protocols {{ server.ssl.protocols }};
-{% endif %}
-{% if server.ssl.ciphers is defined %}
-    ssl_ciphers {{ server.ssl.ciphers }};
-{% endif %}
-{% if server.ssl.prefer_server_ciphers is defined and server.ssl.prefer_server_ciphers %}
-    ssl_prefer_server_ciphers on;
-{% endif %}
-{% if server.ssl.session_cache is defined %}
-    ssl_session_cache {{ server.ssl.session_cache }};
-{% endif %}
-{% if server.ssl.session_timeout is defined %}
-    ssl_session_timeout {{ server.ssl.session_timeout }};
-{% endif %}
-{% if server.ssl.disable_session_tickets is defined and server.ssl.disable_session_tickets %}
-    ssl_session_tickets off;
-{% endif %}
-{% if server.ssl.stapling is defined and server.ssl.stapling %}
-    ssl_stapling on;
-{% endif %}
-{% if server.ssl.stapling_verify is defined and server.ssl.stapling_verify %}
-    ssl_stapling_verify on;
-{% endif %}
-{% if server.ssl.ecdh_curve is defined %}
-    ssl_ecdh_curve {{ server.ssl.ecdh_curve }};
-{% endif %}
-{% if server.ssl.buffer_size is defined %}
-    ssl_buffer_size {{ server.ssl.buffer_size }};
-{% endif %}
 {% endif %}
 {% if server.include_files is defined and server.include_files | length %}
 {% for file in server.include_files %}
