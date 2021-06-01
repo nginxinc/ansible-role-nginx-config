@@ -185,8 +185,8 @@ proxy_pass_request_body {{ proxy['pass_request_body'] | ternary('on', 'off') }};
 {% if proxy['pass_request_headers'] is defined and proxy['pass_request_headers'] is boolean %}
 proxy_pass_request_headers {{ proxy['pass_request_headers'] | ternary('on', 'off') }};
 {% endif %}
-{% if proxy['read_timeout'] is defined and proxy['read_timeout'] is boolean %}
-proxy_read_timeout {{ proxy['read_timeout'] | ternary('on', 'off') }};
+{% if proxy['read_timeout'] is defined %}
+proxy_read_timeout {{ proxy['read_timeout'] }};
 {% endif %}
 {% if proxy['redirect'] is defined and proxy['redirect'] is iterable and proxy['redirect'] is not string %}
 {% for redirect in proxy['redirect'] %}
