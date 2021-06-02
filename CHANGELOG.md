@@ -67,6 +67,7 @@ ENHANCEMENTS:
 *   Add [`server_names_hash_bucket_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_bucket_size) and [`server_names_hash_max_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_max_size) directives.
 *   Replace Ansible base with Ansible core. Ansible core will be the "core" Ansible release moving forward from Ansible `2.11`.
 *   Update GitHub actions to add a workflow dispatch option.
+*   Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
 
 BUG FIXES:
 

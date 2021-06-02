@@ -4,8 +4,8 @@
   args:
     chdir: /etc/nginx/
   register: config_check
-  ignore_errors: yes
-  check_mode: no
+  ignore_errors: true
+  check_mode: false
   changed_when: false
   listen: (Handler - NGINX Config) Run NGINX
 
