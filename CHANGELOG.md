@@ -49,7 +49,7 @@ FEATURES:
     ---
     collections:
       - name: community.general
-        version: 3.0.0
+        version: 3.1.0
       - name: ansible.posix
         version: 1.2.0
     ```
@@ -59,7 +59,7 @@ FEATURES:
 ENHANCEMENTS:
 
 *   Add support for NGINX's `index` directive to the `server` block within the template config parameters.
-*   Update Ansible base to `2.10.8`, Ansible Lint to `5.0.7`, Molecule to `3.3.0`, yamllint to `1.26.1` and Docker Python SDK to `5.0.0`.
+*   Update Ansible Lint to `5.0.11`, Molecule to `3.3.0`, yamllint to `1.26.1` and Docker Python SDK to `5.0.0`.
 *   Consolidate Molecule testing scenarios to address changes introduced in Ansible Lint `5.*`.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
