@@ -26,7 +26,7 @@ auth_request_set {{ auth_request['set']['variable'] }} {{ auth_request['set']['v
 {# HTTP NGINX Auth JWT -- ngx_http_auth_jwt_module #}
 {% macro auth_jwt(auth_jwt) %}
 {% if auth_jwt['enable'] is defined %}
-auth_jwt {{ 'off' if not auth_jwt['enable'] }}{{ auth_jwt['enable']['realm'] + (' token=' + auth_jwt['enable']['token'] if auth_jwt['enable']['token'] is defined) }};
+auth_jwt {{ 'off' if not auth_jwt['enable'] }}{{ auth_jwt['enable']['realm'] if auth_jwt['enable']['realm'] is defined + (' token=' + auth_jwt['enable']['token'] if auth_jwt['enable']['token'] is defined) }};
 {% endif %}
 {% if auth_jwt['claim_set'] is defined %}
 {% for claim in auth_jwt['claim_set'] %}
