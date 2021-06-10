@@ -219,9 +219,9 @@
                         - path: /etc/app_protect/conf/log_default.json
                           dest: syslog:server=10.1.1.2:514
                     auth_jwt:
-                      enable:
-                        realm: realm
-                        token: $cookie_auth_token
+                      enable: false
+                      #   realm: realm
+                      #   token: $cookie_auth_token
                       # key_file: not tested
                       # key_request: not tested
                       leeway: 0s
