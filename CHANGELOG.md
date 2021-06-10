@@ -33,6 +33,9 @@ BREAKING CHANGES:
 *   Refactor the `ssl` HTTP config template into its own separate file. Almost all variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
     *   All `ssl` variables still live within an `ssl` dictionary, but the names have changed to better reflect the official NGINX directive names.
     *   `ssl` configs are now supported within both the `http` and `server` contexts.
+*   Refactor the `auth` HTTP config template into its own separate file, as well as add support for `auth_jwt` directives. All variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
+    *   All the various `auth` variables now live within their respective `auth` dictionaries.
+    *   `auth` configs are now supported within the `http`, `server`, and `location` contexts.
 *   Rename some NGINX template config parameters to align with NGINX directive names:
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.
