@@ -401,6 +401,10 @@
                     root: /usr/share/nginx/html
                     index: frontend_index.html
                     autoindex: false
+                  - location: /alias
+                    alias: /usr/share/nginx/html
+                    index: frontend_index.html
+                    autoindex: false
                 http_demo_conf: false
           - template_file: http/default.conf.j2
             conf_file_name: backend_default.conf
