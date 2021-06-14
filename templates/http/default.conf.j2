@@ -70,7 +70,7 @@ server {
 {% if server.auth_jwt is defined %}
 {% from 'http/auth.j2' import auth_jwt with context %}
 {% filter indent(4) %}
-      {{ auth_jwt(server.auth_jwt) }}
+    {{ auth_jwt(server.auth_jwt) }}
 {% endfilter %}
 {% endif %}
 {% if server.grpc_global is defined %}
