@@ -133,6 +133,29 @@ nginx_config_http_template:
   - template_file: http/default.conf.j2
     conf_file_name: default.conf
     conf_file_location: /etc/nginx/conf.d/
+    auth_jwt:  # Optional -- Configure JWT auth
+      enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
+        realm: realm  # Required
+        token: $cookie_auth_token  # Optional
+      claim_set:  # Optional
+        - variable: $email  # Required
+          name:  # Required list or string
+            - info
+      header_set:  # Optional
+        - variable: $job  # Required
+          name: info  # Required list or string
+      key_file: /path/to/file  # Optional
+      key_request: /path/to/file  # Optional
+      leeway: 0s  # Optional
+      type: signed  # Optional -- One of `signed` or `encrypted`
+    auth_request:  # Optional -- Configure request auth
+      uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
+      set:  # Optional
+        variable: $temp  # Required
+        value: auth  # Required
+    auth_basic:  # Optional -- Configure basic auth
+      realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
+      user_file: /path/to/file  # Optional
     proxy_cache_path:  # Optional -- Configure Proxy Cache Path
       - path: /var/cache/nginx/proxy/backend  # Required
         levels: "1:1"  # Optional
@@ -375,6 +398,22 @@ nginx_config_http_template:
           security_log:  # Optional
             - path: path  # Required
               destination: dest  # Required
+        auth_jwt:  # Optional -- Configure JWT auth
+          enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
+            realm: realm  # Required
+            token: $cookie_auth_token  # Optional
+          key_file: /path/to/file  # Optional
+          key_request: /path/to/file  # Optional
+          leeway: 0s  # Optional
+          type: signed  # Optional -- One of `signed` or `encrypted`
+        auth_request:  # Optional -- Configure request auth
+          uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
+          set:  # Optional
+            variable: $temp  # Required
+            value: auth  # Required
+        auth_basic:  # Optional -- Configure basic auth
+          realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
+          user_file: /path/to/file  # Optional
         grpc_global:  # Optional -- Configure GRPC
           bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
             address: $remote_addr  # Required
@@ -587,6 +626,22 @@ nginx_config_http_template:
               security_log:  # Optional
                 - path: path  # Required
                   destination: dest  # Required
+              auth_jwt:  # Optional -- Configure JWT auth
+                enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
+                  realm: realm  # Required
+                  token: $cookie_auth_token  # Optional
+                key_file: /path/to/file  # Optional
+                key_request: /path/to/file  # Optional
+                leeway: 0s  # Optional
+                type: signed  # Optional -- One of `signed` or `encrypted`
+              auth_request:  # Optional -- Configure request auth
+                uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
+                set:  # Optional
+                  variable: $temp  # Required
+                  value: auth  # Required
+              auth_basic:  # Optional -- Configure basic auth
+                realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
+                user_file: /path/to/file  # Optional
             grpc_global:  # Optional -- Configure GRPC
               bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
                 address: $remote_addr  # Required
