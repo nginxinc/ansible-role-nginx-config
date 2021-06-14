@@ -120,10 +120,6 @@ nginx_config_main_template:
   # events_custom_options: []
   stream_enable: false
   # stream_custom_options: []
-  # auth_request_http: /auth
-  # auth_request_set_http:
-  #   name: $auth_user
-  #   value: $upstream_http_x_user
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
@@ -592,13 +588,7 @@ nginx_config_http_template:
         index: index.html index.php
         # https_redirect: $host
         autoindex: false
-        auth_basic: null
-        auth_basic_user_file: null
         try_files: $uri $uri/index.html $uri.html =404
-        # auth_request: /auth
-        # auth_request_set:
-        #   name: $auth_user
-        #   value: $upstream_http_x_user
         client_max_body_size: 1m
         add_headers:
           strict_transport_security:
@@ -821,17 +811,11 @@ nginx_config_http_template:
             root: /usr/share/nginx/html
             index: index.html
             autoindex: false
-            auth_basic: null
-            auth_basic_user_file: null
             try_files: $uri $uri/index.html $uri.html =404
             # allows:
             #   - 192.168.1.0/24
             # denies:
             #   - all
-            # auth_request: /auth
-            # auth_request_set:
-            #   name: $auth_user
-            #   value: $upstream_http_x_user
             client_max_body_size: 1m
             # returns:
             #   return302:
