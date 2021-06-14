@@ -1,0 +1,32 @@
+{{ ansible_managed | comment }}
+{# NGINX App Protect DoS template -- Add directives under its corresponding block #}
+{# Format is as follows #}
+{# Left side (context module_name) -- Right side (module name) #}
+{# HTTP NGINX App Protect DoS -- ngx_http_app_protect_dos_module #}
+
+{% macro app_protect_dos_local(app_protect_dos) %}
+{% if app_protect_dos['enable'] is defined %}
+app_protect_dos_enable {{ app_protect_dos['enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect_dos['policy_file'] is defined %}
+app_protect_dos_policy_file {{ app_protect_dos['policy_file'] }};
+{% endif %}
+{% if app_protect_dos['name'] is defined %}
+app_protect_dos_name {{ app_protect_dos['name'] }};
+{% endif %}
+{% if app_protect_dos['monitor'] is defined %}
+app_protect_dos_monitor {{ app_protect_dos['monitor'] }};
+{% endif %}
+{% if app_protect_dos['security_log_enable'] is defined %}
+app_protect_dos_security_log_enable {{ app_protect_dos['security_log_enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect_dos['security_log'] is defined %}
+app_protect_dos_security_log {{ app_protect_dos['security_log']['path'] }} {{ app_protect_dos['security_log']['dest'] }};
+{% endif %}
+{% if app_protect_dos['liveness'] is defined %}
+app_protect_dos_liveness {{ app_protect_dos['liveness'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect_dos['readiness'] is defined %}
+app_protect_dos_readiness {{ app_protect_dos['readiness'] | ternary('on', 'off') }};
+{% endif %}
+{% endmacro %}
