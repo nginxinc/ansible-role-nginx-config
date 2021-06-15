@@ -120,10 +120,6 @@ nginx_config_main_template:
   # events_custom_options: []
   stream_enable: false
   # stream_custom_options: []
-  # auth_request_http: /auth
-  # auth_request_set_http:
-  #   name: $auth_user
-  #   value: $upstream_http_x_user
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
@@ -133,6 +129,29 @@ nginx_config_http_template:
   - template_file: http/default.conf.j2
     conf_file_name: default.conf
     conf_file_location: /etc/nginx/conf.d/
+    auth_jwt:  # Optional -- Configure JWT auth
+      enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
+        realm: realm  # Required
+        token: $cookie_auth_token  # Optional
+      claim_set:  # Optional
+        - variable: $email  # Required
+          name:  # Required list or string
+            - info
+      header_set:  # Optional
+        - variable: $job  # Required
+          name: info  # Required list or string
+      key_file: /path/to/file  # Optional
+      key_request: /path/to/file  # Optional
+      leeway: 0s  # Optional
+      type: signed  # Optional -- One of `signed` or `encrypted`
+    auth_request:  # Optional -- Configure request auth
+      uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
+      set:  # Optional
+        variable: $temp  # Required
+        value: auth  # Required
+    auth_basic:  # Optional -- Configure basic auth
+      realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
+      user_file: /path/to/file  # Optional
     proxy_cache_path:  # Optional -- Configure Proxy Cache Path
       - path: /var/cache/nginx/proxy/backend  # Required
         levels: "1:1"  # Optional
@@ -375,6 +394,22 @@ nginx_config_http_template:
           security_log:  # Optional
             - path: path  # Required
               destination: dest  # Required
+        auth_jwt:  # Optional -- Configure JWT auth
+          enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
+            realm: realm  # Required
+            token: $cookie_auth_token  # Optional
+          key_file: /path/to/file  # Optional
+          key_request: /path/to/file  # Optional
+          leeway: 0s  # Optional
+          type: signed  # Optional -- One of `signed` or `encrypted`
+        auth_request:  # Optional -- Configure request auth
+          uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
+          set:  # Optional
+            variable: $temp  # Required
+            value: auth  # Required
+        auth_basic:  # Optional -- Configure basic auth
+          realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
+          user_file: /path/to/file  # Optional
         grpc_global:  # Optional -- Configure GRPC
           bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
             address: $remote_addr  # Required
@@ -553,13 +588,7 @@ nginx_config_http_template:
         index: index.html index.php
         # https_redirect: $host
         autoindex: false
-        auth_basic: null
-        auth_basic_user_file: null
         try_files: $uri $uri/index.html $uri.html =404
-        # auth_request: /auth
-        # auth_request_set:
-        #   name: $auth_user
-        #   value: $upstream_http_x_user
         client_max_body_size: 1m
         add_headers:
           strict_transport_security:
@@ -587,6 +616,22 @@ nginx_config_http_template:
               security_log:  # Optional
                 - path: path  # Required
                   destination: dest  # Required
+              auth_jwt:  # Optional -- Configure JWT auth
+                enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
+                  realm: realm  # Required
+                  token: $cookie_auth_token  # Optional
+                key_file: /path/to/file  # Optional
+                key_request: /path/to/file  # Optional
+                leeway: 0s  # Optional
+                type: signed  # Optional -- One of `signed` or `encrypted`
+              auth_request:  # Optional -- Configure request auth
+                uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
+                set:  # Optional
+                  variable: $temp  # Required
+                  value: auth  # Required
+              auth_basic:  # Optional -- Configure basic auth
+                realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
+                user_file: /path/to/file  # Optional
             grpc_global:  # Optional -- Configure GRPC
               bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
                 address: $remote_addr  # Required
@@ -766,17 +811,11 @@ nginx_config_http_template:
             root: /usr/share/nginx/html
             index: index.html
             autoindex: false
-            auth_basic: null
-            auth_basic_user_file: null
             try_files: $uri $uri/index.html $uri.html =404
             # allows:
             #   - 192.168.1.0/24
             # denies:
             #   - all
-            # auth_request: /auth
-            # auth_request_set:
-            #   name: $auth_user
-            #   value: $upstream_http_x_user
             client_max_body_size: 1m
             # returns:
             #   return302:

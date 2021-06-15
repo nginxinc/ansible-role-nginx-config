@@ -17,11 +17,17 @@
 {{ ssl(item.ssl) }}
 {% endif %}
 
-{% if item.auth_request_http is defined %}
-auth_request {{ item.auth_request_http }};
+{% if item.auth_request is defined %}
+{% from 'http/auth.j2' import auth_request with context %}
+{{ auth_request(item.auth_request) }}
 {% endif %}
-{% if item.auth_request_set_http is defined %}
-auth_request_set {{ item.auth_request_set_http.name }} {{ item.auth_request_set_http.value }};
+{% if item.auth_basic is defined %}
+{% from 'http/auth.j2' import auth_basic with context %}
+{{ auth_basic(item.auth_basic) }}
+{% endif %}
+{% if item.auth_jwt is defined %}
+{% from 'http/auth.j2' import auth_jwt with context %}
+{{ auth_jwt(item.auth_jwt) }}
 {% endif %}
 
 {% if item.custom_options is defined and item.custom_options | length %}
@@ -47,6 +53,24 @@ server {
 {% from 'http/app_protect.j2' import app_protect_local with context %}
 {% filter indent(4) %}
     {{ app_protect_local(server.app_protect) }}
+{% endfilter %}
+{% endif %}
+{% if server.auth_request is defined %}
+{% from 'http/auth.j2' import auth_request with context %}
+{% filter indent(4) %}
+    {{ auth_request(server.auth_request) }}
+{% endfilter %}
+{% endif %}
+{% if server.auth_basic is defined %}
+{% from 'http/auth.j2' import auth_basic with context %}
+{% filter indent(4) %}
+    {{ auth_basic(server.auth_basic) }}
+{% endfilter %}
+{% endif %}
+{% if server.auth_jwt is defined %}
+{% from 'http/auth.j2' import auth_jwt with context %}
+{% filter indent(4) %}
+    {{ auth_jwt(server.auth_jwt) }}
 {% endfilter %}
 {% endif %}
 {% if server.grpc_global is defined %}
@@ -77,12 +101,6 @@ server {
     add_header {{ server.add_headers[header].name }} "{{ server.add_headers[header].value }}"{% if server.add_headers[header].always is defined and server.add_headers[header].always %} always{% endif %};
 {% endfor %}
 {% endif %}
-{% if server.auth_basic is defined %}
-    auth_basic "{{ server.auth_basic }}";
-{% endif %}
-{% if server.auth_basic_user_file is defined %}
-    auth_basic_user_file {{ server.auth_basic_user_file }};
-{% endif %}
 {% if server.root is defined %}
     root {{ server.root }};
 {% endif %}
@@ -97,12 +115,6 @@ server {
 {% endif %}
 {% if server.try_files is defined %}
     try_files {{ server.try_files }};
-{% endif %}
-{% if server.auth_request is defined %}
-    auth_request {{ server.auth_request }};
-{% endif %}
-{% if server.auth_request_set is defined %}
-    auth_request_set {{ server.auth_request_set.name }} {{ server.auth_request_set.value }};
 {% endif %}
 {% if server.client_max_body_size is defined %}
     client_max_body_size {{ server.client_max_body_size }};
@@ -136,6 +148,24 @@ server {
 {% from 'http/app_protect.j2' import app_protect_local with context %}
 {% filter indent(8) %}
         {{ app_protect_local(location.app_protect) }}
+{% endfilter %}
+{% endif %}
+{% if location.auth_request is defined %}
+{% from 'http/auth.j2' import auth_request with context %}
+{% filter indent(8) %}
+        {{ auth_request(location.auth_request) }}
+{% endfilter %}
+{% endif %}
+{% if location.auth_basic is defined %}
+{% from 'http/auth.j2' import auth_basic with context %}
+{% filter indent(8) %}
+        {{ auth_basic(location.auth_basic) }}
+{% endfilter %}
+{% endif %}
+{% if location.auth_jwt is defined %}
+{% from 'http/auth.j2' import auth_jwt with context %}
+{% filter indent(8) %}
+        {{ auth_jwt(location.auth_jwt) }}
 {% endfilter %}
 {% endif %}
 {% if location.grpc_global is defined %}
@@ -186,18 +216,6 @@ server {
 {% for header in location.add_headers %}
         add_header {{ location.add_headers[header].name }} "{{ location.add_headers[header].value }}"{% if location.add_headers[header].always is defined and location.add_headers[header].always %} always{% endif %};
 {% endfor %}
-{% endif %}
-{% if location.auth_request is defined %}
-        auth_request {{ location.auth_request }};
-{% endif %}
-{% if location.auth_request_set is defined %}
-        auth_request_set {{ location.auth_request_set.name }} {{ location.auth_request_set.value }};
-{% endif %}
-{% if location.auth_basic is defined %}
-        auth_basic "{{ location.auth_basic }}";
-{% endif %}
-{% if location.auth_basic_user_file is defined %}
-        auth_basic_user_file {{ location.auth_basic_user_file }};
 {% endif %}
 {% if location.returns is defined %}
 {% for code in location.returns %}
