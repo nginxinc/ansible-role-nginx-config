@@ -22,7 +22,7 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
     ---
     collections:
       - name: community.general
-        version: 3.1.0
+        version: 3.2.0
       - name: ansible.posix
         version: 1.2.0
     ```
