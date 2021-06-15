@@ -52,9 +52,11 @@ FEATURES:
     ---
     collections:
       - name: community.general
-        version: 3.1.0
+        version: 3.2.0
       - name: ansible.posix
         version: 1.2.0
+      - name: community.docker  # This collection is only used as part of the Molecule testing suite
+        version: 1.7.0
     ```
 *   Explicitly list Jinja2 `2.11.3` as a requirement, as well as detail the minimum supported version (`2.11.x`).
 *   Implement Release Drafter.
