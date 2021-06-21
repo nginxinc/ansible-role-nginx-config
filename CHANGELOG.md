@@ -74,6 +74,7 @@ ENHANCEMENTS:
 *   Replace Ansible base with Ansible core. Ansible core will be the "core" Ansible release moving forward from Ansible `2.11`.
 *   Update GitHub actions to add a workflow dispatch option.
 *   Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
+*   Ensure the default values for the `nginx.conf` template match the default values found on a fresh NGINX installation.
 
 BUG FIXES:
 
@@ -81,6 +82,7 @@ BUG FIXES:
 *   In NGINX App Protect environments on SELinux enforced systems, the `nginx -t` handler fails when run from a directory that the NGINX process' user does not have access to.
 *   Fix missing GRPC boolean check in GRPC template.
 *   Fix `nginx_config_cleanup_paths` not working as intended.
+*   Fix issue with the `app_protect.j2` template that was causing the default values for `nginx.conf` to fail.
 
 ## 0.3.3 (January 28, 2021)
 
