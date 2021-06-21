@@ -13,107 +13,107 @@ nginx_config_main_template_enable: false
 nginx_config_main_template:
   template_file: nginx.conf.j2
   conf_file_name: nginx.conf
-  conf_file_location: /etc/nginx/
+  conf_file_location: /etc/nginx
   # modules:  # specify modules as a list following the format in the line below
   #   - modules/ngx_http_js_module.so
   user: nginx
   worker_processes: auto
-  worker_rlimit_nofile: 1024
+  # worker_rlimit_nofile: 1024
   pid: /var/run/nginx.pid
   error_log:
     location: /var/log/nginx/error.log
-    level: warn
+    level: notice
   worker_connections: 1024
   http_enable: true
   http_settings:
-    app_protect_global:  # Optional -- Configure NGINX App Protect
-      physical_memory_util_thresholds:  # Optional
-        high: 100  # Required
-        low: 100  # Required
-      cpu_thresholds:  # Optional
-        high: 100  # Required
-        low: 100  # Required
-      failure_mode_action: pass  # Optional -- 'pass' or 'drop'
-      cookie_seed: encryptionseed  # Optional
-      compressed_requests_action: drop  # Optional -- 'pass' or 'drop'
-      request_buffer_overflow_action: pass  # Optional -- 'pass' or 'drop'
-      user_defined_signatures: []  # Optional list
-    app_protect:  # Optional -- Configure NGINX App Protect
-      enable: false  # Optional boolean
-      policy_file: path  # Optional
-      security_log_enable: false  # Optional boolean
-      security_log:  # Optional
-        - path: path  # Required
-          destination: dest  # Required
-    grpc_global:  # Optional -- Configure GRPC
-      bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-        address: $remote_addr  # Required
-        transparent: true  # Optional boolean
-      buffer_size: 4k  # Optional
-      connect_timeout: 60s  # Optional
-      hide_header: []  # Optional list
-      ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-      intercept_errors: false  # Optional boolean
-      next_upstream: []  # Optional list
-      next_upstream_timeout: 0  # Optional
-      next_upstream_tries: 0  # Optional
-      pass_header: []  # Optional list
-      read_timeout: 60s  # Optional
-      send_timeout: 60s  # Optional
-      set_header:  # Optional
-        - field: Accept-Encoding  # Required
-          value: '""'  # Required
-      socket_keepalive: false  # Optional boolean
-      ssl_certificate: /path/to/file  # Optional
-      ssl_certificate_key: /path/to/file  # Optional
-      ssl_ciphers: DEFAULT  # Optional
-      ssl_conf_command: 'command'  # Optional
-      ssl_crl: /path/to/file  # Optional
-      ssl_name: serverName  # Optional
-      ssl_password_file: /path/to/file  # Optional
-      ssl_protocols: []  # Optional list
-      ssl_server_name: false  # Optional boolean
-      ssl_session_reuse: true  # Optional boolean
-      ssl_trusted_certificate: /path/to/file  # Optional
-      ssl_verify: false  # Optional boolean
-      ssl_verify_depth: 1  # Optional
-    gzip:  # Optional -- Configure GZIP
-      enable: true  # Optional boolean
-      buffers:  # Optional
-        number: 32  # Required
-        size: 4k  # Required
-      comp_level: 1  # Optional
-      disable: []  # Optional list
-      http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-      min_length: 20  # Optional
-      proxied: []  # Optional list
-      types: []  # Optional list
-      vary: false  # Optional boolean
+    # app_protect_global:  # Optional -- Configure NGINX App Protect
+    #   physical_memory_util_thresholds:  # Optional
+    #     high: 100  # Required
+    #     low: 100  # Required
+    #   cpu_thresholds:  # Optional
+    #     high: 100  # Required
+    #     low: 100  # Required
+    #   failure_mode_action: pass  # Optional -- 'pass' or 'drop'
+    #   cookie_seed: encryptionseed  # Optional
+    #   compressed_requests_action: drop  # Optional -- 'pass' or 'drop'
+    #   request_buffer_overflow_action: pass  # Optional -- 'pass' or 'drop'
+    #   user_defined_signatures: []  # Optional list
+    # app_protect:  # Optional -- Configure NGINX App Protect
+    #   enable: false  # Optional boolean
+    #   policy_file: path  # Optional
+    #   security_log_enable: false  # Optional boolean
+    #   security_log:  # Optional
+    #     - path: path  # Required
+    #       dest: dest  # Required
+    # grpc_global:  # Optional -- Configure GRPC
+    #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
+    #     address: $remote_addr  # Required
+    #     transparent: true  # Optional boolean
+    #   buffer_size: 4k  # Optional
+    #   connect_timeout: 60s  # Optional
+    #   hide_header: []  # Optional list
+    #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+    #   intercept_errors: false  # Optional boolean
+    #   next_upstream: []  # Optional list
+    #   next_upstream_timeout: 0  # Optional
+    #   next_upstream_tries: 0  # Optional
+    #   pass_header: []  # Optional list
+    #   read_timeout: 60s  # Optional
+    #   send_timeout: 60s  # Optional
+    #   set_header:  # Optional
+    #     - field: Accept-Encoding  # Required
+    #       value: '""'  # Required
+    #   socket_keepalive: false  # Optional boolean
+    #   ssl_certificate: /path/to/file  # Optional
+    #   ssl_certificate_key: /path/to/file  # Optional
+    #   ssl_ciphers: DEFAULT  # Optional
+    #   ssl_conf_command: 'command'  # Optional
+    #   ssl_crl: /path/to/file  # Optional
+    #   ssl_name: serverName  # Optional
+    #   ssl_password_file: /path/to/file  # Optional
+    #   ssl_protocols: []  # Optional list
+    #   ssl_server_name: false  # Optional boolean
+    #   ssl_session_reuse: true  # Optional boolean
+    #   ssl_trusted_certificate: /path/to/file  # Optional
+    #   ssl_verify: false  # Optional boolean
+    #   ssl_verify_depth: 1  # Optional
+    # gzip:  # Optional -- Configure GZIP
+    #   enable: true  # Optional boolean
+    #   buffers:  # Optional
+    #     number: 32  # Required
+    #     size: 4k  # Required
+    #   comp_level: 1  # Optional
+    #   disable: []  # Optional list
+    #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+    #   min_length: 20  # Optional
+    #   proxied: []  # Optional list
+    #   types: []  # Optional list
+    #   vary: false  # Optional boolean
     access_log_format:
       - name: main
         format: |-
           '$remote_addr - $remote_user [$time_local] "$request" '
-          '$status $body_bytes_sent "$http_referer" '
-          '"$http_user_agent" "$http_x_forwarded_for"'
+                              '$status $body_bytes_sent "$http_referer" '
+                              '"$http_user_agent" "$http_x_forwarded_for"'
     access_log_location:
       - name: main
         location: /var/log/nginx/access.log
     sendfile: true
-    tcp_nopush: true
-    tcp_nodelay: true
+    # tcp_nopush: true
+    # tcp_nodelay: true
     keepalive_timeout: 65
-    cache: false
-    rate_limit: false
-    keyval: false
-    server_tokens: "off"
-    server_names_hash_bucket_size: 64
-    server_names_hash_max_size: 512
-  http_global_autoindex: false
-  sub_filter:
-    # sub_filters: []
-    last_modified: false
-    once: true
-    types: "text/html"
+    # cache: false
+    # rate_limit: false
+    # keyval: false
+    # server_tokens: "off"
+    # server_names_hash_bucket_size: 64
+    # server_names_hash_max_size: 512
+  # http_global_autoindex: false
+  # sub_filter:
+  #   # sub_filters: []
+  #   last_modified: false
+  #   once: true
+  #   types: "text/html"
   # custom_options: []
   # http_custom_options: []
   # http_custom_includes: []
@@ -393,7 +393,7 @@ nginx_config_http_template:
           security_log_enable: false  # Optional
           security_log:  # Optional
             - path: path  # Required
-              destination: dest  # Required
+              dest: dest  # Required
         auth_jwt:  # Optional -- Configure JWT auth
           enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
             realm: realm  # Required
@@ -615,7 +615,7 @@ nginx_config_http_template:
               security_log_enable: false  # Optional
               security_log:  # Optional
                 - path: path  # Required
-                  destination: dest  # Required
+                  dest: dest  # Required
               auth_jwt:  # Optional -- Configure JWT auth
                 enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
                   realm: realm  # Required
