@@ -116,6 +116,14 @@
           - template_file: http/default.conf.j2
             conf_file_name: default.conf
             conf_file_location: /etc/nginx/conf.d/
+            auth_request:
+              uri: false
+              set:
+                variable: $temp
+                value: auth
+            auth_basic:
+              realm: false
+              # user_file: not tested
             servers:
               - listen:
                   - ip: 0.0.0.0
@@ -137,6 +145,14 @@
                     opts:
                       - default_server
                 server_name: localhost
+                auth_request:
+                  uri: false
+                  set:
+                    variable: $temp
+                    value: auth
+                auth_basic:
+                  realm: false
+                  # user_file: not tested
                 http_error_pages:
                   404: /404.html
                 error_page: /usr/share/nginx/html
@@ -187,6 +203,14 @@
                   verify_depth: 1
                 locations:
                   - location: /
+                    auth_request:
+                      uri: false
+                      set:
+                        variable: $temp
+                        value: auth
+                    auth_basic:
+                      realm: false
+                      # user_file: not tested
                     grpc:
                       pass: localhost:9000
                     add_headers:

@@ -23,7 +23,7 @@ worker_rlimit_nofile {{ nginx_config_main_template.worker_rlimit_nofile }};
 {% endif %}
 
 {% if nginx_config_main_template.error_log is defined %}
-error_log  {{ nginx_config_main_template.error_log.location }} {{ nginx_config_main_template.error_log.level }};
+error_log {{ nginx_config_main_template.error_log.location }} {{ nginx_config_main_template.error_log.level }};
 {% endif %}
 {% if nginx_config_main_template.pid is defined %}
 pid {{ nginx_config_main_template.pid }};
@@ -31,7 +31,7 @@ pid {{ nginx_config_main_template.pid }};
 
 events {
 {% if nginx_config_main_template.worker_connections is defined %}
-    worker_connections  {{ nginx_config_main_template.worker_connections }};
+    worker_connections {{ nginx_config_main_template.worker_connections }};
 {% endif %}
 {% if nginx_config_main_template.events_custom_options is defined and nginx_config_main_template.events_custom_options | length %}
 {% for inline_option in nginx_config_main_template.events_custom_options %}
@@ -42,8 +42,8 @@ events {
 
 {% if nginx_config_main_template.http_enable is defined and nginx_config_main_template.http_enable %}
 http {
-    include       /etc/nginx/mime.types;
-    default_type  application/octet-stream;
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
 {% if nginx_config_main_template.http_settings.app_protect_global is defined %}
 {% from 'http/app_protect.j2' import app_protect_global with context %}
 {% filter indent(4) %}
@@ -70,7 +70,7 @@ http {
 {% endif %}
 {% if nginx_config_main_template.http_settings.access_log_format is defined %}
 {% for access_log in nginx_config_main_template.http_settings.access_log_format %}
-    log_format  {{ access_log.name }}  {{ access_log.format }};
+    log_format {{ access_log.name }} {{ access_log.format }};
 {% endfor %}
 {% endif %}
 {% if nginx_config_main_template.http_settings.access_log_location is defined %}
@@ -78,24 +78,24 @@ http {
     access_log off;
 {% else %}
 {% for access_log in nginx_config_main_template.http_settings.access_log_location %}
-    access_log  {{ access_log.location }}  {{ access_log.name }};
+    access_log {{ access_log.location }} {{ access_log.name }};
 {% endfor %}
 {% endif %}
 {% endif %}
 {% if nginx_config_main_template.http_settings.sendfile is defined and nginx_config_main_template.http_settings.sendfile %}
-    sendfile        on;
+    sendfile on;
 {% endif %}
 {% if nginx_config_main_template.http_settings.tcp_nopush is defined and nginx_config_main_template.http_settings.tcp_nopush %}
-    tcp_nopush      on;
+    tcp_nopush on;
 {% endif %}
 {% if nginx_config_main_template.http_settings.tcp_nodelay is defined and nginx_config_main_template.http_settings.tcp_nodelay %}
-    tcp_nodelay     on;
+    tcp_nodelay on;
 {% endif %}
 {% if nginx_config_main_template.http_settings.server_tokens is defined and nginx_config_main_template.http_settings.server_tokens | length %}
     server_tokens {{ nginx_config_main_template.http_settings.server_tokens }};
 {% endif %}
 {% if nginx_config_main_template.http_settings.keepalive_timeout is defined %}
-    keepalive_timeout  {{ nginx_config_main_template.http_settings.keepalive_timeout }};
+    keepalive_timeout {{ nginx_config_main_template.http_settings.keepalive_timeout }};
 {% endif %}
 {% if nginx_config_main_template.http_settings.rate_limit is defined %}
     limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
@@ -105,10 +105,10 @@ http {
     keyval $arg_text $text zone=one;
 {% endif %}
 {% if nginx_config_main_template.http_settings.server_names_hash_bucket_size is defined %}
-    server_names_hash_bucket_size  {{ nginx_config_main_template.http_settings.server_names_hash_bucket_size }};
+    server_names_hash_bucket_size {{ nginx_config_main_template.http_settings.server_names_hash_bucket_size }};
 {% endif %}
 {% if nginx_config_main_template.http_settings.server_names_hash_max_size is defined %}
-    server_names_hash_max_size  {{ nginx_config_main_template.http_settings.server_names_hash_max_size }};
+    server_names_hash_max_size {{ nginx_config_main_template.http_settings.server_names_hash_max_size }};
 {% endif %}
 {% if nginx_config_main_template.http_global_autoindex is defined | default(false) %}
     autoindex on;
@@ -119,7 +119,7 @@ http {
 {% endfor %}
 {% endif %}
 {% if nginx_config_main_template.sub_filter.last_modified is defined %}
-    sub_filter_last_modified  {{ nginx_config_main_template.sub_filter.last_modified | ternary("on", "off") }};
+    sub_filter_last_modified {{ nginx_config_main_template.sub_filter.last_modified | ternary("on", "off") }};
 {% endif %}
 {% if nginx_config_main_template.sub_filter.once is defined %}
     sub_filter_once {{ nginx_config_main_template.sub_filter.once | ternary("on", "off") }};

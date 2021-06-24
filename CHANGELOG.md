@@ -33,6 +33,9 @@ BREAKING CHANGES:
 *   Refactor the `ssl` HTTP config template into its own separate file. Almost all variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
     *   All `ssl` variables still live within an `ssl` dictionary, but the names have changed to better reflect the official NGINX directive names.
     *   `ssl` configs are now supported within both the `http` and `server` contexts.
+*   Refactor the `auth` HTTP config template into its own separate file, as well as add support for `auth_jwt` directives. All variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
+    *   All the various `auth` variables now live within their respective `auth` dictionaries.
+    *   `auth` configs are now supported within the `http`, `server`, and `location` contexts.
 *   Rename some NGINX template config parameters to align with NGINX directive names:
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.
@@ -49,9 +52,11 @@ FEATURES:
     ---
     collections:
       - name: community.general
-        version: 3.1.0
+        version: 3.2.0
       - name: ansible.posix
         version: 1.2.0
+      - name: community.docker  # This collection is only used as part of the Molecule testing suite
+        version: 1.7.0
     ```
 *   Explicitly list Jinja2 `2.11.3` as a requirement, as well as detail the minimum supported version (`2.11.x`).
 *   Implement Release Drafter.
@@ -61,6 +66,7 @@ ENHANCEMENTS:
 *   Add support for NGINX's `index` directive to the `server` block within the template config parameters.
 *   Update Ansible Lint to `5.0.11`, Molecule to `3.3.0`, yamllint to `1.26.1` and Docker Python SDK to `5.0.0`.
 *   Consolidate Molecule testing scenarios to address changes introduced in Ansible Lint `5.*`.
+*   Bump the version of the roles required by Molecule to their latest version.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
 *   Replace Molecule tests using Alpine 3.11 with Alpine 3.10 (to test NGINX App Protect configurations), Debian stretch with Debian buster (stretch has reached its EoL), and update list of supported platforms.
@@ -69,6 +75,7 @@ ENHANCEMENTS:
 *   Update GitHub actions to add a workflow dispatch option.
 *   Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
 *   Add support for `alias` directive in `location` statements
+*   Ensure the default values for the `nginx.conf` template match the default values found on a fresh NGINX installation.
 
 BUG FIXES:
 
@@ -76,6 +83,7 @@ BUG FIXES:
 *   In NGINX App Protect environments on SELinux enforced systems, the `nginx -t` handler fails when run from a directory that the NGINX process' user does not have access to.
 *   Fix missing GRPC boolean check in GRPC template.
 *   Fix `nginx_config_cleanup_paths` not working as intended.
+*   Fix issue with the `app_protect.j2` template that was causing the default values for `nginx.conf` to fail.
 
 ## 0.3.3 (January 28, 2021)
 

@@ -121,6 +121,29 @@
           - template_file: http/default.conf.j2
             conf_file_name: default.conf
             conf_file_location: /etc/nginx/conf.d/
+            auth_jwt:
+              enable: false
+                # realm: realm
+                # token: $cookie_auth_token
+              claim_set:
+                - variable: $email
+                  name:
+                    - info
+              header_set:
+                - variable: $job
+                  name: info
+              # key_file: not tested
+              # key_request: not tested
+              leeway: 0s
+              type: signed
+            auth_request:
+              uri: false
+              set:
+                variable: $temp
+                value: auth
+            auth_basic:
+              realm: false
+              # user_file: not tested
             servers:
               - listen:
                   - ip: 0.0.0.0
@@ -151,6 +174,22 @@
                       dest: syslog:server=10.1.1.1:514
                     - path: /etc/app_protect/conf/log_default.json
                       dest: syslog:server=10.1.1.2:514
+                auth_jwt:
+                  enable:
+                    realm: realm
+                    token: $cookie_auth_token
+                  # key_file: not tested
+                  # key_request: not tested
+                  leeway: 0s
+                  type: signed
+                auth_request:
+                  uri: false
+                  set:
+                    variable: $temp
+                    value: auth
+                auth_basic:
+                  realm: false
+                  # user_file: not tested
                 http_error_pages:
                   404: /404.html
                 error_page: /usr/share/nginx/html
@@ -179,6 +218,22 @@
                           dest: syslog:server=10.1.1.1:514
                         - path: /etc/app_protect/conf/log_default.json
                           dest: syslog:server=10.1.1.2:514
+                    auth_jwt:
+                      enable: false
+                      #   realm: realm
+                      #   token: $cookie_auth_token
+                      # key_file: not tested
+                      # key_request: not tested
+                      leeway: 0s
+                      type: signed
+                    auth_request:
+                      uri: false
+                      set:
+                        variable: $temp
+                        value: auth
+                    auth_basic:
+                      realm: false
+                      # user_file: not tested
                     proxy_hide_header:
                       - X-Powered-By
                     grpc:
