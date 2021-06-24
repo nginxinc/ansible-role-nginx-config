@@ -764,7 +764,7 @@ nginx_config_http_template:
               #   value: Value-X
               #   always: false
             root: /usr/share/nginx/html
-            # alias: /usr/share/nginx/html
+            alias: /usr/share/nginx/html
             index: index.html
             autoindex: false
             auth_basic: null
