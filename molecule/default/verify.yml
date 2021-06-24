@@ -59,7 +59,7 @@
     - name: Ensure frontend_default.conf contains 'alias directive'
       lineinfile:
         path: /etc/nginx/conf.d/frontend_default.conf
-        line: "    alias /usr/share/nginx/html;"
+        line: "        alias /usr/share/nginx/html;"
         state: present
       check_mode: true
       register: conf
