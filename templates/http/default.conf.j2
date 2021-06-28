@@ -198,6 +198,9 @@ server {
         {{ proxy_pass(location.proxy_pass) }}
 {% endfilter %}
 {% endif %}
+{% if location.alias is defined %}
+        alias {{ location.alias }};
+{% endif %}
 {% if location.root is defined %}
         root   {{ location.root }};
 {% endif %}

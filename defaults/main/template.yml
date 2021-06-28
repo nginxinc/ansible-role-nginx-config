@@ -809,6 +809,7 @@ nginx_config_http_template:
               #   value: Value-X
               #   always: false
             root: /usr/share/nginx/html
+            alias: /usr/share/nginx/html
             index: index.html
             autoindex: false
             try_files: $uri $uri/index.html $uri.html =404
