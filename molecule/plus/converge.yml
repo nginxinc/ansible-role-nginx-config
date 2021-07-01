@@ -107,8 +107,6 @@
             conf_file_location: /etc/nginx/conf.d/
             auth_jwt:
               enable: false
-                # realm: realm
-                # token: $cookie_auth_token
               claim_set:
                 - variable: $email
                   name:
@@ -116,8 +114,6 @@
               header_set:
                 - variable: $job
                   name: info
-              # key_file: not tested
-              # key_request: not tested
               leeway: 0s
               type: signed
             auth_request:
@@ -127,7 +123,6 @@
                 value: auth
             auth_basic:
               realm: false
-              # user_file: not tested
             autoindex:
               enable: true
               exact_size: true
@@ -186,15 +181,7 @@
                 min_uses: 2
                 valid: 1m
             rewrite:
-              # return: 200
-              # rewrites:
-              #   - regex: (.*).html(.*)
-              #     replacement: $1$2
-              #     flag: last
               log: false
-              # set:
-              #   - variable: $var
-              #     value: var
               uninitialized_variable_warn: false
             sub_filter:
               sub_filters:
@@ -237,8 +224,6 @@
                   enable:
                     realm: realm
                     token: $cookie_auth_token
-                  # key_file: not tested
-                  # key_request: not tested
                   leeway: 0s
                   type: signed
                 auth_request:
@@ -248,7 +233,6 @@
                     value: auth
                 auth_basic:
                   realm: false
-                  # user_file: not tested
                 http_error_pages:
                   404: /404.html
                 error_page: /usr/share/nginx/html
@@ -274,10 +258,6 @@
                           dest: syslog:server=10.1.1.2:514
                     auth_jwt:
                       enable: false
-                      #   realm: realm
-                      #   token: $cookie_auth_token
-                      # key_file: not tested
-                      # key_request: not tested
                       leeway: 0s
                       type: signed
                     auth_request:
@@ -287,7 +267,6 @@
                         value: auth
                     auth_basic:
                       realm: false
-                      # user_file: not tested
                     proxy_hide_header:
                       - X-Powered-By
                     grpc:
@@ -374,7 +353,6 @@
                       read_timeout: 60s
                       redirect: false
                       request_buffering: false
-                      # send_lowat: 0  # not supported on linux
                       send_timeout: 60s
                       set_body: body
                       set_header:
@@ -388,9 +366,7 @@
                       ssl_ciphers:
                         - DEFAULT
                       ssl_conf_command: Options PrioritizeChaCha?
-                      # ssl_crl: /path/to/file
                       ssl_name: $proxy_host
-                      # ssl_password_file: /path/to/file
                       ssl_protocols:
                         - TLSv1
                         - TLSv1.1
@@ -398,7 +374,6 @@
                         - TLSv1.3
                       ssl_server_name: false
                       ssl_session_reuse: true
-                      # ssl_trusted_certificate: /path/to/file
                       ssl_verify: false
                       ssl_verify_depth: 1
                       store: false
@@ -426,11 +401,6 @@
                           value: $proxy_add_x_forwarded_for
                         - field: X-Forwarded-Proto
                           value: $scheme
-                returns:
-                  return301:
-                    location: ^~ /old-path
-                    code: 301
-                    value: http://$host/new-path
             proxy_cache_path:
               - path: /var/cache/nginx/proxy/frontend
                 levels: "1:1"

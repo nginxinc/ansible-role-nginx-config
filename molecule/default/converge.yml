@@ -108,7 +108,6 @@
                 value: auth
             auth_basic:
               realm: false
-              # user_file: not tested
             proxy_cache_path:
               - path: /var/cache/nginx/proxy/frontend
                 levels: "1:1"
@@ -125,10 +124,6 @@
                 loader_files: 100
                 loader_sleep: 50ms
                 loader_threshold: 200ms
-                # purger: false  # NGINX Plus only
-                # purger_files: 10
-                # purger_sleep: 50ms
-                # purger_threshold: 50ms
               - path: /var/cache/nginx/proxy/backend
                 levels: "1:2"
                 use_temp_path: true
@@ -183,15 +178,7 @@
                 min_uses: 2
                 valid: 1m
             rewrite:
-              # return: 200
-              # rewrites:
-              #   - regex: (.*).html(.*)
-              #     replacement: $1$2
-              #     flag: last
               log: false
-              # set:
-              #   - variable: $var
-              #     value: var
               uninitialized_variable_warn: false
             sub_filter:
               sub_filters:
@@ -228,7 +215,6 @@
                     value: auth
                 auth_basic:
                   realm: false
-                  # user_file: not tested
                 http_error_pages:
                   404: /404.html
                 error_page: /usr/share/nginx/html
@@ -258,28 +244,16 @@
                   dry_run: false
                   log_level: info
                   status: 503
-                  # zones:
-                  #   - key: $binary_remote_addr
-                  #     name: one
-                  #     size: 1m
-                  #     rate: 10r/s
                 log:
                   access:
                     - path: /var/log/nginx/access.log
                       format: main
-                  # format:
-                  #   - name: main
-                  #     format: |
-                  #       '$remote_addr - $remote_user [$time_local] "$request" '
-                  #       '$status $body_bytes_sent "$http_referer" '
-                  #       '"$http_user_agent" "$http_x_forwarded_for"'
                   open_log_file_cache:
                     max: 1000
                     inactive: 20s
                     min_uses: 2
                     valid: 1m
                 rewrite:
-                  return: 200
                   rewrites:
                     - regex: (.*).html(.*)
                       replacement: $1$2
@@ -368,21 +342,12 @@
                       access:
                         - path: /var/log/nginx/access.log
                           format: main
-                      # format:
-                      #   - name: main
-                      #     format: |-
-                      #       '$remote_addr - $remote_user [$time_local] "$request" '
-                      #       '$status $body_bytes_sent "$http_referer" '
-                      #       '"$http_user_agent" "$http_x_forwarded_for"'
                       open_log_file_cache:
                         max: 1000
                         inactive: 20s
                         min_uses: 2
                         valid: 1m
                     rewrite:
-                      return:
-                        code: 200
-                        text: test
                       rewrites:
                         - regex: (.*).html(.*)
                           replacement: $1$2
@@ -466,7 +431,6 @@
                       read_timeout: 60s
                       redirect: false
                       request_buffering: false
-                      # send_lowat: 0  # not supported on linux
                       send_timeout: 60s
                       set_body: body
                       set_header:
@@ -571,11 +535,17 @@
                   - location: /
                     root: /usr/share/nginx/html
                     index: frontend_index.html
-                    autoindex: false
+                    autoindex:
+                      enable: false
                   - location: /alias
                     alias: /usr/share/nginx/html
                     index: frontend_index.html
-                    autoindex: false
+                    autoindex:
+                      enable: false
+                    rewrite:
+                      return:
+                        code: 200
+                        text: test
           - template_file: http/default.conf.j2
             conf_file_name: backend_default.conf
             conf_file_location: /etc/nginx/conf.d/
