@@ -69,6 +69,7 @@ ENHANCEMENTS:
 *   Update GitHub actions to add a workflow dispatch option.
 *   Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
 *   Add support for configuring NGINX App Protect DoS (Denial of Service) module and directives.
+*   Add location block support for `access_log`.
 
 BUG FIXES:
 
