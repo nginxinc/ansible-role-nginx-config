@@ -140,10 +140,10 @@ server {
 {% endif %}
 {% if location.access_log is defined %}
 {% if location.access_log is sameas false or location.access_log == "off" %}
-    access_log off;
+        access_log off;
 {% else %}
 {% for access_log in location.access_log %}
-    access_log  {{ access_log.location }}  {{ access_log.name }};
+        access_log  {{ access_log.location }}  {{ access_log.name }};
 {% endfor %}
 {% endif %}
 {% endif %}
