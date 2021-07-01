@@ -147,7 +147,7 @@ server {
 {% if location.app_protect_dos is defined %}
 {% from 'http/app_protect_dos.j2' import app_protect_dos_local with context %}
 {% filter indent(8) %}
-        {{ app_protect_dos_local(location.app_protect) }}
+        {{ app_protect_dos_local(location.app_protect_dos) }}
 {% endfilter %}
 {% endif %}
 {% if location.grpc_global is defined %}
