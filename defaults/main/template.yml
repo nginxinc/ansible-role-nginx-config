@@ -152,6 +152,80 @@ nginx_config_http_template:
     auth_basic:  # Optional -- Configure basic auth
       realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
       user_file: /path/to/file  # Optional
+    autoindex:  # Optional -- Configure autoindex
+      enable: false  # Optional
+      exact_size: true  # Optional
+      format: html  # Optional
+      localtime: false  # Optional
+    headers:  # Optional -- Configure headers
+      add_headers:  # Optional
+        - name: Strict-Transport-Security  # Required
+          value: '"max-age=15768000; includeSubDomains"'  # Required
+          always: false  # Optional
+      add_trailers:  # Optional
+        - name: Strict-Transport-Security  # Required
+          value: '"max-age=15768000; includeSubDomains"'  # Required
+          always: false  # Optional
+      expires:  # Optional
+        - modified: true  # Optional
+          time: "12h"  # Optional
+        - epoch  # Optional -- Can also be 'max'
+    limit_req:  # Optional -- Configure request limits
+      limit_reqs:  # Optional
+        - zone: one  # Required
+          burst: 5  # Optional
+          delay: false  # Optional -- Set it to 'false' to set it to 'nodelay', otherwise specify a delay value
+      dry_run: false  # Optional
+      log_level: error  # Optional
+      status: 503  # Optional
+      zones:  # Optional
+        - key: $binary_remote_addr  # Required
+          name: one  # Required
+          size: 1m  # Required
+          rate: 10r/s  # Required
+          sync: false  # Optional
+    log:  # Optional -- Configure logs
+      access:  # Optional
+        - path: /var/log/nginx/access.log  # Required
+          format: main  # Optional
+          buffer: 1m  # Optional
+          gzip:  # Optional -- Can also be set to 'true'
+            level: 5  # Optional
+          flush: 10h  # Optional
+          if: $loggable  # Optional
+      format:  # Optional
+        - name: main  # Required
+          escape: default  # Optional -- Can also be 'json' or 'none'
+          format: |  # Required
+            '$remote_addr - $remote_user [$time_local] "$request" '
+            '$status $body_bytes_sent "$http_referer" '
+            '"$http_user_agent" "$http_x_forwarded_for"'
+      open_log_file_cache:  # Optional -- Can also be set to 'false'
+        max: 1000  # Required
+        inactive: 20s  # Optional
+        min_uses: 2  # Optional
+        valid: 1m  # Optional
+    rewrite:  # Optional -- Configure rewrite directives
+      return:  # Optional -- Can also be set to a return URL or code directly
+        - code: 200  # Optional
+          text: text  # Optional
+          url: https://example.com  # Optional
+      rewrites:  # Optional
+        - regex: (.*).html(.*)  # Required
+          replacement: $1$2  # Required
+          flag: last  # Optional
+      log: false  # Optional
+      set:  # Optional
+        - variable: $var  # Required
+          value: var  # Required
+      uninitialized_variable_warn: true  # Optional
+    sub_filter:  # Optional -- Configure sub_filter directives
+      sub_filters:  # Optional
+        - string: server_hostname  # Required
+          replacement: $hostname  # Required
+      last_modified: false  # Optional
+      once: true  # Optional
+      types: text/html  # Optional
     proxy_cache_path:  # Optional -- Configure Proxy Cache Path
       - path: /var/cache/nginx/proxy/backend  # Required
         levels: "1:1"  # Optional

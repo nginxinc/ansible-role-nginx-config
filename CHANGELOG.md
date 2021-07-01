@@ -20,8 +20,8 @@ BREAKING CHANGES:
     *   The `health_check` parameter within the `server` dictionary is no longer supported. Instead, manually set `max_fails` and `fail_timeout`.
 *   Refactor the `proxy` HTTP config template into its own separate file. All variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
     *   All `proxy_*` related variables now live under the `proxy` dictionary key, with the exception of `proxy_pass` and `proxy_cache_path`. You can specify the `proxy` dictionary key inside the `http`, `server`, and `location` contexts.
-    *   Remove the `nginx_config_main_template.http_settings.cache` dictionary variable. Use `nginx_config_http_template.*.proxy_cache_path` instead.
-    *   Remove the `location.websocket` variable. Use `location.proxy.set_header` instead:
+    *   Removed the `nginx_config_main_template.http_settings.cache` dictionary variable. Use `nginx_config_http_template.*.proxy_cache_path` instead.
+    *   Removed the `location.websocket` variable. Use `location.proxy.set_header` instead:
     ```yaml
     proxy:
       set_header:
@@ -36,6 +36,85 @@ BREAKING CHANGES:
 *   Refactor the `auth` HTTP config template into its own separate file, as well as add support for `auth_jwt` directives. All variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
     *   All the various `auth` variables now live within their respective `auth` dictionaries.
     *   `auth` configs are now supported within the `http`, `server`, and `location` contexts.
+*   Refactor the `autoindex` NGINX config template into its own separate file and added missing `autoindex` module directives. All variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
+    *   The `autoindex` directives now live within the `autoindex` dictionary.
+    *   The `autoindex` dictionary now lives in the HTTP template config instead of the Main template config.
+*   Refactor the `add_headers` dictionary into a `headers` dictionary that now includes all the `headers` module directives:
+    *   The `add_headers` directive now lives within the `headers` dictionary.
+*   Refactor the `access_log` and `log_format` directives into a `log` dictionary that now includes all the `log` module directives:
+    *   An `access` and `format` directive now lives within the `log` dictionary.
+    *   The `log` dictionary HTTP context now lives in the HTTP template config instead of the Main template config.
+*   Refactor the `keyval` directives into its own dictionary:
+    *   Both `keyval` directives now live within the `keyval` dictionary.
+    *   The `keyval` dictionary now lives in the HTTP template config instead of the Main template config.
+*   Refactor the `return` and `rewrite` directives into their own dictionary that now includes all the `rewrite` module directives:
+    *   The `rewrites` directive has transitioned from a list of one liners
+    ```yaml
+    rewrites:
+      - (.*).html(.*) $1$2
+    ```
+    to
+    ```yaml
+    rewrites:
+      - regex: (.*).html(.*)
+        replacement: $1$2
+    ```
+    *   The `return` directive has transitioned from a slightly complex dictionary structure (wherein the `location` variable didn't necessarily have any effect)
+    ```yaml
+    returns:
+      return301:
+        location: ^~ /old-path
+        code: 301
+        value: http://$host/new-path
+    ```
+    to a slightly less complicated structure
+    ```yaml
+    return:  # 200 -- Alternatively you could also include a code here instead of fleshing out the dictionary.
+      code: 200
+      text: nginx
+    ```
+*   Refactor the `sub_filter` directives into a `sub_filter` dictionary:
+    *   The only major difference is that one liners under the `sub_filters` dictionary key have changed from
+    ```yaml
+    sub_filters:
+      - sub_filter 'server_hostname' '$hostname';
+    ```
+    to
+    ```yaml
+    sub_filters:
+      - string: server_hostname
+        replacement: $hostname
+    ```
+    *   Removed the `server.http_demo_conf` dictionary. Use `server.sub_filters` instead:
+    ```yaml
+    sub_filter:
+      sub_filters:
+        - string: server_hostname
+          replacement: $hostname
+        - string: server_address
+          replacement: $server_addr:$server_port
+        - string: server_url
+          replacement: $request_uri
+        - string: remote_addr
+          replacement: '$remote_addr:$remote_port'
+        - string: server_date
+          replacement: $time_local
+        - string: client_browser
+          replacement: $http_user_agent
+        - string: request_id
+          replacement: $request_id
+        - string: nginx_version
+          replacement: $nginx_version
+        - string: document_root
+          replacement: $document_root
+        - string: proxied_for_ip
+          replacement: $http_x_forwarded_for
+    ```
+    *   The `sub_filter` dictionary HTTP context now lives in the HTTP template config instead of the Main template config.
+*   Refactor the `limit_req` directive into its own dictionary:
+    *   The `limit_req` directives now live within the `limit_req` dictionary.
+    *   The `limit_req` dictionary now lives in the HTTP template config instead of the Main template config.
+
 *   Rename some NGINX template config parameters to align with NGINX directive names:
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.
