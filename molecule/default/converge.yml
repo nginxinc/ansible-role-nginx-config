@@ -166,6 +166,10 @@
               access:
                 - path: /var/log/nginx/access.log
                   format: main
+                  buffer: 1m
+                  gzip: 5
+                  flush: 10h
+                  if: $status
               format:
                 - name: main
                   format: |
@@ -530,7 +534,6 @@
                       replacement: $http_x_forwarded_for
                   last_modified: false
                   once: false
-                  types: "text/html"
                 locations:
                   - location: /
                     root: /usr/share/nginx/html

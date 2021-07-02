@@ -87,9 +87,9 @@ access_log {{ 'off' }};
 {% elif log['access'] is defined %}
 {% for log in log['access'] %}
 access_log {{ 'off' if not log else log['path'] if log['path'] is defined }}{{ (' ' + log['format']) if log['format'] is defined -}}
-{{- (' buffer=' + log['buffer']) if log['buffer'] is defined -}}
-{{- ' gzip' if log['gzip'] is defined and log['access']['gzip'] is boolean and log['gzip'] | bool else (' gzip=' + log['gzip']) if log['gzip'] is defined and log['gzip'] is not boolean -}}
-{{- (' flush=' + log['flush']) if log['flush'] is defined }}{{ (' if=' + log['if']) if log['if'] is defined }};
+{{- (' buffer=' + log['buffer'] | string) if log['buffer'] is defined -}}
+{{- ' gzip' if log['gzip'] is defined and log['access']['gzip'] is boolean and log['gzip'] | bool else (' gzip=' + log['gzip'] | string) if log['gzip'] is defined and log['gzip'] is not boolean -}}
+{{- (' flush=' + log['flush'] | string) if log['flush'] is defined }}{{ (' if=' + log['if']) if log['if'] is defined }};
 {% endfor %}
 {% endif %}
 {% if log['open_log_file_cache'] is defined %}

@@ -530,7 +530,6 @@
                       replacement: $http_x_forwarded_for
                   last_modified: false
                   once: false
-                  types: "text/html"
                 locations:
                   - location: /
                     root: /usr/share/nginx/html

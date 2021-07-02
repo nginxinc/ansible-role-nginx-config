@@ -189,8 +189,7 @@ nginx_config_http_template:
         - path: /var/log/nginx/access.log  # Required
           format: main  # Optional
           buffer: 1m  # Optional
-          gzip:  # Optional -- Can also be set to 'true'
-            level: 5  # Optional
+          gzip: 5  # Optional -- Can also be set to 'true'
           flush: 10h  # Optional
           if: $loggable  # Optional
       format:  # Optional
