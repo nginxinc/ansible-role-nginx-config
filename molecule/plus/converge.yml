@@ -128,6 +128,11 @@
               exact_size: true
               format: html
               localtime: true
+            health_check:
+              match:
+                - name: nginx
+                  conditions:
+                    - status 200
             keyval:
               keyvals:
                 - key: $arg_text
@@ -267,6 +272,17 @@
                         value: auth
                     auth_basic:
                       realm: false
+                    health_check:
+                      health_checks:
+                        - interval: 5
+                          jitter: 0
+                          fails: 1
+                          passes: 1
+                          uri: /
+                          mandatory: false
+                          persistent: false
+                          match: nginx
+                          port: 80
                     proxy_hide_header:
                       - X-Powered-By
                     grpc:
