@@ -170,6 +170,11 @@ nginx_config_http_template:
         - modified: true  # Optional
           time: "12h"  # Optional
         - epoch  # Optional -- Can also be 'max'
+    health_check:  # Optional -- Configure NGINX Plus Health Checks
+      match:  # Optional list
+        - name: name  # Required
+          conditions: []  # Optional list
+            # - status 200
     limit_req:  # Optional -- Configure request limits
       limit_reqs:  # Optional
         - zone: one  # Required
@@ -483,6 +488,79 @@ nginx_config_http_template:
         auth_basic:  # Optional -- Configure basic auth
           realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
           user_file: /path/to/file  # Optional
+        autoindex:  # Optional -- Configure autoindex
+          enable: false  # Optional
+          exact_size: true  # Optional
+          format: html  # Optional
+          localtime: false  # Optional
+        headers:  # Optional -- Configure headers
+          add_headers:  # Optional
+            - name: Strict-Transport-Security  # Required
+              value: '"max-age=15768000; includeSubDomains"'  # Required
+              always: false  # Optional
+          add_trailers:  # Optional
+            - name: Strict-Transport-Security  # Required
+              value: '"max-age=15768000; includeSubDomains"'  # Required
+              always: false  # Optional
+          expires:  # Optional
+            - modified: true  # Optional
+              time: "12h"  # Optional
+            - epoch  # Optional -- Can also be 'max'
+        limit_req:  # Optional -- Configure request limits
+          limit_reqs:  # Optional
+            - zone: one  # Required
+              burst: 5  # Optional
+              delay: false  # Optional -- Set it to 'false' to set it to 'nodelay', otherwise specify a delay value
+          dry_run: false  # Optional
+          log_level: error  # Optional
+          status: 503  # Optional
+          zones:  # Optional
+            - key: $binary_remote_addr  # Required
+              name: one  # Required
+              size: 1m  # Required
+              rate: 10r/s  # Required
+              sync: false  # Optional
+        log:  # Optional -- Configure logs
+          access:  # Optional
+            - path: /var/log/nginx/access.log  # Required
+              format: main  # Optional
+              buffer: 1m  # Optional
+              gzip: 5  # Optional -- Can also be set to 'true'
+              flush: 10h  # Optional
+              if: $loggable  # Optional
+          format:  # Optional
+            - name: main  # Required
+              escape: default  # Optional -- Can also be 'json' or 'none'
+              format: |  # Required
+                '$remote_addr - $remote_user [$time_local] "$request" '
+                '$status $body_bytes_sent "$http_referer" '
+                '"$http_user_agent" "$http_x_forwarded_for"'
+          open_log_file_cache:  # Optional -- Can also be set to 'false'
+            max: 1000  # Required
+            inactive: 20s  # Optional
+            min_uses: 2  # Optional
+            valid: 1m  # Optional
+        rewrite:  # Optional -- Configure rewrite directives
+          return:  # Optional -- Can also be set to a return URL or code directly
+            - code: 200  # Optional
+              text: text  # Optional
+              url: https://example.com  # Optional
+          rewrites:  # Optional
+            - regex: (.*).html(.*)  # Required
+              replacement: $1$2  # Required
+              flag: last  # Optional
+          log: false  # Optional
+          set:  # Optional
+            - variable: $var  # Required
+              value: var  # Required
+          uninitialized_variable_warn: true  # Optional
+        sub_filter:  # Optional -- Configure sub_filter directives
+          sub_filters:  # Optional
+            - string: server_hostname  # Required
+              replacement: $hostname  # Required
+          last_modified: false  # Optional
+          once: true  # Optional
+          types: text/html  # Optional
         grpc_global:  # Optional -- Configure GRPC
           bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
             address: $remote_addr  # Required
@@ -650,36 +728,15 @@ nginx_config_http_template:
         include_files: []
         http_error_pages: {}
         error_page: /usr/share/nginx/html
-        # access_log: "off" # Cancels all access_log directives on the current level
-        access_log:
-          - name: main
-            location: /var/log/nginx/access.log
         error_log:
           location: /var/log/nginx/error.log
           level: warn
         root: /usr/share/nginx/html
         index: index.html index.php
         # https_redirect: $host
-        autoindex: false
         try_files: $uri $uri/index.html $uri.html =404
         client_max_body_size: 1m
-        add_headers:
-          strict_transport_security:
-            name: Strict-Transport-Security
-            value: max-age=15768000; includeSubDomains
-            always: true
-          # header_name:
-          #   name: Header-X
-          #   value: Value-X
-          #   always: false
-        sub_filter:
-          # sub_filters: []
-          last_modified: false
-          once: true
-          types: "text/html"
         # custom_options: []
-        health_check_plus: false
-        http_demo_conf: false
         locations:
           - location: /
             app_protect:  # Optional -- Configure NGINX App Protect
@@ -689,22 +746,109 @@ nginx_config_http_template:
               security_log:  # Optional
                 - path: path  # Required
                   dest: dest  # Required
-              auth_jwt:  # Optional -- Configure JWT auth
-                enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
-                  realm: realm  # Required
-                  token: $cookie_auth_token  # Optional
-                key_file: /path/to/file  # Optional
-                key_request: /path/to/file  # Optional
-                leeway: 0s  # Optional
-                type: signed  # Optional -- One of `signed` or `encrypted`
-              auth_request:  # Optional -- Configure request auth
-                uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
-                set:  # Optional
-                  variable: $temp  # Required
-                  value: auth  # Required
-              auth_basic:  # Optional -- Configure basic auth
-                realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
-                user_file: /path/to/file  # Optional
+            auth_jwt:  # Optional -- Configure JWT auth
+              enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
+                realm: realm  # Required
+                token: $cookie_auth_token  # Optional
+              key_file: /path/to/file  # Optional
+              key_request: /path/to/file  # Optional
+              leeway: 0s  # Optional
+              type: signed  # Optional -- One of `signed` or `encrypted`
+            auth_request:  # Optional -- Configure request auth
+              uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
+              set:  # Optional
+                variable: $temp  # Required
+                value: auth  # Required
+            auth_basic:  # Optional -- Configure basic auth
+              realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
+              user_file: /path/to/file  # Optional
+            autoindex:  # Optional -- Configure autoindex
+              enable: false  # Optional
+              exact_size: true  # Optional
+              format: html  # Optional
+              localtime: false  # Optional
+            headers:  # Optional -- Configure headers
+              add_headers:  # Optional
+                - name: Strict-Transport-Security  # Required
+                  value: '"max-age=15768000; includeSubDomains"'  # Required
+                  always: false  # Optional
+              add_trailers:  # Optional
+                - name: Strict-Transport-Security  # Required
+                  value: '"max-age=15768000; includeSubDomains"'  # Required
+                  always: false  # Optional
+              expires:  # Optional
+                - modified: true  # Optional
+                  time: "12h"  # Optional
+                - epoch  # Optional -- Can also be 'max'
+            health_check:  # Optional -- Configure NGINX Plus Health Checks
+              health_checks:  # Optional
+                - interval: 5  # Optional
+                  jitter: 0  # Optional
+                  fails: 1  # Optional
+                  passes: 1  # Optional
+                  uri: /  # Optional
+                  mandatory: false  # Optional boolean
+                  persistent: false  # Optional boolean -- Requires 'mandatory' to be set to 'true'
+                  match: block  # Optional
+                  port: 80  # Optional
+                  type: grpc  # Optional
+                  grpc_service: name  # Optional -- Requires 'type: grpc'
+                  grpc_status: code  # Optional -- Requires 'type: grpc'
+            limit_req:  # Optional -- Configure request limits
+              limit_reqs:  # Optional
+                - zone: one  # Required
+                  burst: 5  # Optional
+                  delay: false  # Optional -- Set it to 'false' to set it to 'nodelay', otherwise specify a delay value
+              dry_run: false  # Optional
+              log_level: error  # Optional
+              status: 503  # Optional
+              zones:  # Optional
+                - key: $binary_remote_addr  # Required
+                  name: one  # Required
+                  size: 1m  # Required
+                  rate: 10r/s  # Required
+                  sync: false  # Optional
+            log:  # Optional -- Configure logs
+              access:  # Optional
+                - path: /var/log/nginx/access.log  # Required
+                  format: main  # Optional
+                  buffer: 1m  # Optional
+                  gzip: 5  # Optional -- Can also be set to 'true'
+                  flush: 10h  # Optional
+                  if: $loggable  # Optional
+              format:  # Optional
+                - name: main  # Required
+                  escape: default  # Optional -- Can also be 'json' or 'none'
+                  format: |  # Required
+                    '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"'
+              open_log_file_cache:  # Optional -- Can also be set to 'false'
+                max: 1000  # Required
+                inactive: 20s  # Optional
+                min_uses: 2  # Optional
+                valid: 1m  # Optional
+            rewrite:  # Optional -- Configure rewrite directives
+              return:  # Optional -- Can also be set to a return URL or code directly
+                - code: 200  # Optional
+                  text: text  # Optional
+                  url: https://example.com  # Optional
+              rewrites:  # Optional
+                - regex: (.*).html(.*)  # Required
+                  replacement: $1$2  # Required
+                  flag: last  # Optional
+              log: false  # Optional
+              set:  # Optional
+                - variable: $var  # Required
+                  value: var  # Required
+              uninitialized_variable_warn: true  # Optional
+            sub_filter:  # Optional -- Configure sub_filter directives
+              sub_filters:  # Optional
+                - string: server_hostname  # Required
+                  replacement: $hostname  # Required
+              last_modified: false  # Optional
+              once: true  # Optional
+              types: text/html  # Optional
             grpc_global:  # Optional -- Configure GRPC
               bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
                 address: $remote_addr  # Required
@@ -872,50 +1016,22 @@ nginx_config_http_template:
                 path: /var/cache/nginx/proxy/temp  # Required
                 level: 2  # Optional -- One of '1', '2' or '3'
             include_files: []
-            add_headers:
-              strict_transport_security:
-                name: Strict-Transport-Security
-                value: max-age=15768000; includeSubDomains
-                always: true
-              # header_name:
-              #   name: Header-X
-              #   value: Value-X
-              #   always: false
             root: /usr/share/nginx/html
             alias: /usr/share/nginx/html
             index: index.html
-            autoindex: false
             try_files: $uri $uri/index.html $uri.html =404
             # allows:
             #   - 192.168.1.0/24
             # denies:
             #   - all
             client_max_body_size: 1m
-            # returns:
-            #   return302:
-            #     code: 302
-            #     url: https://sso.somehost.local/?url=https://$http_host$request_uri
             # custom_options: []
-            # rewrites:
-            #   - /foo(.*) /$1 break
-            # proxy_pass_request_body: off
             # allows:
             #   - 192.168.1.0/24
             # denies:
             #   - all
             internal: false
-            websocket: false
-            sub_filter:
-              # sub_filters: []
-              last_modified: false
-              once: true
-              types: "text/html"
             # custom_options: []
-        returns:
-          return301:
-            location: /
-            code: 301
-            value: http://$host$request_uri
     upstreams:  # Optional -- Configure NGINX Upstreams
       - name: backend  # Required
         servers:  # Optional -- Cannot be used if 'state' directive is defined

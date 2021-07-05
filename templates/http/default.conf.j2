@@ -38,6 +38,10 @@
 {% from 'http/modules.j2' import headers with context %}
 {{ headers(item.headers) }}
 {% endif %}
+{% if item.health_check is defined %}
+{% from 'http/modules.j2' import health_check with context %}
+{{ health_check(item.health_check) }}
+{% endif %}
 {% if item.limit_req is defined %}
 {% from 'http/modules.j2' import limit_req with context %}
 {{ limit_req(item.limit_req) }}
@@ -249,6 +253,12 @@ server {
         {{ headers(location.headers) }}
 {% endfilter %}
 {% endif %}
+{% if location.health_check is defined %}
+{% from 'http/modules.j2' import health_check with context %}
+{% filter indent(8) %}
+        {{ health_check(location.health_check) }}
+{% endfilter %}
+{% endif %}
 {% if location.limit_req is defined %}
 {% from 'http/modules.j2' import limit_req with context %}
 {% filter indent(8) %}
@@ -307,9 +317,6 @@ server {
 {% for inline_option in location.custom_options %}
         {{ inline_option }}
 {% endfor %}
-{% endif %}
-{% if server.health_check_plus is defined %}
-        health_check;
 {% endif %}
     }
 {% endfor %}

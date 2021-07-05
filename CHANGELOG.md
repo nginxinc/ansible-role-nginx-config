@@ -114,7 +114,7 @@ BREAKING CHANGES:
 *   Refactor the `limit_req` directive into its own dictionary:
     *   The `limit_req` directives now live within the `limit_req` dictionary.
     *   The `limit_req` dictionary now lives in the HTTP template config instead of the Main template config.
-
+*   Refactor `server.health_check_plus` into its own dictionary that now includes all the `health_check` module directives (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples).
 *   Rename some NGINX template config parameters to align with NGINX directive names:
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.

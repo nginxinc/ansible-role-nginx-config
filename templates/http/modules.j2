@@ -38,6 +38,35 @@ expires {{ 'off' if not expire else (expire if expire is string) }}{{ 'modified 
 {% endif %}
 {% endmacro %}
 
+{# HTTP NGINX Upstream Health Checks -- ngx_http_upstream_hc_module #}
+{% macro health_check(health_check) %}
+{% if health_check['health_checks'] is defined %}
+{% for health_check in health_check['health_checks'] %}
+health_check{{ (' interval=' + health_check['interval'] | string) if health_check['interval'] is defined -}}
+{{- (' jitter=' + health_check['jitter'] | string) if health_check['jitter'] is defined -}}
+{{- (' fails=' + health_check['fails'] | string) if health_check['fails'] is defined -}}
+{{- (' passes=' + health_check['passes'] | string) if health_check['passes'] is defined -}}
+{{- (' uri=' + health_check['uri']) if health_check['uri'] is defined -}}
+{{- ' mandatory' if health_check['mandatory'] is defined and health_check['mandatory'] is boolean and health_check['mandatory'] | bool -}}
+{{- ' persistent' if health_check['persistent'] is defined and health_check['persistent'] is boolean and health_check['persistent'] | bool -}}
+{{- (' match=' + health_check['match']) if health_check['match'] is defined -}}
+{{- (' port=' + health_check['port'] | string) if health_check['port'] is defined -}}
+{{- (' type=' + health_check['type']) if health_check['type'] is defined -}}
+{{- (' grpc_service=' + health_check['grpc_service']) if health_check['grpc_service'] is defined -}}
+{{- (' grpc_status=' + health_check['grpc_status']) if health_check['grpc_status'] is defined }};
+{% endfor %}
+{% endif %}
+{% if health_check['match'] is defined %}
+{% for match in health_check['match'] %}
+match {{ match['name'] }} {
+{% for condition in match['conditions'] %}
+    {{ condition }};
+{% endfor %}
+}
+{% endfor %}
+{% endif %}
+{% endmacro %}
+
 {# HTTP NGINX Keyval -- ngx_http_keyval_module #}
 {% macro keyval(keyval) %}
 {% if keyval['keyvals'] is defined %}
