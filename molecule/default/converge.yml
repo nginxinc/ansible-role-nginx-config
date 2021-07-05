@@ -75,26 +75,11 @@
                 - text/html
               vary: false
             default_type: application/octet-stream
-            access_log_format:
-              - name: main
-                format: |
-                  '$remote_addr - $remote_user [$time_local] "$request" '
-                  '$status $body_bytes_sent "$http_referer" '
-                  '"$http_user_agent" "$http_x_forwarded_for"'
-            access_log_location:
-              - name: main
-                location: /var/log/nginx/access.log
             keepalive_timeout: 65
             cache: false
-            rate_limit: false
-            keyval: false
             server_tokens: "off"
             server_names_hash_bucket_size: 64
             server_names_hash_max_size: 512
-          sub_filter:
-            last_modified: false
-            once: true
-          http_global_autoindex: false
           custom_options:
             - master_process on;
           http_custom_options:
@@ -123,7 +108,89 @@
                 value: auth
             auth_basic:
               realm: false
-              # user_file: not tested
+            proxy_cache_path:
+              - path: /var/cache/nginx/proxy/frontend
+                levels: "1:1"
+                use_temp_path: false
+                inactive: 10m
+                keys_zone:
+                  name: frontend_proxy_cache
+                  size: 10m
+                max_size: 2g
+                min_free: 1g
+                manager_files: 100
+                manager_sleep: 500ms
+                manager_threshold: 200ms
+                loader_files: 100
+                loader_sleep: 50ms
+                loader_threshold: 200ms
+              - path: /var/cache/nginx/proxy/backend
+                levels: "1:2"
+                use_temp_path: true
+                keys_zone:
+                  name: backend_proxy_cache
+                  size: 10m
+                inactive: 60m
+                max_size: 10g
+            autoindex:
+              enable: true
+              exact_size: true
+              format: html
+              localtime: true
+            headers:
+              add_headers:
+                - name: Strict-Transport-Security
+                  value: '"max-age=15768000; includeSubDomains"'
+                  always: true
+              add_trailers:
+                - name: Strict-Transport-Security
+                  value: '"max-age=15768000; includeSubDomains"'
+                  always: true
+              expires:
+                - modified: true
+                  time: "12h"
+            limit_req:
+              limit_reqs:
+                - zone: one
+                  burst: 5
+                  delay: false
+              dry_run: false
+              log_level: info
+              status: 503
+              zones:
+                - key: $binary_remote_addr
+                  name: one
+                  size: 1m
+                  rate: 10r/s
+            log:
+              access:
+                - path: /var/log/nginx/access.log
+                  format: main
+                  buffer: 1m
+                  gzip: 5
+                  flush: 10h
+                  if: $status
+              format:
+                - name: main
+                  format: |
+                    '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"'
+              open_log_file_cache:
+                max: 1000
+                inactive: 20s
+                min_uses: 2
+                valid: 1m
+            rewrite:
+              log: false
+              uninitialized_variable_warn: false
+            sub_filter:
+              sub_filters:
+                - string: server_hostname
+                  replacement: $hostname
+              last_modified: false
+              once: false
+              types: text/html
             servers:
               - listen:
                   - ip: 0.0.0.0
@@ -152,22 +219,57 @@
                     value: auth
                 auth_basic:
                   realm: false
-                  # user_file: not tested
                 http_error_pages:
                   404: /404.html
                 error_page: /usr/share/nginx/html
-                access_log:
-                  - name: main
-                    location: /var/log/nginx/access.log
                 client_max_body_size: 512k
-                add_headers:
-                  strict_transport_security:
-                    name: Strict-Transport-Security
-                    value: max-age=15768000; includeSubDomains
-                    always: true
+                autoindex:
+                  enable: true
+                  exact_size: true
+                  format: html
+                  localtime: true
+                headers:
+                  add_headers:
+                    - name: Strict-Transport-Security
+                      value: '"max-age=15768000; includeSubDomains"'
+                      always: true
+                  add_trailers:
+                    - name: Strict-Transport-Security
+                      value: '"max-age=15768000; includeSubDomains"'
+                      always: true
+                  expires:
+                    - modified: true
+                      time: "12h"
+                limit_req:
+                  limit_reqs:
+                    - zone: one
+                      burst: 5
+                      delay: false
+                  dry_run: false
+                  log_level: info
+                  status: 503
+                log:
+                  access:
+                    - path: /var/log/nginx/access.log
+                      format: main
+                  open_log_file_cache:
+                    max: 1000
+                    inactive: 20s
+                    min_uses: 2
+                    valid: 1m
+                rewrite:
+                  rewrites:
+                    - regex: (.*).html(.*)
+                      replacement: $1$2
+                      flag: last
+                  log: false
+                  set:
+                    - variable: $var
+                      value: var
+                  uninitialized_variable_warn: false
                 sub_filter:
                   last_modified: false
-                  once: true
+                  once: false
                 ssl:
                   buffer_size: 16k
                   certificate: /etc/ssl/certs/molecule.crt
@@ -213,17 +315,55 @@
                       # user_file: not tested
                     grpc:
                       pass: localhost:9000
-                    add_headers:
-                      strict_transport_security:
-                        name: Strict-Transport-Security
-                        value: max-age=15768000; includeSubDomains
-                        always: true
-                      another_header:
-                        name: Fancy-New-Header-To-Test
-                        value: testing=true
-                        always: false
-                    rewrites:
-                      - (.*).html(.*) $1$2
+                    autoindex:
+                      enable: false
+                    headers:
+                      add_headers:
+                        - name: Strict-Transport-Security
+                          value: '"max-age=15768000; includeSubDomains"'
+                          always: true
+                      add_trailers:
+                        - name: Strict-Transport-Security
+                          value: '"max-age=15768000; includeSubDomains"'
+                          always: true
+                      expires:
+                        - modified: true
+                          time: "12h"
+                    limit_req:
+                      limit_reqs:
+                        - zone: one
+                          burst: 5
+                          delay: false
+                      dry_run: false
+                      log_level: info
+                      status: 503
+                      # zones:
+                      #   - key: $binary_remote_addr
+                      #     name: one
+                      #     size: 1m
+                      #     rate: 10r/s
+                    log:
+                      access:
+                        - path: /var/log/nginx/access.log
+                          format: main
+                      open_log_file_cache:
+                        max: 1000
+                        inactive: 20s
+                        min_uses: 2
+                        valid: 1m
+                    rewrite:
+                      rewrites:
+                        - regex: (.*).html(.*)
+                          replacement: $1$2
+                          flag: last
+                      log: false
+                      set:
+                        - variable: $var
+                          value: var
+                      uninitialized_variable_warn: false
+                    sub_filter:
+                      last_modified: false
+                      once: false
                     proxy_pass: http://frontend_servers/
                     proxy:
                       bind: false
@@ -295,7 +435,6 @@
                       read_timeout: 60s
                       redirect: false
                       request_buffering: false
-                      # send_lowat: 0  # not supported on linux
                       send_timeout: 60s
                       set_body: body
                       set_header:
@@ -314,9 +453,6 @@
                         path: /var/cache/nginx/proxy
                         level: 2
                     client_max_body_size: 5m
-                    sub_filter:
-                      last_modified: false
-                      once: true
                   - location: /backend
                     proxy_pass: http://backend_servers/
                     proxy:
@@ -329,39 +465,6 @@
                           value: $proxy_add_x_forwarded_for
                         - field: X-Forwarded-Proto
                           value: $scheme
-                returns:
-                  return301:
-                    location: ^~ /old-path
-                    code: 301
-                    value: http://$host/new-path
-            proxy_cache_path:
-              - path: /var/cache/nginx/proxy/frontend
-                levels: "1:1"
-                use_temp_path: false
-                inactive: 10m
-                keys_zone:
-                  name: frontend_proxy_cache
-                  size: 10m
-                max_size: 2g
-                min_free: 1g
-                manager_files: 100
-                manager_sleep: 500ms
-                manager_threshold: 200ms
-                loader_files: 100
-                loader_sleep: 50ms
-                loader_threshold: 200ms
-                # purger: false  # NGINX Plus only
-                # purger_files: 10
-                # purger_sleep: 50ms
-                # purger_threshold: 50ms
-              - path: /var/cache/nginx/proxy/backend
-                levels: "1:2"
-                use_temp_path: true
-                keys_zone:
-                  name: backend_proxy_cache
-                  size: 10m
-                inactive: 60m
-                max_size: 10g
             upstreams:
               - name: frontend_servers
                 zone:
@@ -403,33 +506,49 @@
                     opts: []
                 server_name: localhost
                 error_page: /usr/share/nginx/html
-                access_log: "off"
-                autoindex: false
+                log:
+                  access: false
+                autoindex:
+                  enable: false
                 sub_filter:
                   sub_filters:
-                    - "'server_hostname' '$hostname'"
-                    - "'server_address' '$server_addr:$server_port'"
-                    - "'server_url' '$request_uri'"
-                    - "'remote_addr' '$remote_addr:$remote_port'"
-                    - "'server_date' '$time_local'"
-                    - "'client_browser' '$http_user_agent'"
-                    - "'request_id' '$request_id'"
-                    - "'nginx_version' '$nginx_version'"
-                    - "'document_root' '$document_root'"
-                    - "'proxied_for_ip' '$http_x_forwarded_for'"
+                    - string: server_hostname
+                      replacement: $hostname
+                    - string: server_address
+                      replacement: $server_addr:$server_port
+                    - string: server_url
+                      replacement: $request_uri
+                    - string: remote_addr
+                      replacement: '$remote_addr:$remote_port'
+                    - string: server_date
+                      replacement: $time_local
+                    - string: client_browser
+                      replacement: $http_user_agent
+                    - string: request_id
+                      replacement: $request_id
+                    - string: nginx_version
+                      replacement: $nginx_version
+                    - string: document_root
+                      replacement: $document_root
+                    - string: proxied_for_ip
+                      replacement: $http_x_forwarded_for
                   last_modified: false
                   once: false
-                  types: "text/html"
                 locations:
                   - location: /
                     root: /usr/share/nginx/html
                     index: frontend_index.html
-                    autoindex: false
+                    autoindex:
+                      enable: false
                   - location: /alias
                     alias: /usr/share/nginx/html
                     index: frontend_index.html
-                    autoindex: false
-                http_demo_conf: false
+                    autoindex:
+                      enable: false
+                    rewrite:
+                      return:
+                        code: 200
+                        text: test
           - template_file: http/default.conf.j2
             conf_file_name: backend_default.conf
             conf_file_location: /etc/nginx/conf.d/
@@ -439,40 +558,52 @@
                     opts: []
                 server_name: localhost
                 error_page: /usr/share/nginx/html
-                autoindex: false
+                autoindex:
+                  enable: false
                 sub_filter:
                   sub_filters:
-                    - "'server_hostname' '$hostname'"
-                    - "'server_address' '$server_addr:$server_port'"
-                    - "'server_url' '$request_uri'"
-                    - "'remote_addr' '$remote_addr:$remote_port'"
-                    - "'server_date' '$time_local'"
-                    - "'client_browser' '$http_user_agent'"
-                    - "'request_id' '$request_id'"
-                    - "'nginx_version' '$nginx_version'"
-                    - "'document_root' '$document_root'"
-                    - "'proxied_for_ip' '$http_x_forwarded_for'"
+                    - string: server_hostname
+                      replacement: $hostname
+                    - string: server_address
+                      replacement: $server_addr:$server_port
+                    - string: server_url
+                      replacement: $request_uri
+                    - string: remote_addr
+                      replacement: '$remote_addr:$remote_port'
+                    - string: server_date
+                      replacement: $time_local
+                    - string: client_browser
+                      replacement: $http_user_agent
+                    - string: request_id
+                      replacement: $request_id
+                    - string: nginx_version
+                      replacement: $nginx_version
+                    - string: document_root
+                      replacement: $document_root
+                    - string: proxied_for_ip
+                      replacement: $http_x_forwarded_for
                   last_modified: false
                   once: false
                 locations:
                   - location: /
                     root: /usr/share/nginx/html
                     index: backend_index.html
-                    autoindex: false
+                    autoindex:
+                      enable: false
                     allows:
                       - 192.168.1.0/24
                     denies:
                       - all
                   - location: ~ \.php$
                     root: /usr/share/nginx/html
-                    autoindex: false
+                    autoindex:
+                      enable: false
                     custom_options:
                       - fastcgi_split_path_info ^(.+\.php)(/.+)$;
                       - fastcgi_pass unix:/run/php/php7.2-fpm.sock;
                       - fastcgi_index index.php;
                       - include fastcgi_params;
                       - fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-                http_demo_conf: false
 
         nginx_config_html_demo_template_enable: true
         nginx_config_html_demo_template:
