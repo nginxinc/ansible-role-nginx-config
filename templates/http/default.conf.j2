@@ -17,11 +17,46 @@
 {{ ssl(item.ssl) }}
 {% endif %}
 
-{% if item.auth_request_http is defined %}
-auth_request {{ item.auth_request_http }};
+{% if item.auth_request is defined %}
+{% from 'http/auth.j2' import auth_request with context %}
+{{ auth_request(item.auth_request) }}
 {% endif %}
-{% if item.auth_request_set_http is defined %}
-auth_request_set {{ item.auth_request_set_http.name }} {{ item.auth_request_set_http.value }};
+{% if item.auth_basic is defined %}
+{% from 'http/auth.j2' import auth_basic with context %}
+{{ auth_basic(item.auth_basic) }}
+{% endif %}
+{% if item.auth_jwt is defined %}
+{% from 'http/auth.j2' import auth_jwt with context %}
+{{ auth_jwt(item.auth_jwt) }}
+{% endif %}
+
+{% if item.autoindex is defined %}
+{% from 'http/modules.j2' import autoindex with context %}
+{{ autoindex(item.autoindex) }}
+{% endif %}
+{% if item.headers is defined %}
+{% from 'http/modules.j2' import headers with context %}
+{{ headers(item.headers) }}
+{% endif %}
+{% if item.health_check is defined %}
+{% from 'http/modules.j2' import health_check with context %}
+{{ health_check(item.health_check) }}
+{% endif %}
+{% if item.limit_req is defined %}
+{% from 'http/modules.j2' import limit_req with context %}
+{{ limit_req(item.limit_req) }}
+{% endif %}
+{% if item.log is defined %}
+{% from 'http/modules.j2' import log with context %}
+{{ log(item.log) }}
+{% endif %}
+{% if item.rewrite is defined %}
+{% from 'http/modules.j2' import rewrite with context %}
+{{ rewrite(item.rewrite) }}
+{% endif %}
+{% if item.sub_filter is defined %}
+{% from 'http/modules.j2' import sub_filter with context %}
+{{ sub_filter(item.sub_filter) }}
 {% endif %}
 
 {% if item.custom_options is defined and item.custom_options | length %}
@@ -55,6 +90,24 @@ server {
     {{ app_protect_dos_local(server.app_protect_dos) }}
 {% endfilter %}
 {% endif %}
+{% if server.auth_request is defined %}
+{% from 'http/auth.j2' import auth_request with context %}
+{% filter indent(4) %}
+    {{ auth_request(server.auth_request) }}
+{% endfilter %}
+{% endif %}
+{% if server.auth_basic is defined %}
+{% from 'http/auth.j2' import auth_basic with context %}
+{% filter indent(4) %}
+    {{ auth_basic(server.auth_basic) }}
+{% endfilter %}
+{% endif %}
+{% if server.auth_jwt is defined %}
+{% from 'http/auth.j2' import auth_jwt with context %}
+{% filter indent(4) %}
+    {{ auth_jwt(server.auth_jwt) }}
+{% endfilter %}
+{% endif %}
 {% if server.grpc_global is defined %}
 {% from 'http/grpc.j2' import grpc_global with context %}
 {% filter indent(4) %}
@@ -73,21 +126,46 @@ server {
     {{ proxy(server.proxy) }}
 {% endfilter %}
 {% endif %}
+{% if server.autoindex is defined %}
+{% from 'http/modules.j2' import autoindex with context %}
+{% filter indent(4) %}
+    {{ autoindex(server.autoindex) }}
+{% endfilter %}
+{% endif %}
+{% if server.headers is defined %}
+{% from 'http/modules.j2' import headers with context %}
+{% filter indent(4) %}
+    {{ headers(server.headers) }}
+{% endfilter %}
+{% endif %}
+{% if server.limit_req is defined %}
+{% from 'http/modules.j2' import limit_req with context %}
+{% filter indent(4) %}
+    {{ limit_req(server.limit_req) }}
+{% endfilter %}
+{% endif %}
+{% if server.log is defined %}
+{% from 'http/modules.j2' import log with context %}
+{% filter indent(4) %}
+    {{ log(server.log) }}
+{% endfilter %}
+{% endif %}
+{% if server.rewrite is defined %}
+{% from 'http/modules.j2' import rewrite with context %}
+{% filter indent(4) %}
+    {{ rewrite(server.rewrite) }}
+{% endfilter %}
+{% endif %}
+{% if server.sub_filter is defined %}
+{% from 'http/modules.j2' import sub_filter with context %}
+{% filter indent(4) %}
+    {{ sub_filter(server.sub_filter) }}
+{% endfilter %}
+{% endif %}
 {% if server.include_files is defined and server.include_files | length %}
 {% for file in server.include_files %}
     include "{{ file }}";
 {% endfor %}
-{% endif %}
-{% if server.add_headers is defined %}
-{% for header in server.add_headers %}
-    add_header {{ server.add_headers[header].name }} "{{ server.add_headers[header].value }}"{% if server.add_headers[header].always is defined and server.add_headers[header].always %} always{% endif %};
-{% endfor %}
-{% endif %}
-{% if server.auth_basic is defined %}
-    auth_basic "{{ server.auth_basic }}";
-{% endif %}
-{% if server.auth_basic_user_file is defined %}
-    auth_basic_user_file {{ server.auth_basic_user_file }};
 {% endif %}
 {% if server.root is defined %}
     root {{ server.root }};
@@ -98,34 +176,11 @@ server {
 {% if server.https_redirect is defined %}
     return 301 https://{{ server.https_redirect }}$request_uri;
 {% endif %}
-{% if server.autoindex is defined and server.autoindex %}
-    autoindex on;
-{% endif %}
 {% if server.try_files is defined %}
     try_files {{ server.try_files }};
 {% endif %}
-{% if server.auth_request is defined %}
-    auth_request {{ server.auth_request }};
-{% endif %}
-{% if server.auth_request_set is defined %}
-    auth_request_set {{ server.auth_request_set.name }} {{ server.auth_request_set.value }};
-{% endif %}
 {% if server.client_max_body_size is defined %}
     client_max_body_size {{ server.client_max_body_size }};
-{% endif %}
-{% if server.sub_filter.sub_filters is defined and server.sub_filter.sub_filters | length %}
-{% for sub_filter in server.sub_filter.sub_filters %}
-    sub_filter {{ sub_filter }};
-{% endfor %}
-{% endif %}
-{% if server.sub_filter.last_modified is defined %}
-    sub_filter_last_modified  {{ server.sub_filter.last_modified | ternary("on", "off") }};
-{% endif %}
-{% if server.sub_filter.once is defined %}
-    sub_filter_once {{ server.sub_filter.once | ternary("on", "off") }};
-{% endif %}
-{% if server.sub_filter.types is defined %}
-    sub_filter_types {{ server.sub_filter.types }};
 {% endif %}
 {% if server.custom_options is defined and server.custom_options | length %}
 {% for inline_option in server.custom_options %}
@@ -159,6 +214,24 @@ server {
         {{ app_protect_dos_local(location.app_protect_dos) }}
 {% endfilter %}
 {% endif %}
+{% if location.auth_request is defined %}
+{% from 'http/auth.j2' import auth_request with context %}
+{% filter indent(8) %}
+        {{ auth_request(location.auth_request) }}
+{% endfilter %}
+{% endif %}
+{% if location.auth_basic is defined %}
+{% from 'http/auth.j2' import auth_basic with context %}
+{% filter indent(8) %}
+        {{ auth_basic(location.auth_basic) }}
+{% endfilter %}
+{% endif %}
+{% if location.auth_jwt is defined %}
+{% from 'http/auth.j2' import auth_jwt with context %}
+{% filter indent(8) %}
+        {{ auth_jwt(location.auth_jwt) }}
+{% endfilter %}
+{% endif %}
 {% if location.grpc_global is defined %}
 {% from 'http/grpc.j2' import grpc_global with context %}
 {% filter indent(8) %}
@@ -189,49 +262,60 @@ server {
         {{ proxy_pass(location.proxy_pass) }}
 {% endfilter %}
 {% endif %}
+{% if location.autoindex is defined %}
+{% from 'http/modules.j2' import autoindex with context %}
+{% filter indent(8) %}
+        {{ autoindex(location.autoindex) }}
+{% endfilter %}
+{% endif %}
+{% if location.headers is defined %}
+{% from 'http/modules.j2' import headers with context %}
+{% filter indent(8) %}
+        {{ headers(location.headers) }}
+{% endfilter %}
+{% endif %}
+{% if location.health_check is defined %}
+{% from 'http/modules.j2' import health_check with context %}
+{% filter indent(8) %}
+        {{ health_check(location.health_check) }}
+{% endfilter %}
+{% endif %}
+{% if location.limit_req is defined %}
+{% from 'http/modules.j2' import limit_req with context %}
+{% filter indent(8) %}
+        {{ limit_req(location.limit_req) }}
+{% endfilter %}
+{% endif %}
+{% if location.log is defined %}
+{% from 'http/modules.j2' import log with context %}
+{% filter indent(8) %}
+        {{ log(location.log) }}
+{% endfilter %}
+{% endif %}
+{% if location.rewrite is defined %}
+{% from 'http/modules.j2' import rewrite with context %}
+{% filter indent(8) %}
+        {{ rewrite(location.rewrite) }}
+{% endfilter %}
+{% endif %}
+{% if location.sub_filter is defined %}
+{% from 'http/modules.j2' import sub_filter with context %}
+{% filter indent(8) %}
+        {{ sub_filter(location.sub_filter) }}
+{% endfilter %}
+{% endif %}
+{% if location.alias is defined %}
+        alias {{ location.alias }};
+{% endif %}
 {% if location.root is defined %}
         root   {{ location.root }};
 {% endif %}
 {% if location.index is defined %}
         index  {{ location.index }};
 {% endif %}
-{% if location.autoindex | default(false) %}
-        autoindex on;
-{% endif %}
 {% if location.include_files is defined and location.include_files | length %}
 {% for file in location.include_files %}
         include "{{ file }}";
-{% endfor %}
-{% endif %}
-{% if location.add_headers is defined %}
-{% for header in location.add_headers %}
-        add_header {{ location.add_headers[header].name }} "{{ location.add_headers[header].value }}"{% if location.add_headers[header].always is defined and location.add_headers[header].always %} always{% endif %};
-{% endfor %}
-{% endif %}
-{% if location.auth_request is defined %}
-        auth_request {{ location.auth_request }};
-{% endif %}
-{% if location.auth_request_set is defined %}
-        auth_request_set {{ location.auth_request_set.name }} {{ location.auth_request_set.value }};
-{% endif %}
-{% if location.auth_basic is defined %}
-        auth_basic "{{ location.auth_basic }}";
-{% endif %}
-{% if location.auth_basic_user_file is defined %}
-        auth_basic_user_file {{ location.auth_basic_user_file }};
-{% endif %}
-{% if location.returns is defined %}
-{% for code in location.returns %}
-{% if location.returns[code] is defined %}
-        return {{ location.returns[code].code }} {{ location.returns[code].url }};
-{% else %}
-        return {{ location.returns[code].url }};
-{% endif %}
-{% endfor %}
-{% endif %}
-{% if location.rewrites is defined %}
-{% for rewrite in location.rewrites %}
-        rewrite {{ rewrite }};
 {% endfor %}
 {% endif %}
 {% if location.allows is defined %}
@@ -250,48 +334,11 @@ server {
 {% if location.client_max_body_size is defined %}
         client_max_body_size {{ location.client_max_body_size }};
 {% endif %}
-{% if location.sub_filter.sub_filters is defined and location.sub_filter.sub_filters | length %}
-{% for sub_filter in location.sub_filter.sub_filters %}
-        sub_filter {{ sub_filter }};
-{% endfor %}
-{% endif %}
-{% if location.sub_filter.last_modified is defined %}
-        sub_filter_last_modified  {{ location.sub_filter.last_modified | ternary("on", "off") }};
-{% endif %}
-{% if location.sub_filter.once is defined %}
-        sub_filter_once {{ location.sub_filter.once | ternary("on", "off") }};
-{% endif %}
-{% if location.sub_filter.types is defined %}
-        sub_filter_types {{ location.sub_filter.types }};
-{% endif %}
 {% if location.custom_options is defined and location.custom_options | length %}
 {% for inline_option in location.custom_options %}
         {{ inline_option }}
 {% endfor %}
 {% endif %}
-{% if server.health_check_plus is defined %}
-        health_check;
-{% endif %}
-    }
-{% endfor %}
-{% if server.http_demo_conf is defined and server.http_demo_conf %}
-    sub_filter_once off;
-    sub_filter 'server_hostname' '$hostname';
-    sub_filter 'server_address' '$server_addr:$server_port';
-    sub_filter 'server_url' '$request_uri';
-    sub_filter 'remote_addr' '$remote_addr:$remote_port';
-    sub_filter 'server_date' '$time_local';
-    sub_filter 'client_browser' '$http_user_agent';
-    sub_filter 'request_id' '$request_id';
-    sub_filter 'nginx_version' '$nginx_version';
-    sub_filter 'document_root' '$document_root';
-    sub_filter 'proxied_for_ip' '$http_x_forwarded_for';
-{% endif %}
-{% endif %}
-{% if server.returns is defined %}
-{% for return in server.returns %}
-    location {{ server.returns[return].location }} {
-        return {{ server.returns[return].code }}{% if server.returns[return].value is defined %} {{ server.returns[return].value }}{% endif %};
     }
 {% endfor %}
 {% endif %}
@@ -308,15 +355,6 @@ server {
     location = /50x.html {
         root   {{ server.error_page }};
     }
-{% endif %}
-{% if server.access_log is defined %}
-{% if server.access_log is sameas false or server.access_log == "off" %}
-    access_log off;
-{% else %}
-{% for access_log in server.access_log %}
-    access_log  {{ access_log.location }}  {{ access_log.name }};
-{% endfor %}
-{% endif %}
 {% endif %}
 {% if server.error_log is defined %}
     error_log {{ server.error_log.location }} {{ server.error_log.level }};
