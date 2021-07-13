@@ -79,9 +79,15 @@ server {
 {% endfilter %}
 {% endif %}
 {% if server.app_protect is defined %}
-{% from 'http/app_protect.j2' import app_protect_local with context %}
+{% from 'http/app_protect_waf.j2' import app_protect_waf_local with context %}
 {% filter indent(4) %}
-    {{ app_protect_local(server.app_protect) }}
+    {{ app_protect_waf_local(server.app_protect) }}
+{% endfilter %}
+{% endif %}
+{% if server.app_protect_dos is defined %}
+{% from 'http/app_protect_dos.j2' import app_protect_dos_local with context %}
+{% filter indent(4) %}
+    {{ app_protect_dos_local(server.app_protect_dos) }}
 {% endfilter %}
 {% endif %}
 {% if server.auth_request is defined %}
@@ -187,10 +193,25 @@ server {
 {% if location.internal is sameas true %}
         internal;
 {% endif %}
+{% if location.access_log is defined %}
+{% if location.access_log is sameas false or location.access_log == "off" %}
+        access_log off;
+{% else %}
+{% for access_log in location.access_log %}
+        access_log  {{ access_log.location }}  {{ access_log.name }};
+{% endfor %}
+{% endif %}
+{% endif %}
 {% if location.app_protect is defined %}
-{% from 'http/app_protect.j2' import app_protect_local with context %}
+{% from 'http/app_protect_waf.j2' import app_protect_waf_local with context %}
 {% filter indent(8) %}
-        {{ app_protect_local(location.app_protect) }}
+        {{ app_protect_waf_local(location.app_protect) }}
+{% endfilter %}
+{% endif %}
+{% if location.app_protect_dos is defined %}
+{% from 'http/app_protect_dos.j2' import app_protect_dos_local with context %}
+{% filter indent(8) %}
+        {{ app_protect_dos_local(location.app_protect_dos) }}
 {% endfilter %}
 {% endif %}
 {% if location.auth_request is defined %}

@@ -45,15 +45,21 @@ http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 {% if nginx_config_main_template.http_settings.app_protect_global is defined %}
-{% from 'http/app_protect.j2' import app_protect_global with context %}
+{% from 'http/app_protect_waf.j2' import app_protect_waf_global with context %}
 {% filter indent(4) %}
-    {{ app_protect_global(nginx_config_main_template.http_settings.app_protect_global) }}
+    {{ app_protect_waf_global(nginx_config_main_template.http_settings.app_protect_global) }}
 {% endfilter %}
 {% endif %}
 {% if nginx_config_main_template.http_settings.app_protect is defined %}
-{% from 'http/app_protect.j2' import app_protect_local with context %}
+{% from 'http/app_protect_waf.j2' import app_protect_waf_local with context %}
 {% filter indent(4) %}
-    {{ app_protect_local(nginx_config_main_template.http_settings.app_protect) }}
+    {{ app_protect_waf_local(nginx_config_main_template.http_settings.app_protect) }}
+{% endfilter %}
+{% endif %}
+{% if nginx_config_main_template.http_settings.app_protect_dos is defined %}
+{% from 'http/app_protect_dos.j2' import app_protect_dos_local with context %}
+{% filter indent(4) %}
+    {{ app_protect_dos_local(nginx_config_main_template.http_settings.app_protect_dos) }}
 {% endfilter %}
 {% endif %}
 {% if nginx_config_main_template.http_settings.grpc_global is defined %}

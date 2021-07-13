@@ -153,6 +153,8 @@ ENHANCEMENTS:
 *   Replace Ansible base with Ansible core. Ansible core will be the "core" Ansible release moving forward from Ansible `2.11`.
 *   Update GitHub actions to add a workflow dispatch option.
 *   Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
+*   Add support for configuring NGINX App Protect DoS (Denial of Service) module and directives.
+*   Add location block support for `access_log`.
 *   Add support for `alias` directive in `location` statements
 *   Ensure the default values for the `nginx.conf` template match the default values found on a fresh NGINX installation.
 

@@ -1,10 +1,10 @@
 {{ ansible_managed | comment }}
-{# NGINX App Protect template -- Add directives under its corresponding block #}
+{# NGINX App Protect WAF template -- Add directives under its corresponding block #}
 {# Format is as follows #}
 {# Left side (context module_name) -- Right side (module name) #}
-{# HTTP NGINX App Protect -- ngx_http_app_protect_module #}
+{# HTTP NGINX App Protect WAF -- ngx_http_app_protect_module #}
 
-{% macro app_protect_global(app_protect) %}
+{% macro app_protect_waf_global(app_protect) %}
 {% if app_protect['physical_memory_util_thresholds'] is defined %}
 app_protect_physical_memory_util_thresholds high={{ app_protect['physical_memory_util_thresholds']['high'] }} low={{ app_protect['physical_memory_util_thresholds']['low'] }};
 {% endif %}
@@ -30,7 +30,7 @@ app_protect_user_defined_signatures {{ signature }};
 {% endif %}
 {% endmacro %}
 
-{% macro app_protect_local(app_protect) %}
+{% macro app_protect_waf_local(app_protect) %}
 {% if app_protect['enable'] is defined and app_protect['enable'] is boolean %}
 app_protect_enable {{ app_protect['enable'] | ternary('on', 'off') }};
 {% endif %}
