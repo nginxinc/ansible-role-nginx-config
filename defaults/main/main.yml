@@ -5,8 +5,6 @@ nginx_config_start: true
 
 # Print NGINX configuration file to terminal after executing playbook.
 nginx_config_debug_output: false
-# Print NGINX configuration file to terminal after executing playbook.
-nginx_config_debug_tasks: false
 
 # Remove previously existing NGINX configuration files (files ending in *.conf).
 # You can specify a list of paths you wish to remove.
