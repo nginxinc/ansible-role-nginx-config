@@ -79,6 +79,11 @@ http {
     log_format  {{ access_log.name }}  {{ access_log.format }};
 {% endfor %}
 {% endif %}
+{% if nginx_config_main_template.http_settings.access_log_location is defined %}
+{% for access_log in nginx_config_main_template.http_settings.access_log_location %}
+    access_log {{ access_log.location }}  {{ access_log.name }};
+{% endfor %}
+{% endif %}
 {% if nginx_config_main_template.http_settings.sendfile is defined and nginx_config_main_template.http_settings.sendfile %}
     sendfile on;
 {% endif %}
