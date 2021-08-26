@@ -233,6 +233,9 @@
                   security_log:
                     path: /etc/app_protect_dos/log-default.json
                     dest: syslog:server=10.1.1.1:514
+                  monitor:
+                    uri: http://10.1.1.1:5000/monitor
+                    protocol: http2
                 auth_jwt:
                   enable:
                     realm: realm
