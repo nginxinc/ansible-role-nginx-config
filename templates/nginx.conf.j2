@@ -73,6 +73,11 @@ http {
 {% filter indent(4) %}
     {{ gzip(nginx_config_main_template.http_settings.gzip) }}
 {% endfilter %}
+{% if nginx_config_main_template.http_settings.access_log_format is defined %}
+{% for access_log in nginx_config_main_template.http_settings.access_log_format %}
+    log_format  {{ access_log.name }}  {{ access_log.format }};
+{% endfor %}
+{% endif %}
 {% endif %}
 {% if nginx_config_main_template.http_settings.sendfile is defined and nginx_config_main_template.http_settings.sendfile %}
     sendfile on;
