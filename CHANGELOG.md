@@ -157,6 +157,7 @@ ENHANCEMENTS:
 *   Add location block support for `access_log`.
 *   Add support for `alias` directive in `location` statements
 *   Ensure the default values for the `nginx.conf` template match the default values found on a fresh NGINX installation.
+*   Add support for `log_format` and `access_log` in `nginx.conf`.
 
 BUG FIXES:
 
