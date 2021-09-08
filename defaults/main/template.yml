@@ -38,6 +38,7 @@ nginx_config_main_template:
     #   compressed_requests_action: drop  # Optional -- 'pass' or 'drop'
     #   request_buffer_overflow_action: pass  # Optional -- 'pass' or 'drop'
     #   user_defined_signatures: []  # Optional list
+    #   reconnect_period_seconds: 5 # Optional integer
     # app_protect:  # Optional -- Configure NGINX App Protect
     #   enable: false  # Optional boolean
     #   policy_file: path  # Optional

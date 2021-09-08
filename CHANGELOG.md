@@ -119,6 +119,7 @@ BREAKING CHANGES:
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.
 *   NGINX App Protect 3.2 supports multiple log destinations per scope. Changing the `security_log` variable from a dictionary to a list of objects in order to support this.
+*   NGINX App Protect 3.5 supports a new timeout directive which allows the user to configure the period of time between reconnect retries of the module to the web application firewall (WAF) engine. Added this as a supported global directive.
 
 DEPRECATION WARNINGS:
 

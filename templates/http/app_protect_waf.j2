@@ -28,6 +28,9 @@ app_protect_request_buffer_overflow_action {{ app_protect['request_buffer_overfl
 app_protect_user_defined_signatures {{ signature }};
 {% endfor %}
 {% endif %}
+{% if app_protect['reconnect_period_seconds'] is defined %}
+app_protect_reconnect_period_seconds {{ app_protect['reconnect_period_seconds'] }};
+{% endif %}
 {% endmacro %}
 
 {% macro app_protect_waf_local(app_protect) %}
