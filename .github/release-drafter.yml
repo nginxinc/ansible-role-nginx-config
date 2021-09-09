@@ -89,7 +89,7 @@ template: |
   ## Install & Upgrade
 
   *   To install the Ansible NGINX config role on a fresh environment, run `ansible-galaxy install nginxinc.nginx_config`.
-  *   To upgrade the Ansible NGINX  configrole to the latest release, run `ansible-galaxy install -f nginxinc.nginx_config`.
+  *   To upgrade the Ansible NGINX config role to the latest release, run `ansible-galaxy install -f nginxinc.nginx_config`.
   *   To install or upgrade to this specific Ansible NGINX config role release ($RESOLVED_VERSION), run `ansible-galaxy install -f nginxinc.nginx_config,v$RESOLVED_VERSION`.
 
   ## Resources
