@@ -43,7 +43,8 @@ Template engine updates:
     *   `sticky_cookie` is no longer supported as is. You will now have to configure the respective `sticky_cookie` values.
     *   The `health_check` parameter within the `server` dictionary is no longer supported. Instead, manually set `max_fails` and `fail_timeout`.
 *   Refactor various individual variables into the `core` HTTP config template. All the `core` module directives are now included. The following variables are now included in the `core` dictionary:
-    *   `alias`, `client_max_body_size`, `error_log`, `error_page`, `include`, `index`, `keepalive_timeout`, `root`, `send_file`, `server_name`, `server_names_hash_bucket_size`, `server_names_hash_max_size`, `server_tokens`, `tcp_nodelay`, `tcp_nopush`, `try_files`
+    *   `alias`, `client_max_body_size`, `error_log`, `error_page`, `include`, `index`, `keepalive_timeout`, `listen`, `root`, `send_file`, `server_name`, `server_names_hash_bucket_size`, `server_names_hash_max_size`, `server_tokens`, `tcp_nodelay`, `tcp_nopush`, `try_files`
+    *   `listen.port` is now `listen.address`, and `listen.opts` no longer exists (there are now individual keys for each `listen` parameter).
 *   Refactor the `ssl` HTTP config template into its own separate file. All the `ssl` module directives are now included. Almost all variables have changed:
     *   All `ssl` variables still live within an `ssl` dictionary, but the names have changed to reflect the official NGINX directive names.
     *   `ssl` configs are now supported within both the `http` and `server` contexts.
