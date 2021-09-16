@@ -286,18 +286,18 @@
                 once: false
                 types: text/html
               servers:
-                - listen:
-                    - address: 0.0.0.0
-                      port: 80
-                      default_server: true
-                    - address: 0.0.0.0
-                      port: 443
-                      ssl: false
-                      default_server: true
-                    - address: "[::]"
-                      port: 80
-                      default_server: true
-                  core:
+                - core:
+                    listen:
+                      - address: 0.0.0.0
+                        port: 80
+                        default_server: true
+                      - address: 0.0.0.0
+                        port: 443
+                        ssl: false
+                        default_server: true
+                      - address: "[::]"
+                        port: 80
+                        default_server: true
                     server_name: localhost
                     client_max_body_size: 512k
                   app_protect_waf:
