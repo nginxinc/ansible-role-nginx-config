@@ -3,8 +3,7 @@
 
 {# NGINX Plus HTTP API -- ngx_http_api_module #}
 {% macro api(api) %}
-{# 'api' directive is only available in the 'location' context #}
-{% if api['enable'] is defined and ((api['enable'] is boolean and api['enable'] | bool) or api['enable']['write'] is defined) %}
+{% if api['enable'] is defined and ((api['enable'] is boolean and api['enable'] | bool) or api['enable']['write'] is defined) %}{# 'api' directive is only available in the 'location' context #}
 api{{ (' write=' + api['enable']['write'] | ternary('on', 'off')) if (api['enable']['write'] is defined and api['enable']['write'] is boolean) }};
 {% endif %}
 {% if api['status_zone'] %} {# 'status_zone' directive is not available in the 'http' context #}

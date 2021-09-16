@@ -593,7 +593,7 @@ nginx_config_http_template:
         expires:  # Set to 'false' to set to 'off' or set to a value -- otherwise, you can also use the below dictionary
           modified: true  # Boolean
           time: "12h"
-      health_check:  # Available only in NGINX Plus -- Configure NGINX Plus health checks
+      health_check:  # Only available in NGINX Plus -- Configure NGINX Plus health checks
         health_checks:
           - interval: 5s
             jitter: 0

@@ -57,7 +57,6 @@ The NGINX config Ansible role supports all platforms supported by [NGINX Open So
 
 ```yaml
 Alpine:
-  - 3.10
   - 3.11
   - 3.12
   - 3.13
@@ -73,10 +72,9 @@ SUSE/SLES:
   - 12
   - 15
 Ubuntu:
-  - xenial
   - bionic
   - focal
-  - groovy
+  - hirsute
 ```
 
 ### NGINX Plus

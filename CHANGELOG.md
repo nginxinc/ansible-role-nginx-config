@@ -8,23 +8,51 @@ Efforts have been made to thoroughly test all these changes and make sure they w
 
 BREAKING CHANGES:
 
+General updates:
 *   Rename upload related variables:
     *   Rename the `nginx_config_snippet_upload_*` parameters to `nginx_config_upload_*` (check `defaults/main/upload.yml` for an example).
     *   Rename the `nginx_config_html_upload_*` parameters to `nginx_config_upload_html_*`.
     *   Rename the `nginx_config_ssl_upload_*` parameters to `nginx_config_upload_ssl_*`.
-*   Tweak the `nginx_config_html_upload` and `nginx_config_ssl_upload` parameters to ow use a list instead of a single `src` and `dest` value (check `defaults/main/upload.yml` for an example).
+*   Tweak the `nginx_config_html_upload` and `nginx_config_ssl_upload` parameters to use a list instead of a single `src` and `dest` value (check `defaults/main/upload.yml` for an example).
+
+Template engine updates:
+*   Refactor all the Jinja2 templates!:
+    * Each NGINX module is now contained within its own templating file. Macros are then used, in turn, to import each respective module template into a top level template file.
+    * This avoids confusing and unnecessary code duplication, as well as hard to maintain code.
+    * You will notice that the overall structure of your NGINX config now follows a very simple dictionary structure where each top level key corresponds to an NGINX module. Top level lists are used when dealing with `servers` and `locations`:
+    ```yaml
+    core:
+      root: /usr/share/nginx/html
+    proxy:
+      set_header: []
+    servers:
+      - core: {}
+        proxy: {}
+        locations:
+          - core: {}
+            proxy: {}
+    ```
+    * Check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) and [`molecule/default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml) for examples!
 *   Refactor the base config templates to simplify the creation of templates as well as development and maintenance moving forward:
     *   Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists, as well as modify the `nginx_config_html_demo_template` variable from a nested dictionary to a list. To update your templates, replace the aforementioned nested dictionary keys by lists (place a dash in front of the topmost nested value within each aforementioned nested dictionary).
     *   Remove/merge the `web_server` and `reverse_proxy` nested dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates, remove both keys and adjust your spacing accordingly.
-*   Refactor the `upstream` HTTP config template into its own separate file. The following variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
+*   Refactor the `upstream` HTTP config template into its own separate file. All the `upstream` module directives are now included. The following variables have changed:
     *   `port` is no longer supported. Instead, include the port as part of your `address`.
     *   `lb_method` is no longer supported. Instead, you will have to specifically set the method you want to use.
     *   `zone_name` and `zone_size` have been modified into a dictionary.
-    *   `sticky_cookie` is no longer supported as is. You will now have to configure the `sticky_cookie` values.
+    *   `sticky_cookie` is no longer supported as is. You will now have to configure the respective `sticky_cookie` values.
     *   The `health_check` parameter within the `server` dictionary is no longer supported. Instead, manually set `max_fails` and `fail_timeout`.
-*   Refactor the `proxy` HTTP config template into its own separate file. All variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
-    *   All `proxy_*` related variables now live under the `proxy` dictionary key, with the exception of `proxy_pass` and `proxy_cache_path`. You can specify the `proxy` dictionary key inside the `http`, `server`, and `location` contexts.
-    *   Removed the `nginx_config_main_template.http_settings.cache` dictionary variable. Use `nginx_config_http_template.*.proxy_cache_path` instead.
+*   Refactor various individual variables into the `core` HTTP config template. All the `core` module directives are now included. The following variables are now included in the `core` dictionary:
+    *   `alias`, `client_max_body_size`, `error_log`, `error_page`, `include`, `index`, `keepalive_timeout`, `root`, `send_file`, `server_name`, `server_names_hash_bucket_size`, `server_names_hash_max_size`, `server_tokens`, `tcp_nodelay`, `tcp_nopush`, `try_files`
+*   Refactor the `ssl` HTTP config template into its own separate file. All the `ssl` module directives are now included. Almost all variables have changed:
+    *   All `ssl` variables still live within an `ssl` dictionary, but the names have changed to reflect the official NGINX directive names.
+    *   `ssl` configs are now supported within both the `http` and `server` contexts.
+*   Refactor both the `app_protect_waf` and `app_protect_dos` modules into a single file:
+    *   The `app_protect` dictionary now has the `app_protect_waf` key.
+    *   `app_protect_global` directives are now found inside the `app_protect_waf` dictionary too.
+*   Refactor the `proxy` HTTP config template into its own separate file. All the `proxy` module directives are now included. All variables have changed:
+    *   All `proxy_*` related variables now live under the `proxy` dictionary key. You can specify the `proxy` dictionary key inside the `http`, `server`, and `location` contexts.
+    *   Removed the `nginx_config_main_template.http_settings.cache` dictionary variable. Use `nginx_config_http_template.*.proxy.cache_path` instead.
     *   Removed the `location.websocket` variable. Use `location.proxy.set_header` instead:
     ```yaml
     proxy:
@@ -34,24 +62,27 @@ BREAKING CHANGES:
         - field: Connection
           value: Upgrade
     ```
-*   Refactor the `ssl` HTTP config template into its own separate file. Almost all variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
-    *   All `ssl` variables still live within an `ssl` dictionary, but the names have changed to better reflect the official NGINX directive names.
-    *   `ssl` configs are now supported within both the `http` and `server` contexts.
-*   Refactor the `auth` HTTP config template into its own separate file, as well as add support for `auth_jwt` directives. All variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
+*   Combine the `grpc_global` directives with the `grpc` directives.
+*   Refactor the `auth` HTTP config template into its own separate `auth` modules file. All the various `auth` related module directives including all `auth_jwt` directives are now available. All variables have changed:
     *   All the various `auth` variables now live within their respective `auth` dictionaries.
     *   `auth` configs are now supported within the `http`, `server`, and `location` contexts.
-*   Refactor the `autoindex` NGINX config template into its own separate file and added missing `autoindex` module directives. All variables have changed (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples):
+
+*   Refactor the `autoindex` HTTP config template into its own separate file `modules` file and added missing `autoindex` module directives. All variables have changed:
     *   The `autoindex` directives now live within the `autoindex` dictionary.
     *   The `autoindex` dictionary now lives in the HTTP template config instead of the Main template config.
-*   Refactor the `add_headers` dictionary into a `headers` dictionary that now includes all the `headers` module directives:
+*   Refactor the `add_headers` dictionary into a `headers` dictionary that now includes all the `headers` HTTP config directives:
     *   The `add_headers` directive now lives within the `headers` dictionary.
+*   Refactor the `keyval` directives into its own template config that now includes all the `keyval` HTTP module directives:
+    *   Both `keyval` directives now live within the `keyval` dictionary.
+    *   The `keyval` dictionary now lives in the HTTP template config instead of the Main template config.
+*   Refactor `server.health_check_plus` into its own dictionary that now includes all the `health_check` module directives (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples).
+*   Refactor the `limit_req` directive into its own dictionary:
+    *   The `limit_req` directives now live within the `limit_req` dictionary.
+    *   The `limit_req` dictionary now lives in the HTTP template config instead of the Main template config.
 *   Refactor the `access_log` and `log_format` directives into a `log` dictionary that now includes all the `log` module directives:
     *   An `access` and `format` directive now lives within the `log` dictionary.
     *   The `log` dictionary HTTP context now lives in the HTTP template config instead of the Main template config.
-*   Refactor the `keyval` directives into its own dictionary:
-    *   Both `keyval` directives now live within the `keyval` dictionary.
-    *   The `keyval` dictionary now lives in the HTTP template config instead of the Main template config.
-*   Refactor the `return` and `rewrite` directives into their own dictionary that now includes all the `rewrite` module directives:
+*   Refactor the `return` and `rewrite` directives into their own dictionary that now includes all the `rewrite` HTTP module directives:
     *   The `rewrites` directive has transitioned from a list of one liners
     ```yaml
     rewrites:
@@ -77,7 +108,7 @@ BREAKING CHANGES:
       code: 200
       text: nginx
     ```
-*   Refactor the `sub_filter` directives into a `sub_filter` dictionary:
+*   Refactor the `sub_filter` directives into their own `sub_filter` dictionary that includes all the `sub_filter` HTTP module directives:
     *   The only major difference is that one liners under the `sub_filters` dictionary key have changed from
     ```yaml
     sub_filters:
@@ -115,19 +146,15 @@ BREAKING CHANGES:
           replacement: $http_x_forwarded_for
     ```
     *   The `sub_filter` dictionary HTTP context now lives in the HTTP template config instead of the Main template config.
-*   Refactor the `limit_req` directive into its own dictionary:
-    *   The `limit_req` directives now live within the `limit_req` dictionary.
-    *   The `limit_req` dictionary now lives in the HTTP template config instead of the Main template config.
-*   Refactor `server.health_check_plus` into its own dictionary that now includes all the `health_check` module directives (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples).
 *   Rename some NGINX template config parameters to align with NGINX directive names:
     *   Rename `html_file_location` to `root`.
     *   Rename `html_file_name` to `index`.
 *   NGINX App Protect 3.2 supports multiple log destinations per scope. Changing the `security_log` variable from a dictionary to a list of objects in order to support this.
-*   NGINX App Protect 3.5 supports a new timeout directive which allows the user to configure the period of time between reconnect retries of the module to the web application firewall (WAF) engine. Added this as a supported global directive.
+*   NGINX App Protect 3.5 supports a new timeout directive which allows the user to configure the period of time between reconnect retries of the module to the web application firewall (WAF) engine. Added this as a supported directive.
 
 DEPRECATION WARNINGS:
 
-The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload_*` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The deprecated parameters will be removed in the next major release (0.5.0), due April 2021.
+The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload_*` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The deprecated parameters will be removed in the next major release (0.5.0), due November 2021.
 
 FEATURES:
 
@@ -144,23 +171,20 @@ FEATURES:
     ```
 *   Explicitly list Jinja2 `2.11.3` as a requirement, as well as detail the minimum supported version (`2.11.x`).
 *   Implement Release Drafter.
+*   Add support for configuring NGINX App Protect DoS (Denial of Service) module and directives.
+*   Add support for configuring the NGINX Rest API module and the NGINX stub status module
 
 ENHANCEMENTS:
 
-*   Add support for NGINX's `index` directive to the `server` block within the template config parameters.
-*   Update Ansible Lint to `5.0.11`, Molecule to `3.3.0`, yamllint to `1.26.1` and Docker Python SDK to `5.0.0`.
+*   Move the `gzip` HTTP config template into the `modules` file. It's a small module and did not warrant being in its own individual file.
+*   Update Ansible Lint to `5.1.3`, Molecule to `3.4.0`, yamllint to `1.26.3` and Docker Python SDK to `5.0.2`.
 *   Consolidate Molecule testing scenarios to address changes introduced in Ansible Lint `5.*`.
-*   Bump the version of the roles required by Molecule to their latest version.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
 *   Replace Molecule tests using Alpine 3.11 with Alpine 3.10 (to test NGINX App Protect configurations), Debian stretch with Debian buster (stretch has reached its EoL), and update list of supported platforms.
-*   Add [`server_names_hash_bucket_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_bucket_size) and [`server_names_hash_max_size`](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_names_hash_max_size) directives.
 *   Replace Ansible base with Ansible core. Ansible core will be the "core" Ansible release moving forward from Ansible `2.11`.
 *   Update GitHub actions to add a workflow dispatch option.
 *   Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
-*   Add support for configuring NGINX App Protect DoS (Denial of Service) module and directives.
-*   Add location block support for `access_log`.
-*   Add support for `alias` directive in `location` statements
 *   Ensure the default values for the `nginx.conf` template match the default values found on a fresh NGINX installation.
 
 BUG FIXES:
