@@ -1,0 +1,112 @@
+{{ ansible_managed | comment }}
+
+{# NGINX Core template -- ngx_core_module #}
+{% macro main(main) %}
+{% if main['load_module'] is defined and main['load_module'] is sequence %}
+{% for module in main['load_module'] if main['load_module'] is not string %}
+load_module {{ module }};
+{% else %}
+load_module {{ main['load_module'] }};
+{% endfor %}
+{% endif %}
+
+{% if main['user'] is defined %}
+user {{ main['user'] if main['user'] is string else main['user']['username'] if main['user']['username'] is defined }}{{ (' ' + main['user']['group'] | string) if main['user']['group'] is defined }};
+{% endif %}
+{% if main['worker_cpu_affinity'] is defined %}
+worker_cpu_affinity{{ ' auto' if main['worker_cpu_affinity']['auto'] is defined and main['worker_cpu_affinity']['auto'] is boolean and main['worker_cpu_affinity']['auto'] | bool -}}
+{{- ((' ' + main['worker_cpu_affinity']['cpumask'] | string) if main['worker_cpu_affinity']['cpumask'] is string else (' ' + main['worker_cpu_affinity']['cpumask'] | join(' '))) if main['worker_cpu_affinity']['cpumask'] is defined }};
+{% endif %}
+{% if main['worker_priority'] is defined and main['worker_priority'] is number %}
+worker_priority {{ main['worker_priority'] }};
+{% endif %}
+{% if main['worker_processes'] is defined and (main['worker_processes'] is number or main['worker_processes'] == 'auto') %}
+worker_processes {{ main['worker_processes'] }};
+{% endif %}
+{% if core['worker_rlimit_core'] is defined %}
+worker_rlimit_core {{ core['worker_rlimit_core'] }};
+{% endif %}
+{% if core['worker_rlimit_nofile'] is defined and core['worker_rlimit_nofile'] is number %}
+worker_rlimit_nofile {{ core['worker_rlimit_nofile'] }};
+{% endif %}
+{% if core['worker_shutdown_timeout'] is defined %}
+worker_shutdown_timeout {{ core['worker_shutdown_timeout'] }};
+{% endif %}
+
+{% if main['error_log'] is defined %}
+{% for log in main['error_log'] if (main['error_log'] is sequence and main['error_log'] is not string) %}
+error_log {{ log if log is string else log['file'] }}{{ (' ' + log['level'] | string) if log['level'] is defined }};
+{% else %}
+error_log {{ main['error_log'] if main['error_log'] is string else main['error_log']['file'] }}{{ (' ' + main['error_log']['level'] | string) if main['error_log']['level'] is defined }};
+{% endfor %}
+{% endif %}
+{% if main['pid'] is defined %}
+pid {{ main['pid'] }};
+{% endif %}
+
+{% if main['daemon'] is defined and main['daemon'] is boolean %}
+daemon {{ main['daemon'] | ternary('on', 'off') }};
+{% endif %}
+{% if main['debug_points'] is defined and main['debug_points'] in ['abort', 'stop'] %}
+debug_points {{ main['debug_points'] }};
+{% endif %}
+
+{% if main['env'] is defined %}
+{% for env in main['env'] if (main['env'] is sequence and main['env'] is not string) %}
+env {{ env if env is string else env['variable'] }}{{ ('=' + env['value'] | string) if env['value'] is defined }};
+{% else %}
+env {{ main['env'] if main['env'] is string else main['env']['variable'] }}{{ ('=' + main['env']['value'] | string) if main['env']['value'] is defined }};
+{% endfor %}
+{% endif %}
+{% if main['lock_file'] is defined %}
+lock_file {{ main['lock_file'] }};
+{% endif %}
+{% if main['master_process'] is defined and main['master_process'] is boolean %}
+master_process {{ main['master_process'] | ternary('on', 'off') }};
+{% endif %}
+{% if main['pcre_jit'] is defined and main['pcre_jit'] is boolean %}
+pcre_jit {{ main['pcre_jit'] | ternary('on', 'off') }};
+{% endif %}
+{% if main['ssl_engine'] is defined %}
+ssl_engine {{ main['ssl_engine'] }};
+{% endif %}
+{% if main['thread_pool'] is defined %}
+{% for thread in main['thread_pool'] %}
+thread_pool {{ thread['name'] }} {{ ('threads=' + thread['threads'] | string) if thread['threads'] is number }}{{ (' max_queue=' + thread['max_queue'] | string) if thread['max_queue'] is defined and thread['max_queue'] is number }};
+{% endfor %}
+{% endif %}
+{% if main['timer_resolution'] is defined %}
+timer_resolution {{ main['timer_resolution'] }};
+{% endif %}
+{% if main['working_directory'] is defined %}
+working_directory {{ main['working_directory'] }};
+{% endif %}
+{% endmacro %}
+
+{% macro events(events) %}
+{% if events['accept_mutex'] is defined and events['accept_mutex'] is boolean %}
+accept_mutex {{ events['accept_mutex'] | ternary('on', 'off') }};
+{% endif %}
+{% if events['accept_mutex_delay'] is defined %}
+accept_mutex_delay {{ events['accept_mutex_delay'] }};
+{% endif %}
+{% if events['debug_connection'] is defined and events['debug_connection'] is sequence %}
+{% for connection in events['debug_connection'] if events['debug_connection'] is not string %}
+debug_connection {{ connection }};
+{% else %}
+debug_connection {{ events['debug_connection'] }};
+{% endfor %}
+{% endif %}
+{% if events['multi_accept'] is defined and events['multi_accept'] is boolean %}
+multi_accept {{ events['multi_accept'] | ternary('on', 'off') }};
+{% endif %}
+{% if events['use'] is defined %}
+use {{ events['use'] }};
+{% endif %}
+{% if events['worker_aio_requests'] is defined and events['worker_aio_requests'] is number %}
+worker_aio_requests {{ events['worker_aio_requests'] }};
+{% endif %}
+{% if events['worker_connections'] is defined and events['worker_connections'] is number %}
+worker_connections {{ events['worker_connections'] }};
+{% endif %}
+{% endmacro %}

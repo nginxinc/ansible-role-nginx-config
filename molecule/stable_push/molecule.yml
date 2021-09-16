@@ -10,8 +10,8 @@ lint: |
   yamllint .
   ansible-lint --force-color
 platforms:
-  - name: alpine-3.10
-    image: alpine:3.10
+  - name: alpine-3.13
+    image: alpine:3.13
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     volumes:

@@ -9,1093 +9,694 @@ nginx_config_html_demo_template:
 
 # Enable creating dynamic templated NGINX configuration files.
 # Defaults are the values found in a fresh NGINX installation.
+# Unless otherwise noted, all variables are *strings* and *optional* (*required* values inside a dictionary are only required if the top level variable is defined).
 nginx_config_main_template_enable: false
 nginx_config_main_template:
   template_file: nginx.conf.j2
-  conf_file_name: nginx.conf
-  conf_file_location: /etc/nginx
-  # modules:  # specify modules as a list following the format in the line below
-  #   - modules/ngx_http_js_module.so
-  user: nginx
-  worker_processes: auto
-  # worker_rlimit_nofile: 1024
-  pid: /var/run/nginx.pid
-  error_log:
-    location: /var/log/nginx/error.log
-    level: notice
-  worker_connections: 1024
-  http_enable: true
-  http_settings:
-    # app_protect_global:  # Optional -- Configure NGINX App Protect
-    #   physical_memory_util_thresholds:  # Optional
-    #     high: 100  # Required
-    #     low: 100  # Required
-    #   cpu_thresholds:  # Optional
-    #     high: 100  # Required
-    #     low: 100  # Required
-    #   failure_mode_action: pass  # Optional -- 'pass' or 'drop'
-    #   cookie_seed: encryptionseed  # Optional
-    #   compressed_requests_action: drop  # Optional -- 'pass' or 'drop'
-    #   request_buffer_overflow_action: pass  # Optional -- 'pass' or 'drop'
-    #   user_defined_signatures: []  # Optional list
-    #   reconnect_period_seconds: 5 # Optional integer
-    # app_protect:  # Optional -- Configure NGINX App Protect
-    #   enable: false  # Optional boolean
-    #   policy_file: path  # Optional
-    #   security_log_enable: false  # Optional boolean
-    #   security_log:  # Optional
-    #     - path: path  # Required
-    #       dest: dest  # Required
-    # grpc_global:  # Optional -- Configure GRPC
-    #   bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-    #     address: $remote_addr  # Required
-    #     transparent: true  # Optional boolean
-    #   buffer_size: 4k  # Optional
-    #   connect_timeout: 60s  # Optional
-    #   hide_header: []  # Optional list
-    #   ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-    #   intercept_errors: false  # Optional boolean
-    #   next_upstream: []  # Optional list
-    #   next_upstream_timeout: 0  # Optional
-    #   next_upstream_tries: 0  # Optional
-    #   pass_header: []  # Optional list
-    #   read_timeout: 60s  # Optional
-    #   send_timeout: 60s  # Optional
-    #   set_header:  # Optional
-    #     - field: Accept-Encoding  # Required
-    #       value: '""'  # Required
-    #   socket_keepalive: false  # Optional boolean
-    #   ssl_certificate: /path/to/file  # Optional
-    #   ssl_certificate_key: /path/to/file  # Optional
-    #   ssl_ciphers: DEFAULT  # Optional
-    #   ssl_conf_command: 'command'  # Optional
-    #   ssl_crl: /path/to/file  # Optional
-    #   ssl_name: serverName  # Optional
-    #   ssl_password_file: /path/to/file  # Optional
-    #   ssl_protocols: []  # Optional list
-    #   ssl_server_name: false  # Optional boolean
-    #   ssl_session_reuse: true  # Optional boolean
-    #   ssl_trusted_certificate: /path/to/file  # Optional
-    #   ssl_verify: false  # Optional boolean
-    #   ssl_verify_depth: 1  # Optional
-    # gzip:  # Optional -- Configure GZIP
-    #   enable: true  # Optional boolean
-    #   buffers:  # Optional
-    #     number: 32  # Required
-    #     size: 4k  # Required
-    #   comp_level: 1  # Optional
-    #   disable: []  # Optional list
-    #   http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-    #   min_length: 20  # Optional
-    #   proxied: []  # Optional list
-    #   types: []  # Optional list
-    #   vary: false  # Optional boolean
-    access_log_format:
-      - name: main
-        format: |-
-          '$remote_addr - $remote_user [$time_local] "$request" '
-                              '$status $body_bytes_sent "$http_referer" '
-                              '"$http_user_agent" "$http_x_forwarded_for"'
-    access_log_location:
-      - name: main
-        location: /var/log/nginx/access.log
-    sendfile: true
-    # tcp_nopush: true
-    # tcp_nodelay: true
-    keepalive_timeout: 65
-    # cache: false
-    # rate_limit: false
-    # keyval: false
-    # server_tokens: "off"
-    # server_names_hash_bucket_size: 64
-    # server_names_hash_max_size: 512
-  # http_global_autoindex: false
-  # sub_filter:
-  #   # sub_filters: []
-  #   last_modified: false
-  #   once: true
-  #   types: "text/html"
-  # custom_options: []
-  # http_custom_options: []
-  # http_custom_includes: []
-  # events_custom_options: []
-  stream_enable: false
-  # stream_custom_options: []
+  deployment_location: /etc/nginx/nginx.conf
+  config:
+    main:  # Configure NGINX main core directives
+      load_module: modules/ngx_http_js_module.so  # Can be a string or a list
+        # - modules/ngx_http_js_module.so
+      user:  # nginx  # Can alternatively be a 'user' string
+        username: nginx  # Required
+        group: nginx
+      # worker_cpu_affinity:
+      #   auto: true  # Optional boolean
+      #   cpumask: 0101 1010  # Optional if 'auto' is set to 'true'
+      # worker_priority: 0  # Number
+      worker_processes: auto  # Can be a number or 'auto'
+      # worker_rlimit_core: 1m
+      # worker_rlimit_nofile: 10000  # Number
+      # worker_shutdown_timeout: 30m
+      error_log:  # /var/log/nginx/error.log  # Can be a string, a dictionary, or a list of dictionaries. The 'file' variable is only required when setting a 'level'.
+        file: /var/log/nginx/error.log  # Required
+        level: notice
+        # - /var/log/nginx/error.log
+        # - file: /var/log/nginx/error.log  # Required
+        #   level: notice
+      pid: /var/run/nginx.pid
+      daemon: true  # Boolean
+      # debug_points: abort  # Can be 'abort' or 'stop'
+      # env:  # MALLOC_OPTIONS  # Can be a string, a dictionary, or a list of dictionaries. The 'variable' variable is only required when setting a 'value'.
+      #   variable: PERL5LIB  # Required
+      #   value: /data/site/modules
+      #   - MALLOC_OPTIONS
+      #   - variable: PERL5LIB  # Required
+      #     value: /data/site/modules
+      # lock_file: logs/nginx.lock
+      # master_process: true  # Boolean
+      # pcre_jit: false  # Boolean
+      # ssl_engine: device
+      # thread_pool:  # Can be a dictionary or a list of dictionaries.
+      #   - name: default  # Required
+      #     threads: 32  # Required boolean
+      #     max_queue: 65536  # Boolean
+      # timer_resolution: 1s
+      # working_directory: /etc/nginx
+    events:  # Configure NGINX events
+      # accept_mutex: false  # Boolean
+      # accept_mutex_delay: 500ms
+      # debug_connection:  # localhost  # Can be a string or a list
+      #   - localhost
+      # multi_accept: false  # Boolean
+      # use: epoll
+      # worker_aio_requests: 32  # Number
+      worker_connections: 1024  # Number
+    http:
+      include: /etc/nginx/conf.d/*.conf  # Can be a string or a list
+        # - /etc/nginx/conf.d/*.conf
+    stream:
+      include: /etc/nginx/conf.d/stream/*.conf  # Can be a string or a list
+        # - /etc/nginx/conf.d/stream/*.conf
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
-# the options available for templating. Each key represents a new configuration file.
+# the options available for templating. Each dictionary in the top level list/array represents a new configuration file.
+# Unless otherwise noted, all variables are *strings* and *optional* (*required* values inside a dictionary are only required if the top level variable is defined).
+# Most (not all) of these directives can also be used under the 'server' and 'location' contexts, as briefly seen at the end of the below dictionary.
 nginx_config_http_template_enable: false
 nginx_config_http_template:
   - template_file: http/default.conf.j2
-    conf_file_name: default.conf
-    conf_file_location: /etc/nginx/conf.d/
-    auth_jwt:  # Optional -- Configure JWT auth
-      enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
-        realm: realm  # Required
-        token: $cookie_auth_token  # Optional
-      claim_set:  # Optional
-        - variable: $email  # Required
-          name:  # Required list or string
-            - info
-      header_set:  # Optional
-        - variable: $job  # Required
-          name: info  # Required list or string
-      key_file: /path/to/file  # Optional
-      key_request: /path/to/file  # Optional
-      leeway: 0s  # Optional
-      type: signed  # Optional -- One of `signed` or `encrypted`
-    auth_request:  # Optional -- Configure request auth
-      uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
-      set:  # Optional
-        variable: $temp  # Required
-        value: auth  # Required
-    auth_basic:  # Optional -- Configure basic auth
-      realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
-      user_file: /path/to/file  # Optional
-    autoindex:  # Optional -- Configure autoindex
-      enable: false  # Optional
-      exact_size: true  # Optional
-      format: html  # Optional
-      localtime: false  # Optional
-    headers:  # Optional -- Configure headers
-      add_headers:  # Optional
-        - name: Strict-Transport-Security  # Required
-          value: '"max-age=15768000; includeSubDomains"'  # Required
-          always: false  # Optional
-      add_trailers:  # Optional
-        - name: Strict-Transport-Security  # Required
-          value: '"max-age=15768000; includeSubDomains"'  # Required
-          always: false  # Optional
-      expires:  # Optional
-        - modified: true  # Optional
-          time: "12h"  # Optional
-        - epoch  # Optional -- Can also be 'max'
-    health_check:  # Optional -- Configure NGINX Plus Health Checks
-      match:  # Optional list
-        - name: name  # Required
-          conditions: []  # Optional list
-            # - status 200
-    limit_req:  # Optional -- Configure request limits
-      limit_reqs:  # Optional
-        - zone: one  # Required
-          burst: 5  # Optional
-          delay: false  # Optional -- Set it to 'false' to set it to 'nodelay', otherwise specify a delay value
-      dry_run: false  # Optional
-      log_level: error  # Optional
-      status: 503  # Optional
-      zones:  # Optional
-        - key: $binary_remote_addr  # Required
-          name: one  # Required
-          size: 1m  # Required
-          rate: 10r/s  # Required
-          sync: false  # Optional
-    log:  # Optional -- Configure logs
-      access:  # Optional
-        - path: /var/log/nginx/access.log  # Required
-          format: main  # Optional
-          buffer: 1m  # Optional
-          gzip: 5  # Optional -- Can also be set to 'true'
-          flush: 10h  # Optional
-          if: $loggable  # Optional
-      format:  # Optional
-        - name: main  # Required
-          escape: default  # Optional -- Can also be 'json' or 'none'
-          format: |  # Required
-            '$remote_addr - $remote_user [$time_local] "$request" '
-            '$status $body_bytes_sent "$http_referer" '
-            '"$http_user_agent" "$http_x_forwarded_for"'
-      open_log_file_cache:  # Optional -- Can also be set to 'false'
-        max: 1000  # Required
-        inactive: 20s  # Optional
-        min_uses: 2  # Optional
-        valid: 1m  # Optional
-    rewrite:  # Optional -- Configure rewrite directives
-      return:  # Optional -- Can also be set to a return URL or code directly
-        - code: 200  # Optional
-          text: text  # Optional
-          url: https://example.com  # Optional
-      rewrites:  # Optional
-        - regex: (.*).html(.*)  # Required
-          replacement: $1$2  # Required
-          flag: last  # Optional
-      log: false  # Optional
-      set:  # Optional
-        - variable: $var  # Required
-          value: var  # Required
-      uninitialized_variable_warn: true  # Optional
-    sub_filter:  # Optional -- Configure sub_filter directives
-      sub_filters:  # Optional
-        - string: server_hostname  # Required
-          replacement: $hostname  # Required
-      last_modified: false  # Optional
-      once: true  # Optional
-      types: text/html  # Optional
-    proxy_cache_path:  # Optional -- Configure Proxy Cache Path
-      - path: /var/cache/nginx/proxy/backend  # Required
-        levels: "1:1"  # Optional
-        use_temp_path: false  # Optional boolean
-        inactive: 10m  # Optional
-        keys_zone:  # Required
-          name: backend_proxy_cache  # Required
-          size: 10m  # Required
-        max_size: 2g  # Optional
-        min_free: 1g  # Optional
-        manager_files: 100  # Optional
-        manager_sleep: 500ms  # Optional
-        manager_threshold: 200ms  # Optional
-        loader_files: 100  # Optional
-        loader_sleep: 50ms  # Optional
-        loader_threshold: 200ms  # Optional
-        purger: false  # Optional boolean
-        purger_files: 10  # Optional
-        purger_sleep: 50ms  # Optional
-        purger_threshold: 50ms  # Optional
-    proxy:  # Optional -- Configure Proxy
-      bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_bind
-        address: 0.0.0.0  # Required
-        transparent: false  # Optional boolean
-      buffer_size: 4k  # Optional
-      buffering: true  # Optional boolean
-      buffers:  # Optional
-        number: 8  # Required
-        size: 4k  # Required
-      busy_buffers_size: 8k  # Optional
-      cache: false  # Optional -- Set to 'false' or specify cache zone
-      cache_background_update: false  # Optional boolean
-      cache_bypass: $cookie_seed  # Optional nested list, list, or single value
-        # - - $cookie_nocache
-        #   - $arg_nocache$arg_comment
-        # - $cookie_path
-      cache_convert_head: true  # Optional boolean
-      cache_key: $scheme$proxy_host$request_uri  # Optional
-      cache_lock: false  # Optional boolean
-      cache_lock_age: 5s  # Optional
-      cache_lock_timeout: 5s  # Optional
-      cache_max_range_offset: 1  # Optional
-      cache_methods: []  # Optional list
-        # - GET
-        # - HEAD
-      cache_min_uses: 1  # Optional
-      cache_purge: sample  # Optional list or string
-        # - cache_key
-        # - cache_purge
-      cache_revalidate: false  # Optional boolean
-      cache_use_stale: false  # Optional list
-        # - error
-        # - timeout
-      cache_valid:  # Optional list of codes
-        - code: 200  # Optional list or string
-          # - 201
-          # - 202
-          time: 10m  # Required
-      connect_timeout: 60s  # Optional
-      cookie_domain: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain
-        # - domain: localhost  # Required
-        #   replacement: example.org  # Required
-      cookie_flags: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_flags
-        # cookie: one  # Required
-        # flag: []  # Optional list
-        #   - httponly
-      cookie_path: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_path
-        # - path: $uri  # Required
-        #   replacement: $someuri  # Required
-      force_ranges: false  # Optional boolean
-      headers_hash_bucket_size: 64  # Optional
-      headers_hash_max_size: 512  # Optional
-      hide_header: Date  # Optional list or string
-        # - Date
-        # - X-Accel-Redirect
-      http_version: 1.1  # Optional
-      ignore_client_abort: false  # Optional boolean
-      ignore_headers: X-Accel-Redirect  # Optional list or string
-        # - Date
-        # - X-Accel-Redirect
-      intercept_errors: false  # Optional boolean
-      limit_rate: 0  # Optional
-      max_temp_file_size: 1024m  # Optional
-      method: GET  # Optional
-      next_upstream: false  # Optional -- Set to 'false' to disable proxy_next_upstream or include a variables list or string
-        # - error
-        # - timeout
-      next_upstream_timeout: 0  # Optional
-      next_upstream_tries: 0  # Optional
-      no_cache: $cookie_nocache  # Optional list or string
-        # - $cookie_nocache
-        # - $arg_nocache$arg_comment
-      pass_header: Date  # Optional list or string
-        # - Date
-        # - X-Accel-Redirect
-      pass_request_body: false  # Optional boolean
-      pass_request_headers: true  # Optional boolean
-      read_timeout: 60s  # Optional
-      redirect: false  # Optional -- Set to 'false' to disable proxy_redirect
-        # - original: http://upstream:port/two/
-        #   replacement: /one/
-        # - default
-      request_buffering: false  # Optional boolean
-      send_lowat: 0  # Optional
-      send_timeout: 60s  # Optional
-      set_body: body  # Optional
-      set_header: []  # Optional list
-        # - field: Host
-        #   value: $proxy_host
-        # - field: Connection
-        #   value: close
-      socket_keepalive: false  # Optional boolean
-      ssl_certificate: /path/to/file  # Optional
-      ssl_certificate_key: /path/to/file  # Optional
-      ssl_ciphers: DEFAULT  # Optional list or string
-        # - DEFAULT
-      ssl_conf_command: 'command'  # Optional list or string
-        # - 'command'
-      ssl_crl: /path/to/file  # Optional
-      ssl_name: $proxy_host  # Optional
-      ssl_password_file: /path/to/file  # Optional
-      ssl_protocols: TLSv1  # Optional list or string
-        # - TLSv1
-        # - TLSv1.1
-        # - TLSv1.2
-      ssl_server_name: false  # Optional boolean
-      ssl_session_reuse: true  # Optional boolean
-      ssl_trusted_certificate: /path/to/file  # Optional
-      ssl_verify: false  # Optional boolean
-      ssl_verify_depth: 1  # Optional
-      store: false  # Optional boolean
-      store_access:  # Optional
-        user: rw  # Optional
-        group: rw  # Optional
-        all: r  # Optional
-      temp_file_write_size: 8k  # Optional
-      temp_path:  # Optional
-        path: /var/cache/nginx/proxy/temp  # Required
-        level: 2  # Optional -- One of '1', '2' or '3'
-    ssl:
-      buffer_size: 16k  # Optional
-      certificate: /path/to/file  # Optional
-      certificate_key: /path/to/file  # Optional
-      ciphers: HIGH  # Optional list or string
-        # - HIGH
-        # - "!aNull"
-        # - "!MD5"
-      client_certificate: /path/to/file  # Optional
-      conf_command: 'command'  # Optional list or string
-        # - 'command'
-      crl: /path/to/file  # Optional
-      dhparam: /path/to/file  # Optional
-      early_data: false  # Optional boolean
-      ecdh_curve: auto  # Optional list or string
-        # - prime256v1
-      ocsp: false  # Optional boolean (also accepts the 'leaf' value)
-      ocsp_cache: false  # Optional -- Can be set to 'false', 'none', or use the 'name'/'size' dict to create a shared cache
-        # name: cache  # Required
-        # size: 16k  # Required
-      ocsp_responder: <url>  # Optional
-      password_file: /path/to/file  # Optional
-      prefer_server_ciphers: false  # Optional boolean
-      protocols: TLSv1  # Optional list or string
-        # - TLSv1
-        # - TLSv1.1
-        # - TLSv1.2
-      reject_handshake: false  # Optional
-      session_cache: none  # Optional -- Can be set to 'false', 'none', 'builtin' (use the 'enable' and 'size' dict), or 'shared' (use the 'name' and 'size' dict).
-        # builtin:  # Optional
-        #   enable: false  # Required
-        #   size: 16k  # Optional
-        # shared:  # Optional
-        #   name: cache  # Required
-        #   size: 16k  # Required
-      session_ticket_key: /path/to/file  # Optional
-      session_tickets: true  # Optional boolean
-      session_timeout: 5m  # Optional
-      stapling: false  # Optional boolean
-      stapling_file: /path/to/file  # Optional
-      stapling_responder: <url>   # Optional
-      stapling_verify: false  # Optional boolean
-      trusted_certificate: /path/to/file  # Optional
-      verify_client: false  # Optional boolean
-      verify_depth: 1  # Optional
-    servers:
-      - listen:
-          - ip: localhost  # Wrap in square brackets for IPv6 addresses
-            port: 8081
-            ssl: true
-            opts: []  # Listen opts like http2 which will be added (ssl is automatically added if you specify 'ssl:').
-        ssl:
-          buffer_size: 16k  # Optional
-          certificate: /path/to/file  # Optional
-          certificate_key: /path/to/file  # Optional
-          ciphers: HIGH  # Optional list or string
-            # - HIGH
-            # - "!aNull"
-            # - "!MD5"
-          client_certificate: /path/to/file  # Optional
-          conf_command: 'command'  # Optional list or string
-            # - 'command'
-          crl: /path/to/file  # Optional
-          dhparam: /path/to/file  # Optional
-          early_data: false  # Optional boolean
-          ecdh_curve: auto  # Optional list or string
-            # - prime256v1
-          ocsp: false  # Optional boolean (also accepts the 'leaf' value)
-          ocsp_cache: false  # Optional -- Can be set to 'false', 'none', or use the 'name'/'size' dict to create a shared cache
-            # name: cache  # Required
-            # size: 16k  # Required
-          ocsp_responder: <url>  # Optional
-          password_file: /path/to/file  # Optional
-          prefer_server_ciphers: false  # Optional boolean
-          protocols: TLSv1  # Optional list or string
-            # - TLSv1
-            # - TLSv1.1
-            # - TLSv1.2
-          reject_handshake: false  # Optional
-          session_cache: none  # Optional -- Can be set to 'false', 'none', 'builtin' (use the 'enable' and 'size' dict), or 'shared' (use the 'name' and 'size' dict).
-            # builtin:  # Optional
-            #   enable: false  # Required
-            #   size: 16k  # Optional
-            # shared:  # Optional
-            #   name: cache  # Required
-            #   size: 16k  # Required
-          session_ticket_key: /path/to/file  # Optional
-          session_tickets: true  # Optional boolean
-          session_timeout: 5m  # Optional
-          stapling: false  # Optional boolean
-          stapling_file: /path/to/file  # Optional
-          stapling_responder: <url>   # Optional
-          stapling_verify: false  # Optional boolean
-          trusted_certificate: /path/to/file  # Optional
-          verify_client: false  # Optional boolean
-          verify_depth: 1  # Optional
-        app_protect:  # Optional -- Configure NGINX App Protect
-          enable: false  # Optional
-          policy_file: path  # Optional
-          security_log_enable: false  # Optional
-          security_log:  # Optional
-            - path: path  # Required
-              dest: dest  # Required
-        auth_jwt:  # Optional -- Configure JWT auth
-          enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
-            realm: realm  # Required
-            token: $cookie_auth_token  # Optional
-          key_file: /path/to/file  # Optional
-          key_request: /path/to/file  # Optional
-          leeway: 0s  # Optional
-          type: signed  # Optional -- One of `signed` or `encrypted`
-        auth_request:  # Optional -- Configure request auth
-          uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
-          set:  # Optional
-            variable: $temp  # Required
-            value: auth  # Required
-        auth_basic:  # Optional -- Configure basic auth
-          realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
-          user_file: /path/to/file  # Optional
-        autoindex:  # Optional -- Configure autoindex
-          enable: false  # Optional
-          exact_size: true  # Optional
-          format: html  # Optional
-          localtime: false  # Optional
-        headers:  # Optional -- Configure headers
-          add_headers:  # Optional
-            - name: Strict-Transport-Security  # Required
-              value: '"max-age=15768000; includeSubDomains"'  # Required
-              always: false  # Optional
-          add_trailers:  # Optional
-            - name: Strict-Transport-Security  # Required
-              value: '"max-age=15768000; includeSubDomains"'  # Required
-              always: false  # Optional
-          expires:  # Optional
-            - modified: true  # Optional
-              time: "12h"  # Optional
-            - epoch  # Optional -- Can also be 'max'
-        limit_req:  # Optional -- Configure request limits
-          limit_reqs:  # Optional
-            - zone: one  # Required
-              burst: 5  # Optional
-              delay: false  # Optional -- Set it to 'false' to set it to 'nodelay', otherwise specify a delay value
-          dry_run: false  # Optional
-          log_level: error  # Optional
-          status: 503  # Optional
-          zones:  # Optional
-            - key: $binary_remote_addr  # Required
-              name: one  # Required
+    deployment_location: /etc/nginx/conf.d/default.conf
+    config:
+      upstreams:  # Configure NGINX upstreams
+        - name: backend  # Required
+          servers:  # Note -- Cannot be used if 'state' directive is defined
+            - address: localhost  # Required -- You can use an IP address, a Unix socket, or a domain -- include port details inline if necessary
+              weight: 1  # Number
+              max_conns: 0  # Number
+              max_fails: 1  # Number
+              fail_timeout: 10s
+              backup: false  # Boolean
+              down: false  # Boolean
+              resolve: false  # Requires 'resolver' directive to be defined
+              service: http  # Requires 'resolve' to be 'true'
+              route: a  # Requires 'sticky route' directive to be defined
+              slow_start: 0s  # Cannot be used if using 'hash', 'ip_hash' or 'random' load balancing methods
+              drain: false  # Boolean
+          zone:
+            name: backend_mem_zone  # Required
+            size: 64k
+          state: /var/lib/nginx/state/servers.conf  # Available only in NGINX Plus -- Cannot be used if 'servers' directive is defined
+          hash:  # Note -- You can only set one load balancing method -- 'round_robin' is used if no method is specified
+            key: key  # Required
+            consistent: false  # Boolean
+          ip_hash: false  # Boolean
+          least_conn: false  # Boolean
+          least_time:
+            response: last_byte  # Required -- Must be one of 'header' or 'last_byte'
+            inflight: false  # Boolean
+          random:
+            two: true  # Boolean
+            method: least_time=last_byte  # Requires two to be set to 'true'
+          queue:
+            number: 10  # Required number
+            timeout: 60s
+          keepalive: 32  # Number
+          keepalive_requests: 100  # Number
+          keepalive_time: 1h
+          keepalive_timeout: 60s
+          ntlm: false  # Available only in NGINX Plus -- Boolean
+          resolver:  # Available only in NGINX Plus
+            address: []  # Required -- Can be a string or a list
+            valid: 30s
+            ipv6: false  # Boolean
+            status_zone: backend_mem_zone
+          resolver_timeout: 30s
+          sticky_cookie:  # Note -- You can only set one type of sticky session affinity
+            name: cookie  # Required
+            expires: 1d
+            domain: example.com
+            httponly: false  # Boolean
+            samesite: none  # Note -- Must be one of 'strict', 'lax' or 'none'
+            secure: true  # Boolean
+            path: path
+          sticky_route: []  # Can be a string or a list
+          sticky_learn:  # Available only in NGINX Plus
+            create: []  # Required -- Can be a string or a list
+            lookup: []  # Required -- Can be a string or a list
+            zone:  # Required
+              name: client_sessions  # Required
               size: 1m  # Required
-              rate: 10r/s  # Required
-              sync: false  # Optional
-        log:  # Optional -- Configure logs
-          access:  # Optional
-            - path: /var/log/nginx/access.log  # Required
-              format: main  # Optional
-              buffer: 1m  # Optional
-              gzip: 5  # Optional -- Can also be set to 'true'
-              flush: 10h  # Optional
-              if: $loggable  # Optional
-          format:  # Optional
-            - name: main  # Required
-              escape: default  # Optional -- Can also be 'json' or 'none'
-              format: |  # Required
-                '$remote_addr - $remote_user [$time_local] "$request" '
-                '$status $body_bytes_sent "$http_referer" '
-                '"$http_user_agent" "$http_x_forwarded_for"'
-          open_log_file_cache:  # Optional -- Can also be set to 'false'
-            max: 1000  # Required
-            inactive: 20s  # Optional
-            min_uses: 2  # Optional
-            valid: 1m  # Optional
-        rewrite:  # Optional -- Configure rewrite directives
-          return:  # Optional -- Can also be set to a return URL or code directly
-            - code: 200  # Optional
-              text: text  # Optional
-              url: https://example.com  # Optional
-          rewrites:  # Optional
-            - regex: (.*).html(.*)  # Required
-              replacement: $1$2  # Required
-              flag: last  # Optional
-          log: false  # Optional
-          set:  # Optional
-            - variable: $var  # Required
-              value: var  # Required
-          uninitialized_variable_warn: true  # Optional
-        sub_filter:  # Optional -- Configure sub_filter directives
-          sub_filters:  # Optional
-            - string: server_hostname  # Required
-              replacement: $hostname  # Required
-          last_modified: false  # Optional
-          once: true  # Optional
-          types: text/html  # Optional
-        grpc_global:  # Optional -- Configure GRPC
-          bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-            address: $remote_addr  # Required
-            transparent: true  # Optional
-          buffer_size: 4k  # Optional
-          connect_timeout: 60s  # Optional
-          hide_header: []  # Optional list
-          ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-          intercept_errors: false  # Optional
-          next_upstream: []  # Optional list
-          next_upstream_timeout: 0  # Optional
-          next_upstream_tries: 0  # Optional
-          pass_header: []  # Optional list
-          read_timeout: 60s  # Optional
-          send_timeout: 60s  # Optional
-          set_header:  # Optional
-            - field: Accept-Encoding  # Required
-              value: '""'  # Required
-          socket_keepalive: false  # Optional
-          ssl_certificate: /path/to/file  # Optional
-          ssl_certificate_key: /path/to/file  # Optional
-          ssl_ciphers: DEFAULT  # Optional
-          ssl_conf_command: 'command'  # Optional
-          ssl_crl: /path/to/file  # Optional
-          ssl_name: $host  # Optional
-          ssl_password_file: /path/to/file  # Optional
-          ssl_protocols: []  # Optional list
-          ssl_server_name: false  # Optional
-          ssl_session_reuse: true  # Optional
-          ssl_trusted_certificate: /path/to/file  # Optional
-          ssl_verify: false  # Optional
-          ssl_verify_depth: 1  # Optional
-        gzip:  # Optional -- Configure GZIP
-          enable: true  # Optional
-          buffers:  # Optional
-            number: 32  # Required
-            size: 4k  # Required
-          comp_level: 1  # Optional
-          disable: []  # Optional list
-          http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-          min_length: 20  # Optional
-          proxied: []  # Optional list
-          types: []  # Optional list
-          vary: false  # Optional
-        proxy:  # Optional -- Configure Proxy
-          bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_bind
-            address: 0.0.0.0  # Required
-            transparent: false  # Optional boolean
-          buffer_size: 4k  # Optional
-          buffering: true  # Optional boolean
-          buffers:  # Optional
-            number: 8  # Required
-            size: 4k  # Required
-          busy_buffers_size: 8k  # Optional
-          cache: false  # Optional -- Set to 'false' or specify cache zone
-          cache_background_update: false  # Optional boolean
-          cache_bypass: $cookie_seed  # Optional nested list, list, or single value
-            # - - $cookie_nocache
-            #   - $arg_nocache$arg_comment
-            # - $cookie_path
-          cache_convert_head: true  # Optional boolean
-          cache_key: $scheme$proxy_host$request_uri  # Optional
-          cache_lock: false  # Optional boolean
-          cache_lock_age: 5s  # Optional
-          cache_lock_timeout: 5s  # Optional
-          cache_max_range_offset: 1  # Optional
-          cache_methods: []  # Optional list
-            # - GET
-            # - HEAD
-          cache_min_uses: 1  # Optional
-          cache_purge: sample  # Optional list or string
-            # - cache_key
-            # - cache_purge
-          cache_revalidate: false  # Optional boolean
-          cache_use_stale: false  # Optional list
-            # - error
-            # - timeout
-          cache_valid:  # Optional list of codes
-            - code: 200  # Optional list or string
-              # - 201
-              # - 202
-              time: 10m  # Required
-          connect_timeout: 60s  # Optional
-          cookie_domain: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain
-            # - domain: localhost  # Required
-            #   replacement: example.org  # Required
-          cookie_flags: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_flags
-            # cookie: one  # Required
-            # flag: []  # Optional list
-            #   - httponly
-          cookie_path: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_path
-            # - path: $uri  # Required
-            #   replacement: $someuri  # Required
-          force_ranges: false  # Optional boolean
-          headers_hash_bucket_size: 64  # Optional
-          headers_hash_max_size: 512  # Optional
-          hide_header: Date  # Optional list or string
-            # - Date
-            # - X-Accel-Redirect
-          http_version: 1.1  # Optional
-          ignore_client_abort: false  # Optional boolean
-          ignore_headers: X-Accel-Redirect  # Optional list or string
-            # - Date
-            # - X-Accel-Redirect
-          intercept_errors: false  # Optional boolean
-          limit_rate: 0  # Optional
-          max_temp_file_size: 1024m  # Optional
-          method: GET  # Optional
-          next_upstream: false  # Optional -- Set to 'false' to disable proxy_next_upstream or include a variables list or string
-            # - error
-            # - timeout
-          next_upstream_timeout: 0  # Optional
-          next_upstream_tries: 0  # Optional
-          no_cache: $cookie_nocache  # Optional list or string
-            # - $cookie_nocache
-            # - $arg_nocache$arg_comment
-          pass_header: Date  # Optional list or string
-            # - Date
-            # - X-Accel-Redirect
-          pass_request_body: false  # Optional boolean
-          pass_request_headers: true  # Optional boolean
-          read_timeout: 60s  # Optional
-          redirect: false  # Optional -- Set to 'false' to disable proxy_redirect
-            # - original: http://upstream:port/two/
-            #   replacement: /one/
-            # - default
-          request_buffering: false  # Optional boolean
-          send_lowat: 0  # Optional
-          send_timeout: 60s  # Optional
-          set_body: body  # Optional
-          set_header: []  # Optional list
-            # - field: Host
-            #   value: $proxy_host
-            # - field: Connection
-            #   value: close
-          socket_keepalive: false  # Optional boolean
-          ssl_certificate: /path/to/file  # Optional
-          ssl_certificate_key: /path/to/file  # Optional
-          ssl_ciphers: DEFAULT  # Optional list or string
-            # - DEFAULT
-          ssl_conf_command: 'command'  # Optional list or string
-            # - 'command'
-          ssl_crl: /path/to/file  # Optional
-          ssl_name: $proxy_host  # Optional
-          ssl_password_file: /path/to/file  # Optional
-          ssl_protocols: TLSv1  # Optional list or string
-            # - TLSv1
-            # - TLSv1.1
-            # - TLSv1.2
-          ssl_server_name: false  # Optional boolean
-          ssl_session_reuse: true  # Optional boolean
-          ssl_trusted_certificate: /path/to/file  # Optional
-          ssl_verify: false  # Optional boolean
-          ssl_verify_depth: 1  # Optional
-          store: false  # Optional boolean
-          store_access:  # Optional
-            user: rw  # Optional
-            group: rw  # Optional
-            all: r  # Optional
-          temp_file_write_size: 8k  # Optional
-          temp_path:  # Optional
-            path: /var/cache/nginx/proxy/temp  # Required
-            level: 2  # Optional -- One of '1', '2' or '3'
-        server_name: localhost
-        include_files: []
-        http_error_pages: {}
-        error_page: /usr/share/nginx/html
-        error_log:
-          location: /var/log/nginx/error.log
-          level: warn
-        root: /usr/share/nginx/html
-        index: index.html index.php
-        # https_redirect: $host
-        try_files: $uri $uri/index.html $uri.html =404
+            timeout: 10m
+            header: false  # Boolean
+            sync: false  # Boolean
+      core:  # Configure NGINX HTTP core directives
+        absolute_redirect: true  # Boolean
+        aio:  # false  # You can set it to 'true' or 'false' to avoid using 'threads'
+          threads: true  # Set it to 'true' to enable threads. Alternatively, use the threads 'pool' you wish to use.
+        aio_write: false  # Boolean
+        alias: path  # Available only in location context
+        auth_delay: 0s
+        chunked_transfer_encoding: true  # Boolean
+        client_body_buffer_size: 8k
+        client_body_in_file_only: false  # Boolean -- Can also be set to 'clean'
+        client_body_in_single_buffer: false  # Boolean
+        client_body_temp_path:
+          path: /var/cache/nginx  # Required
+          level: 2  # Required number -- Can be '1', '2' or '3'
+        client_body_timeout: 60s
+        client_header_buffer_size: 1k
+        client_header_timeout: 60s
         client_max_body_size: 1m
-        # custom_options: []
-        locations:
-          - location: /
-            app_protect:  # Optional -- Configure NGINX App Protect
-              enable: false  # Optional
-              policy_file: path  # Optional
-              security_log_enable: false  # Optional
-              security_log:  # Optional
-                - path: path  # Required
-                  dest: dest  # Required
-            auth_jwt:  # Optional -- Configure JWT auth
-              enable:  # Optional -- Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
-                realm: realm  # Required
-                token: $cookie_auth_token  # Optional
-              key_file: /path/to/file  # Optional
-              key_request: /path/to/file  # Optional
-              leeway: 0s  # Optional
-              type: signed  # Optional -- One of `signed` or `encrypted`
-            auth_request:  # Optional -- Configure request auth
-              uri: false  # Optional -- Set to 'false' to set auth_request to 'off'
-              set:  # Optional
-                variable: $temp  # Required
-                value: auth  # Required
-            auth_basic:  # Optional -- Configure basic auth
-              realm: false  # Optional -- Set to 'false' to set auth_basic to 'off'
-              user_file: /path/to/file  # Optional
-            autoindex:  # Optional -- Configure autoindex
-              enable: false  # Optional
-              exact_size: true  # Optional
-              format: html  # Optional
-              localtime: false  # Optional
-            headers:  # Optional -- Configure headers
-              add_headers:  # Optional
-                - name: Strict-Transport-Security  # Required
-                  value: '"max-age=15768000; includeSubDomains"'  # Required
-                  always: false  # Optional
-              add_trailers:  # Optional
-                - name: Strict-Transport-Security  # Required
-                  value: '"max-age=15768000; includeSubDomains"'  # Required
-                  always: false  # Optional
-              expires:  # Optional
-                - modified: true  # Optional
-                  time: "12h"  # Optional
-                - epoch  # Optional -- Can also be 'max'
-            health_check:  # Optional -- Configure NGINX Plus Health Checks
-              health_checks:  # Optional
-                - interval: 5  # Optional
-                  jitter: 0  # Optional
-                  fails: 1  # Optional
-                  passes: 1  # Optional
-                  uri: /  # Optional
-                  mandatory: false  # Optional boolean
-                  persistent: false  # Optional boolean -- Requires 'mandatory' to be set to 'true'
-                  match: block  # Optional
-                  port: 80  # Optional
-                  type: grpc  # Optional
-                  grpc_service: name  # Optional -- Requires 'type: grpc'
-                  grpc_status: code  # Optional -- Requires 'type: grpc'
-            limit_req:  # Optional -- Configure request limits
-              limit_reqs:  # Optional
-                - zone: one  # Required
-                  burst: 5  # Optional
-                  delay: false  # Optional -- Set it to 'false' to set it to 'nodelay', otherwise specify a delay value
-              dry_run: false  # Optional
-              log_level: error  # Optional
-              status: 503  # Optional
-              zones:  # Optional
-                - key: $binary_remote_addr  # Required
-                  name: one  # Required
-                  size: 1m  # Required
-                  rate: 10r/s  # Required
-                  sync: false  # Optional
-            log:  # Optional -- Configure logs
-              access:  # Optional
-                - path: /var/log/nginx/access.log  # Required
-                  format: main  # Optional
-                  buffer: 1m  # Optional
-                  gzip: 5  # Optional -- Can also be set to 'true'
-                  flush: 10h  # Optional
-                  if: $loggable  # Optional
-              format:  # Optional
-                - name: main  # Required
-                  escape: default  # Optional -- Can also be 'json' or 'none'
-                  format: |  # Required
-                    '$remote_addr - $remote_user [$time_local] "$request" '
-                    '$status $body_bytes_sent "$http_referer" '
-                    '"$http_user_agent" "$http_x_forwarded_for"'
-              open_log_file_cache:  # Optional -- Can also be set to 'false'
-                max: 1000  # Required
-                inactive: 20s  # Optional
-                min_uses: 2  # Optional
-                valid: 1m  # Optional
-            rewrite:  # Optional -- Configure rewrite directives
-              return:  # Optional -- Can also be set to a return URL or code directly
-                - code: 200  # Optional
-                  text: text  # Optional
-                  url: https://example.com  # Optional
-              rewrites:  # Optional
-                - regex: (.*).html(.*)  # Required
-                  replacement: $1$2  # Required
-                  flag: last  # Optional
-              log: false  # Optional
-              set:  # Optional
-                - variable: $var  # Required
-                  value: var  # Required
-              uninitialized_variable_warn: true  # Optional
-            sub_filter:  # Optional -- Configure sub_filter directives
-              sub_filters:  # Optional
-                - string: server_hostname  # Required
-                  replacement: $hostname  # Required
-              last_modified: false  # Optional
-              once: true  # Optional
-              types: text/html  # Optional
-            grpc_global:  # Optional -- Configure GRPC
-              bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable grpc_bind
-                address: $remote_addr  # Required
-                transparent: true  # Optional
-              buffer_size: 4k  # Optional
-              connect_timeout: 60s  # Optional
-              hide_header: []  # Optional list
-              ignore_headers: []  # Optional list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
-              intercept_errors: false  # Optional
-              next_upstream: []  # Optional list
-              next_upstream_timeout: 0  # Optional
-              next_upstream_tries: 0  # Optional
-              pass_header: []  # Optional list
-              read_timeout: 60s  # Optional
-              send_timeout: 60s  # Optional
-              set_header:  # Optional
-                - field: Accept-Encoding  # Required
-                  value: '""'  # Required
-              socket_keepalive: false  # Optional
-              ssl_certificate: fileLocation  # Optional
-              ssl_certificate_key: fileLocation  # Optional
-              ssl_ciphers: DEFAULT  # Optional
-              ssl_conf_command: command  # Optional
-              ssl_crl: fileLocation  # Optional
-              ssl_name: serverName  # Optional
-              ssl_password_file: fileLocation  # Optional
-              ssl_protocols: []  # Optional list
-              ssl_server_name: false  # Optional
-              ssl_session_reuse: true  # Optional
-              ssl_trusted_certificate: fileLocation  # Optional
-              ssl_verify: false  # Optional
-              ssl_verify_depth: 1  # Optional
-            grpc:  # Optional -- Configure GRPC
-              pass: localhost:9000  # Optional
-            gzip:  # Optional -- Configure GZIP
-              enable: true  # Optional
-              buffers:  # Optional
-                number: 32  # Required
-                size: 4k  # Required
-              comp_level: 1  # Optional
-              disable: []  # Optional list
-              http_version: 1.1  # Optional -- One of '1.0' or '1.1'
-              min_length: 20  # Optional
-              proxied: []  # Optional list
-              types: []  # Optional list
-              vary: false  # Optional
-            proxy_pass: localhost:9000  # Optional -- Configure Proxy Pass
-            proxy:  # Optional -- Configure Proxy
-              bind:  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_bind
-                address: 0.0.0.0  # Required
-                transparent: false  # Optional boolean
-              buffer_size: 4k  # Optional
-              buffering: true  # Optional boolean
-              buffers:  # Optional
-                number: 8  # Required
-                size: 4k  # Required
-              busy_buffers_size: 8k  # Optional
-              cache: false  # Optional -- Set to 'false' or specify cache zone
-              cache_background_update: false  # Optional boolean
-              cache_bypass: $cookie_seed  # Optional nested list, list, or single value
-                # - - $cookie_nocache
-                #   - $arg_nocache$arg_comment
-                # - $cookie_path
-              cache_convert_head: true  # Optional boolean
-              cache_key: $scheme$proxy_host$request_uri  # Optional
-              cache_lock: false  # Optional boolean
-              cache_lock_age: 5s  # Optional
-              cache_lock_timeout: 5s  # Optional
-              cache_max_range_offset: 1  # Optional
-              cache_methods: []  # Optional list
-                # - GET
-                # - HEAD
-              cache_min_uses: 1  # Optional
-              cache_purge: sample  # Optional list or string
-                # - cache_key
-                # - cache_purge
-              cache_revalidate: false  # Optional boolean
-              cache_use_stale: false  # Optional list
-                # - error
-                # - timeout
-              cache_valid:  # Optional list of codes
-                - code: 200  # Optional list or string
-                  # - 201
-                  # - 202
-                  time: 10m  # Required
-              connect_timeout: 60s  # Optional
-              cookie_domain: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain
-                # - domain: localhost  # Required
-                #   replacement: example.org  # Required
-              cookie_flags: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_flags
-                # cookie: one  # Required
-                # flag: []  # Optional list
-                #   - httponly
-              cookie_path: false  # Optional -- Set to 'false' and remove/comment nested variables to disable proxy_cookie_path
-                # - path: $uri  # Required
-                #   replacement: $someuri  # Required
-              force_ranges: false  # Optional boolean
-              headers_hash_bucket_size: 64  # Optional
-              headers_hash_max_size: 512  # Optional
-              hide_header: Date  # Optional list or string
-                # - Date
-                # - X-Accel-Redirect
-              http_version: 1.1  # Optional
-              ignore_client_abort: false  # Optional boolean
-              ignore_headers: X-Accel-Redirect  # Optional list or string
-                # - Date
-                # - X-Accel-Redirect
-              intercept_errors: false  # Optional boolean
-              limit_rate: 0  # Optional
-              max_temp_file_size: 1024m  # Optional
-              method: GET  # Optional
-              next_upstream: false  # Optional -- Set to 'false' to disable proxy_next_upstream or include a variables list or string
-                # - error
-                # - timeout
-              next_upstream_timeout: 0  # Optional
-              next_upstream_tries: 0  # Optional
-              no_cache: $cookie_nocache  # Optional list or string
-                # - $cookie_nocache
-                # - $arg_nocache$arg_comment
-              pass_header: Date  # Optional list or string
-                # - Date
-                # - X-Accel-Redirect
-              pass_request_body: false  # Optional boolean
-              pass_request_headers: true  # Optional boolean
-              read_timeout: 60s  # Optional
-              redirect: false  # Optional -- Set to 'false' to disable proxy_redirect
-                # - original: http://upstream:port/two/
-                #   replacement: /one/
-                # - default
-              request_buffering: false  # Optional boolean
-              send_lowat: 0  # Optional
-              send_timeout: 60s  # Optional
-              set_body: body  # Optional
-              set_header: []  # Optional list
-                # - field: Host
-                #   value: $proxy_host
-                # - field: Connection
-                #   value: close
-              socket_keepalive: false  # Optional boolean
-              ssl_certificate: /path/to/file  # Optional
-              ssl_certificate_key: /path/to/file  # Optional
-              ssl_ciphers: DEFAULT  # Optional list or string
-                # - DEFAULT
-              ssl_conf_command: 'command'  # Optional list or string
-                # - 'command'
-              ssl_crl: /path/to/file  # Optional
-              ssl_name: $proxy_host  # Optional
-              ssl_password_file: /path/to/file  # Optional
-              ssl_protocols: TLSv1  # Optional list or string
-                # - TLSv1
-                # - TLSv1.1
-                # - TLSv1.2
-              ssl_server_name: false  # Optional boolean
-              ssl_session_reuse: true  # Optional boolean
-              ssl_trusted_certificate: /path/to/file  # Optional
-              ssl_verify: false  # Optional boolean
-              ssl_verify_depth: 1  # Optional
-              store: false  # Optional boolean
-              store_access:  # Optional
-                user: rw  # Optional
-                group: rw  # Optional
-                all: r  # Optional
-              temp_file_write_size: 8k  # Optional
-              temp_path:  # Optional
-                path: /var/cache/nginx/proxy/temp  # Required
-                level: 2  # Optional -- One of '1', '2' or '3'
-            include_files: []
-            root: /usr/share/nginx/html
-            alias: /usr/share/nginx/html
-            index: index.html
-            try_files: $uri $uri/index.html $uri.html =404
-            # allows:
-            #   - 192.168.1.0/24
-            # denies:
-            #   - all
-            client_max_body_size: 1m
-            # custom_options: []
-            # allows:
-            #   - 192.168.1.0/24
-            # denies:
-            #   - all
-            internal: false
-            # custom_options: []
-    upstreams:  # Optional -- Configure NGINX Upstreams
-      - name: backend  # Required
-        servers:  # Optional -- Cannot be used if 'state' directive is defined
-          - address: localhost  # Required -- You can use an IP address, a Unix socket, or a domain -- include port details inline if necessary
-            weight: 1  # Optional
-            max_conns: 0  # Optional
-            max_fails: 1  # Optional
-            fail_timeout: 10s  # Optional
-            backup: false  # Optional
-            down: false  # Optional
-            resolve: false  # Optional -- Requires 'resolver' directive to be defined
-            route: a  # Optional -- Requires 'sticky route' directive to be defined
-            service: http  # Optional --  Requires 'resolve' parameter to be set
-            slow_start: 0s  # Optional
-            drain: false  # Optional
-        zone:  # Optional
-          name: backend_mem_zone  # Required
-          size: 64k  # Optional
-        state: /var/lib/nginx/state/servers.conf  # Optional -- Cannot be used if 'servers' directive is defined
-        hash:  # Optional -- You can only set one load balancing method -- 'round_robin' is used if no method is specified
-          key: key  # Required
-          consistent: false  # Optional
-        ip_hash: false  # Optional
-        least_conn: false  # Optional
-        least_time:  # Optional
-          response: last_byte  # Required -- One of 'header' or 'last_byte'
-          inflight: false  # Optional
-        random:  # Optional
-          two: true  # Optional
-          method: least_time=last_byte  # Optional -- Requires two to be set to true
-        queue:  # Optional
-          number: 10  # Required
-          timeout: 60s  # Optional
-        keepalive: 32  # Optional
-        keepalive_requests: 100  # Optional
-        keepalive_timeout: 60s  # Optional
-        ntlm: false  # Optional
-        resolver:  # Optional
-          address: []  # Required
-          valid: 30s  # Optional
-          ipv6: false  # Optional
-          status_zone: backend_mem_zone  # Optional
-        resolver_timeout: 30s  # Optional
-        sticky_cookie:  # Optional -- You can only set one type of sticky session affinity
-          name: cookie  # Required
-          expires: 1d  # Optional
-          domain: example.com  # Optional
-          httponly: false  # Optional
-          samesite: none  # Optional -- One of 'strict', 'lax' or 'none'
-          secure: true  # Optional
-          path: /  # Optional
-        sticky_route: []  # Optional
-        sticky_learn:  # Optional
-          create: []  # Required
-          lookup: []  # Required
-          zone:  # Required
-            name: client_sessions
-            size: 1m
-          timeout: 10m  # Optional
-          header: false  # Optional
-          sync: false  # Optional
-        custom_directives: []
-      # custom_options: []
+        connection_pool_size: 256  # Not available in location context
+        default_type: text/plain
+        directio: false  # Can also be set to a size
+        directio_alignment: 512
+        disable_symlinks:  # Can be directly set to 'true', 'false' or 'if_not_owner'. A dictionary is required if you want to set 'from'.
+          check: 'on'  # Required  -- Can be set to 'on' or 'if_not_owner'
+          from: $document_root
+        error_page:
+          - code:  # Required number -- Can be a number or a list of numbers
+              - 404
+            response: 404
+            uri: /404.html  # Required
+        etag: true  # Boolean
+        if_modified_since: exact  # Can be set to 'off', 'exact' or 'before'
+        ignore_invalid_headers: true  # Boolean -- Not available in the 'location' context
+        include: path  # Note -- This directive originally belongs in the NGINX core module, but we are making an exception here
+        index: path  # Note -- This directive originally belongs in the NGINX index module, but we are making an exception here
+        internal: false  # Boolean -- Only available in the 'location' context
+        keepalive_disable: msie6  # Can be a string or a list
+        keepalive_requests: 1000  # Number
+        keepalive_time: 1h
+        keepalive_timeout:  # Can be a string or a dictionary. The latter is required to set 'header_timeout'
+          timeout: 75s  # Required
+          header_timeout: 75s
+        large_client_header_buffers:
+          number: 4  # Required number
+          size: 8k  # Required
+        limit_except:  # Available only in 'location' context
+          method: GET  # Required -- Can be a string or a list
+          directive:  # Can be a string or a list
+            - allow all
+        limit_rate: 0
+        limit_rate_after: 0
+        lingering_close: true  # Can be set to 'true', 'false' or 'always'
+        lingering_time: 30s
+        lingering_timeout: 5s
+        listen:
+          - address: 0.0.0.0  # Can also be a unix path
+            port: 80
+            default_server: true  # Boolean
+            ssl: false  # Boolean
+            http2: false  # Boolean
+            spdy: false  # Boolean
+            proxy_protocol: false  # Boolean
+            fastopen: 12  # Number
+            backlog: 511  # Number
+            rcvbuf: 512
+            sndbuf: 512
+            deffered: false  # Boolean
+            bind: false  # Boolean
+            ipv6only: false  # Boolean
+            reuseport: false  # Boolean
+            so_keepalive:  # false  # Boolean -- alternatively you can specify 'keepidle', 'keepintvl', and 'keepcnt'
+              keepidle: 30m
+              keepintvl: 5
+              keepcnt: 10
+        log_not_found: true  # Boolean
+        log_subrequest: false  # Boolean
+        max_ranges: 0  # Number
+        merge_slashes: true  # Boolean
+        msie_padding: true  # Boolean
+        msie_refresh: false  # Boolean
+        open_file_cache:  # false  # Can be set to 'false', alternatively use max and inactive
+          max: 10  # Required
+          inactive: 60s  # Optional
+        open_file_cache_errors: false  # Boolean
+        open_file_cache_min_uses: 1  # Number
+        open_file_cache_valid: 60s
+        output_buffers:
+          number: 2  # Required
+          size: 32k  # Required
+        port_in_redirect: true  # Boolean
+        postpone_output: 1460
+        read_ahead: 0
+        recursive_error_pages: false  # Boolean
+        request_pool_size: 4k
+        reset_timedout_connection: false  # Boolean
+        resolver:
+          address: 127.0.0.1  # Required -- Can also be a list
+          valid: 60s
+          ipv6: false  # Boolean
+          status_zone: zone  # Only available in NGINX Plus
+        resolver_timeout: 30s
+        root: html
+        satisfy: all  # Can be 'all' or 'any'
+        send_lowat: 0  # Not used on Linux, Solaris and Windows
+        send_timeout: 60s
+        sendfile: false  # Boolean
+        sendfile_max_chunk: 0
+        server_name: ""  # Only allowed in 'server' context -- can be a list
+          # - server.com
+          # - www.server.com
+        server_name_in_redirect: false  # Boolean
+        server_names_hash_bucket_size: 32
+        server_names_hash_max_size: 512
+        server_tokens: true  # Can also be 'build' or a string
+        subrequest_output_buffer_size: 4k
+        tcp_nodelay: true  # Boolean
+        tcp_nopush: false  # Boolean
+        try_files:
+          files: $uri  # Required - Can be a string or a list
+            # - $uri1
+            # - $uri2
+          uri: /uri  # Must set either the 'uri' or 'code' parameter
+          code: code  # Must set either the 'uri' or 'code' parameter
+        types:
+          - mime: text/html  # Required
+            extensions: html  # Required -- Can be a string or a list
+              # - html
+              # - htm
+        types_hash_bucket_size: 64
+        types_hash_max_size: 1024
+        underscores_in_headers: false  # Boolean -- Not allowed in 'location' context
+        variables_hash_bucket_size: 64  # Only allowed in 'http' context
+        variables_hash_max_size: 1024  # Only allowed in 'http' context
+      ssl:
+        buffer_size: 16k
+        certificate: /path/to/file  # String or list
+        certificate_key: /path/to/file  # String or list
+        ciphers: HIGH  # String or list
+          # - HIGH
+          # - "!aNull"
+          # - "!MD5"
+        client_certificate: /path/to/file
+        conf_command: 'command'  #  String or list
+          # - 'command'
+        crl: /path/to/file
+        dhparam: /path/to/file
+        early_data: false  # Boolean
+        ecdh_curve: auto  # String or list
+          # - prime256v1
+        ocsp: false  # Boolean or 'leaf'
+        ocsp_cache: false  # Can be set to 'false' or use the 'name'/'size' dict to create a shared cache
+          # name: cache  # Required
+          # size: 16k  # Required
+        ocsp_responder: <url>
+        password_file: /path/to/file
+        prefer_server_ciphers: false  # Boolean
+        protocols: TLSv1  # String or list
+          # - TLSv1
+          # - TLSv1.1
+          # - TLSv1.2
+        reject_handshake: false  # Boolean
+        session_cache: none  #  Can be set to 'false', 'none', 'builtin' (uses the 'enable' and 'size' dict), or 'shared' (uses the 'name' and 'size' dict).
+          # builtin:
+          #   enable: false  # Required
+          #   size: 16k
+          # shared:
+          #   name: cache  # Required
+          #   size: 16k  # Required
+        session_ticket_key: /path/to/file  # String or list
+        session_tickets: true  # Boolean
+        session_timeout: 5m
+        stapling: false  # Boolean
+        stapling_file: /path/to/file
+        stapling_responder: <url>
+        stapling_verify: false  # Boolean
+        trusted_certificate: /path/to/file
+        verify_client: false  # Boolean, 'optional' or 'optional_no_ca'
+        verify_depth: 1  # Number
+      app_protect_waf:  # Only available when using NGINX App Protect WAF -- Configure NGINX App Protect WAF
+        physical_memory_util_thresholds:
+          high: 100  # Required
+          low: 100  # Required
+        cpu_thresholds:
+          high: 100  # Required
+          low: 100  # Required
+        failure_mode_action: pass  # Can be set to 'pass' or 'drop'
+        cookie_seed: encryptionseed
+        compressed_requests_action: drop  # Can be set to 'pass' or 'drop'
+        reconnect_period_seconds: 5  # Number
+        request_buffer_overflow_action: pass  # Can be set to 'pass' or 'drop'
+        user_defined_signatures: /path/to/file  # String or list
+          # - /path/to/file1
+          # - /path/to/file2
+        enable: false  # Boolean
+        policy_file: /path/to/file
+        security_log_enable: false  # Boolean
+        security_log:  # Can be a dictionary or a list of dictionaries
+          - path: /path/to/file  # Required
+            dest: dest  # Required
+      app_protect_dos:  # Only available when using NGINX App Protect DoS -- Configure NGINX App Protect DoS
+        enable: true  # Boolean
+        monitor: url
+        name: samplename
+        policy_file: /etc/app_protect/conf/BADOSDefaultPolicy.json
+        security_log_enable: true  # Boolean
+        security_log:
+          path: /etc/app_protect_dos/log-default.json
+          dest: syslog:server=10.1.1.1:514
+        liveness:  # Only available in the 'http' context
+          enable: true  # Required
+          uri: example.com
+          port: 80
+        readiness:  # Only available in the 'http' context
+          enable: true  # Required
+          uri: example.com
+          port: 80
+      proxy:  # Configure Proxy
+        bind:  # Set to 'false' and remove/comment nested variables to disable proxy_bind
+          address: 0.0.0.0  # Required
+          transparent: false  # Boolean
+        buffer_size: 4k
+        buffering: true  # Boolean
+        buffers:
+          number: 8  # Required number
+          size: 4k  # Required
+        busy_buffers_size: 8k
+        cache: false  # Set to 'false' or specify cache zone
+        cache_background_update: false  # Boolean
+        cache_bypass: $cookie_seed  # String, list, or nested list
+          # - - $cookie_nocache
+          #   - $arg_nocache$arg_comment
+          # - $cookie_path
+        cache_convert_head: true  # Boolean
+        cache_key: $scheme$proxy_host$request_uri
+        cache_lock: false  # Boolean
+        cache_lock_age: 5s
+        cache_lock_timeout: 5s
+        cache_max_range_offset: 1  # Number
+        cache_methods: GET  # String or list
+          # - GET
+          # - HEAD
+        cache_min_uses: 1  # Number
+        cache_path:
+          - path: /var/cache/nginx/proxy/backend  # Required
+            levels: "1:1"
+            use_temp_path: false  # Boolean
+            keys_zone:  # Required
+              name: backend_proxy_cache  # Required
+              size: 10m  # Required
+            inactive: 10m
+            max_size: 2g
+            min_free: 1g
+            manager_files: 100  # Number
+            manager_sleep: 500ms
+            manager_threshold: 200ms
+            loader_files: 100  # Number
+            loader_sleep: 50ms
+            loader_threshold: 200ms
+            purger: false  # Boolean -- Purger parameters are available only in NGINX Plus
+            purger_files: 10  # Number
+            purger_sleep: 50ms
+            purger_threshold: 50ms
+        cache_purge: sample  # String or list
+          # - cache_key
+          # - cache_purge
+        cache_revalidate: false  # Boolean
+        cache_use_stale: false  # String or list -- set to 'false' to set to 'off'
+          # - error
+          # - timeout
+        cache_valid:  # 10m  # String, dictionary or list of dictionaries. 'time' is required when using 'code'.
+          - code: 200  # String or list
+            # - 201
+            # - 202
+            time: 10m  # Required
+        connect_timeout: 60s
+        cookie_domain: false  # Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain. Variables can be a dictionary or list of dictionaries.
+          # - domain: localhost  # Required
+          #   replacement: example.org  # Required
+        cookie_flags: false  # Set to 'false' and remove/comment nested variables to disable proxy_cookie_flags. Variables can be a dictionary or list of dictionaries.
+          # cookie: one  # Required
+          # flag:  # String or list
+          #   - httponly
+        cookie_path: false  # Set to 'false' and remove/comment nested variables to disable proxy_cookie_path. Variables can be a dictionary or list of dictionaries.
+          # - path: $uri  # Required
+          #   replacement: $someuri  # Required
+        force_ranges: false  #  Boolean
+        headers_hash_bucket_size: 64
+        headers_hash_max_size: 512
+        hide_header: Date  # String or list
+          # - Date
+          # - X-Accel-Redirect
+        http_version: 1.1  # Can be 1.0 or 1.1
+        ignore_client_abort: false  # Boolean
+        ignore_headers: X-Accel-Redirect  # String or list -- can be one of 'X-Accel-Redirect', 'X-Accel-Expires', 'X-Accel-Limit-Rate', 'X-Accel-Buffering', 'X-Accel-Charset', 'Expires', 'Cache-Control', 'Set-Cookie' or 'Vary'.
+          # - X-Accel-Redirect
+        intercept_errors: false  # Boolean
+        limit_rate: 0
+        max_temp_file_size: 1024m
+        method: GET
+        next_upstream: false  # Set to 'false' to disable proxy_next_upstream or include a variable string or list
+          # - error
+          # - timeout
+        next_upstream_timeout: 0
+        next_upstream_tries: 0  # Number
+        no_cache: $cookie_nocache  # String or list
+          # - - $cookie_nocache
+          #   - $arg_nocache$arg_comment
+          # - $arg_nocache$arg_comment
+        pass: http://127.0.0.1
+        pass_header: Date  # String or list
+          # - Date
+          # - X-Accel-Redirect
+        pass_request_body: false  # Boolean
+        pass_request_headers: true  # Boolean
+        read_timeout: 60s
+        redirect:  # false  # Set to 'false' to disable proxy_redirect or 'default' to use default values. Otherwise, use the 'original' and 'replacement' parameters (can also be a list).
+          original: http://upstream:port/two/  # Required when using 'replacement'
+          replacement: /one/  # Required when using 'original'
+          # - default
+          # - original: http://upstream:port/two/
+          #   replacement: /one/
+        request_buffering: false  # Boolean
+        send_lowat: 0
+        send_timeout: 60s
+        set_body: body
+        set_header:  # Dictionary or list of dictionaries
+          field: Host
+          value: $proxy_host
+          # - field: Connection
+          #   value: close
+        socket_keepalive: false  # Boolean
+        ssl_certificate: /path/to/file
+        ssl_certificate_key: /path/to/file
+        ssl_ciphers: DEFAULT  # String or list
+          # - DEFAULT
+        ssl_conf_command: 'command'  # String or list
+          # - 'command'
+        ssl_crl: /path/to/file
+        ssl_name: $proxy_host
+        ssl_password_file: /path/to/file
+        ssl_protocols: TLSv1  # String or list
+          # - TLSv1
+          # - TLSv1.1
+          # - TLSv1.2
+        ssl_server_name: false  # Boolean
+        ssl_session_reuse: true  # Boolean
+        ssl_trusted_certificate: /path/to/file
+        ssl_verify: false  # Boolean
+        ssl_verify_depth: 1  # Number
+        store: false  # Boolean or string
+        store_access:
+          user: rw
+          group: rw
+          all: r
+        temp_file_write_size: 8k
+        temp_path:
+          path: /var/cache/nginx/proxy/temp  # Required
+          level: 2  # One of '1', '2' or '3'
+      grpc:  # Configure GRPC
+        bind:  # Set to 'false' and remove/comment nested variables to disable grpc_bind
+          address: $remote_addr  # Required
+          transparent: true  # Boolean
+        buffer_size: 4k
+        connect_timeout: 60s
+        hide_header: []  # string or list
+        ignore_headers: []  # string or list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+        intercept_errors: false  # Boolean
+        next_upstream: []  # string list
+        next_upstream_timeout: 0
+        next_upstream_tries: 0
+        pass: uri
+        pass_header: []  # string or list
+        read_timeout: 60s
+        send_timeout: 60s
+        set_header:  # Can be a dictionary or a list of dictionaries
+          - field: Accept-Encoding  # Required
+            value: '""'  # Required
+        socket_keepalive: false  # Boolean
+        ssl_certificate: /path/to/file
+        ssl_certificate_key: /path/to/file
+        ssl_ciphers: DEFAULT
+        ssl_conf_command: 'command'  # Can be a string or a list
+        ssl_crl: /path/to/file
+        ssl_name: serverName
+        ssl_password_file: /path/to/file
+        ssl_protocols: []  # String or list
+        ssl_server_name: false  # Boolean
+        ssl_session_reuse: true  # Boolean
+        ssl_trusted_certificate: /path/to/file
+        ssl_verify: false  # Boolean
+        ssl_verify_depth: 1
+      access:  # Configure HTTP access
+        allow: localhost  # Can be string or list
+        deny: 192.168.1.100  # Can be string or list
+      auth_basic:  # Configure basic auth
+        realm: false  # Set to 'false' to set auth_basic to 'off' -- otherwise, you can specify a 'realm'
+        user_file: /path/to/file
+      auth_request:  # Configure request auth
+        uri: false  # Set to 'false' to set auth_request to 'off' -- otherwise, you can specify an 'uri'
+        set:
+          variable: $temp  # Required
+          value: auth  # Required
+      auth_jwt:  # Only available in NGINX Plus -- Configure JWT auth
+        enable:  #  Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
+          realm: realm  # Required
+          token: $cookie_auth_token
+        claim_set:  # Can be a dictionary or a list of dictionaries
+          - variable: $email  # Required
+            name:  # Required string or list
+              - info
+        header_set:  # Can be a dictionary or a list of dictionaries
+          - variable: $job  # Required
+            name: info  # Required string or list
+        key_file: /path/to/file
+        key_request: /path/to/file
+        leeway: 0s
+        type: signed  # One of 'signed' or 'encrypted'
+      api:  # Configure NGINX Plus HTTP API
+        enable:  # true  # Set to Boolean directly to simply enable the 'api' directive
+          write: true  # Boolean
+        status_zone: one
+      stub_status: true  # Configure NGINX OSS stub status
+      autoindex:  # Configure autoindex
+        enable: false  # Boolean
+        exact_size: true  # Boolean
+        format: html
+        localtime: false  # Boolean
+      gzip:  # Configure GZIP
+        enable: true  # Boolean
+        buffers:
+          number: 32  # Required
+          size: 4k  # Required
+        comp_level: 1
+        disable: []  # string or list
+        http_version: 1.1  # Optional -- One of '1.0' or '1.1'
+        min_length: 20
+        proxied: []  # Set to 'false' to set to 'off' -- otherwise, you can specify a string or a list
+        types: []  # String or list
+        vary: false  # Boolean
+      headers:  # Configure headers
+        add_headers:  # Can be a dictionary or a list of dictionaries
+          - name: Strict-Transport-Security  # Required
+            value: '"max-age=15768000; includeSubDomains"'  # Required
+            always: false  # Boolean
+        add_trailers:  # Can be a dictionary or a list of dictionaries
+          - name: Strict-Transport-Security  # Required
+            value: '"max-age=15768000; includeSubDomains"'  # Required
+            always: false  # Boolean
+        expires:  # Set to 'false' to set to 'off' or set to a value -- otherwise, you can also use the below dictionary
+          modified: true  # Boolean
+          time: "12h"
+      health_check:  # Available only in NGINX Plus -- Configure NGINX Plus health checks
+        health_checks:
+          - interval: 5s
+            jitter: 0
+            fails: 1  # Number
+            passes: 1  # Number
+            uri: /
+            mandatory: false  # Boolean
+            persistent: false  # Boolean
+            match: match
+            port: 80
+            grpc_service: service
+            grpc_status: 12
+        match:  # Optional list
+          - name: name  # Required
+            conditions: []  # list
+              # - status 200
+      keyval:  # Available only in NGINX Plus -- Configure NGINX Plus key value store
+        keyvals:
+          - key: key  # Required
+            variable: $var  # Required
+            zone: one  # Required
+        zones:
+          - name: one  # Required
+            size: 32k  # Required
+            state: /var/lib/nginx/state/one.keyval
+            timeout: 60m
+            type: string  # One of 'string', 'ip' or 'prefix'
+            sync: false  # Boolean
+      limit_req:  # Configure request limits
+        limit_reqs:
+          - zone: one  # Required
+            burst: 5  # Number
+            delay: false  # Set it to 'false' to set it to 'nodelay', otherwise specify a delay value
+        dry_run: false  # Boolean
+        log_level: error  # Optional
+        status: 503  # Number
+        zones:
+          - key: $binary_remote_addr  # Required
+            name: one  # Required
+            size: 1m  # Required
+            rate: 10r/s  # Required
+            sync: false  # Boolean
+      log:  # Configure logs
+        format:
+          - name: main  # Required
+            escape: default  # Can be 'default', 'json' or 'none'
+            format: |  # Required
+              '$remote_addr - $remote_user [$time_local] "$request" '
+              '$status $body_bytes_sent "$http_referer" '
+              '"$http_user_agent" "$http_x_forwarded_for"'
+        access:  # false  # Can be set to 'false' to set to 'off'
+          - path: /var/log/nginx/access.log  # Required
+            format: main
+            buffer: 1m
+            gzip: 5  # Can also be set to 'true'
+            flush: 10h
+            if: $loggable
+        error:  # /var/log/nginx/error.log  # Can be a string, a dictionary, or a list. The 'file' variable is only required when setting a 'level'. This directive does not belong in this module but we are making an exception.
+          file: /var/log/nginx/error.log  # Required
+          level: notice
+          # - /var/log/nginx/error.log
+          # - file: /var/log/nginx/error.log  # Required
+          #   level: notice
+        open_log_file_cache:  # Can also be set to 'false' to set to 'off'
+          max: 1000  # Required
+          inactive: 20s
+          min_uses: 2  # Number
+          valid: 1m
+      rewrite:  # Configure rewrite directives
+        return:  # Can also be set to a return URL or code directly
+          code: 200  # Require 'code' or 'URL'
+          text: text  # Only available when using 'code'
+          url: https://example.com
+        rewrites:
+          - regex: (.*).html(.*)  # Required
+            replacement: $1$2  # Required
+            flag: last  # Can be 'last', 'break', 'redirect' or 'permanent'
+        log: false  # Boolean
+        set:  # Can be a dictionary or a list of dictionaries
+          - variable: $var  # Required
+            value: var  # Required
+        uninitialized_variable_warn: true  # Boolean
+      sub_filter:  # Configure sub filter directives
+        sub_filters:  # Can be a dictionary or a list of dictionaries
+          - string: server_hostname  # Required
+            replacement: $hostname  # Required
+        last_modified: false  # Boolean
+        once: true  # Boolean
+        types: text/html  # String or list
+      custom_directives:  # Custom directive for specific use cases not covered by templates -- you need to add a semi-colon at the end of each directive
+        - fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        - fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+      servers:
+        - core:
+          proxy:
+          locations:
+            - location: /
+              proxy:
+        - core:
+          ssl:
+          locations:
+            - location: /backend
+              core:
 
 # Enable NGINX 'stub_status' data.
 # Will enable 'stub_status' in NGINX Open Source.

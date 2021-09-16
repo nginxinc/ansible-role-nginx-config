@@ -1,0 +1,79 @@
+{{ ansible_managed | comment }}
+
+{# NGINX HTTP App Protect WAF template -- ngx_http_app_protect_module #}
+{% macro app_protect_waf(app_protect_waf) %}
+{% if app_protect_waf['enable'] is defined and app_protect_waf['enable'] is boolean %}
+app_protect_enable {{ app_protect_waf['enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect_waf['policy_file'] is defined %}
+app_protect_policy_file {{ app_protect_waf['policy_file'] }};
+{% endif %}
+{% if app_protect_waf['security_log_enable'] is defined and app_protect_waf['security_log_enable'] is boolean %}
+app_protect_security_log_enable {{ app_protect_waf['security_log_enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect_waf['security_log'] is defined %}
+{% for security_log in app_protect_waf['security_log'] if (app_protect_waf['security_log'] is sequence and app_protect_waf['security_log'] is not string) %}
+app_protect_security_log {{ security_log['path'] }} {{ security_log['dest'] }};
+{% else %}
+app_protect_security_log {{ app_protect_waf['security_log']['path'] }} {{ app_protect_waf['security_log']['dest'] }};
+{% endfor %}
+{% endif %}
+{# 'http' context directives #}
+{% if app_protect_waf['physical_memory_util_thresholds']['high'] is defined and app_protect_waf['physical_memory_util_thresholds']['low'] is defined %}
+app_protect_physical_memory_util_thresholds high={{ app_protect_waf['physical_memory_util_thresholds']['high'] }} low={{ app_protect_waf['physical_memory_util_thresholds']['low'] }};
+{% endif %}
+{% if app_protect_waf['cpu_thresholds']['high'] is defined and app_protect_waf['cpu_thresholds']['low'] is defined %}
+app_protect_cpu_thresholds high={{ app_protect_waf['cpu_thresholds']['high'] }} low={{ app_protect_waf['cpu_thresholds']['low'] }};
+{% endif %}
+{% if app_protect_waf['failure_mode_action'] is defined and app_protect_waf['failure_mode_action'] in ['pass', 'drop'] %}
+app_protect_failure_mode_action {{ app_protect_waf['failure_mode_action'] }};
+{% endif %}
+{% if app_protect_waf['cookie_seed'] is defined %}
+app_protect_cookie_seed {{ app_papp_protect_waf['cookie_seed'] }};
+{% endif %}
+{% if app_protect_waf['compressed_requests_action'] is defined and app_protect_waf['compressed_requests_action'] in ['pass', 'drop'] %}
+app_protect_compressed_requests_action {{ app_protect_waf['compressed_requests_action'] }};
+{% endif %}
+{% if app_protect_waf['reconnect_period_seconds'] is defined and app_protect_waf['reconnect_period_seconds'] is number %}
+app_protect_reconnect_period_seconds {{ app_protect_waf['reconnect_period_seconds'] }};
+{% endif %}
+{% if app_protect_waf['request_buffer_overflow_action'] is defined and app_protect_waf['request_buffer_overflow_action'] in ['pass', 'drop'] %}
+app_protect_request_buffer_overflow_action {{ app_protect_waf['request_buffer_overflow_action'] }};
+{% endif %}
+{% if app_protect_waf['user_defined_signatures'] is defined and app_protect_waf['user_defined_signatures'] is sequence %}
+{% for signature in app_protect_waf['user_defined_signatures'] if app_protect_waf['user_defined_signatures'] is not string %}
+app_protect_user_defined_signatures {{ signature }};
+{% else %}
+app_protect_user_defined_signatures {{ app_protect_waf['user_defined_signatures'] }};
+{% endfor %}
+{% endif %}
+{% endmacro %}
+
+{# NGINX HTTP App Protect DoS template -- ngx_http_app_protect_dos_module #}
+{% macro app_protect_dos(app_protect_dos) %}
+{% if app_protect_dos['enable'] is defined and app_protect_dos['enable'] is boolean %}
+app_protect_dos_enable {{ app_protect_dos['enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect_dos['policy_file'] is defined %}
+app_protect_dos_policy_file {{ app_protect_dos['policy_file'] }};
+{% endif %}
+{% if app_protect_dos['name'] is defined %}
+app_protect_dos_name {{ app_protect_dos['name'] }};
+{% endif %}
+{% if app_protect_dos['monitor'] is defined %}
+app_protect_dos_monitor {{ app_protect_dos['monitor'] }};
+{% endif %}
+{% if app_protect_dos['security_log_enable'] is defined and app_protect_dos['security_log_enable'] is boolean %}
+app_protect_dos_security_log_enable {{ app_protect_dos['security_log_enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if app_protect_dos['security_log']['path'] is defined and app_protect_dos['security_log']['dest'] is defined %}
+app_protect_dos_security_log {{ app_protect_dos['security_log']['path'] }} {{ app_protect_dos['security_log']['dest'] }};
+{% endif %}
+{# 'http' context directives #}
+{% if app_protect_dos['liveness']['enable'] is defined and app_protect_dos['liveness']['enable'] is boolean %}
+app_protect_dos_liveness {{ app_protect_dos['liveness']['enable'] | ternary('on', 'off') }}{{ (' uri:' + app_protect_dos['liveness']['uri'] | string) if app_protect_dos['liveness']['uri'] is defined }}{{ (' port:' + app_protect_dos['liveness']['port'] | string) if app_protect_dos['liveness']['port'] is defined }};
+{% endif %}
+{% if app_protect_dos['readiness']['enable'] is defined and app_protect_dos['readiness'] is boolean %}
+app_protect_dos_readiness {{ app_protect_dos['readiness'] | ternary('on', 'off') }}{{ (' uri:' + app_protect_dos['readiness']['uri'] | string) if app_protect_dos['readiness']['uri'] is defined }}{{ (' port:' + app_protect_dos['readiness']['port'] | string) if app_protect_dos['readiness']['port'] is defined }};
+{% endif %}
+{% endmacro %}

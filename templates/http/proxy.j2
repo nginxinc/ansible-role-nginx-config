@@ -1,34 +1,9 @@
 {{ ansible_managed | comment }}
-{# NGINX Proxy template -- Add directives under its corresponding block #}
-{# Format is as follows #}
-{# Left side (context module_name) -- Right side (module name) #}
-{# HTTP NGINX Proxy -- ngx_http_proxy_module #}
 
-{% macro proxy_cache_path(proxy_cache_path) %}
-{% for proxy in proxy_cache_path %}
-proxy_cache_path {{ proxy['path'] -}}
-{{- (' levels=' + proxy['levels']) if proxy['levels'] is defined -}}
-{{- (' use_temp_path=' + (proxy['use_temp_path'] | ternary('on', 'off'))) if proxy['use_temp_path'] is defined and proxy['use_temp_path'] is boolean -}}
-{{- (' keys_zone=' + proxy['keys_zone']['name'] + ':' + (proxy['keys_zone']['size'] | string)) if proxy['keys_zone'] is defined -}}
-{{- (' inactive=' + proxy['inactive'] | string) if proxy['inactive'] is defined -}}
-{{- (' max_size=' + proxy['max_size'] | string) if proxy['max_size'] is defined -}}
-{{- (' min_free=' + proxy['min_free'] | string) if proxy['min_free'] is defined -}}
-{{- (' manager_files=' + proxy['manager_files'] | string) if proxy['manager_files'] is defined -}}
-{{- (' manager_sleep=' + proxy['manager_sleep'] | string) if proxy['manager_sleep'] is defined -}}
-{{- (' manager_threshold=' + proxy['manager_threshold'] | string) if proxy['manager_threshold'] is defined -}}
-{{- (' loader_files=' + proxy['loader_files'] | string) if proxy['loader_files'] is defined -}}
-{{- (' loader_sleep=' + proxy['loader_sleep'] | string) if proxy['loader_sleep'] is defined -}}
-{{- (' loader_threshold=' + proxy['loader_threshold'] | string) if proxy['loader_threshold'] is defined -}}
-{{- (' purger=' + (proxy['purger'] | ternary('on', 'off'))) if proxy['purger'] is defined and proxy['cache_path']['purger'] is boolean -}}
-{{- (' purger_files=' + proxy['purger_files'] | string) if proxy['purger_files'] is defined -}}
-{{- (' purger_sleep=' + proxy['purger_sleep'] | string) if proxy['purger_sleep'] is defined -}}
-{{- (' purger_threshold=' + proxy['purger_threshold'] | string) if proxy['purger_threshold'] is defined }};
-{% endfor %}
-{% endmacro %}
-
+{# NGINX HTTP Proxy template -- ngx_http_proxy_module #}
 {% macro proxy(proxy) %}
 {% if proxy['bind'] is defined %}
-proxy_bind {{ 'off' if not proxy['bind'] }}{{ (proxy['bind']['address']) if proxy['bind']['address'] is defined }}{{ ' transparent' if proxy['bind']['transparent'] is defined and proxy['bind']['transparent'] is boolean }};
+proxy_bind {{ 'off' if not proxy['bind'] }}{{ (proxy['bind']['address']) if proxy['bind']['address'] is defined }}{{ ' transparent' if (proxy['bind']['transparent'] is defined and proxy['bind']['transparent'] is boolean and proxy['bind']['transparent'] | bool) }};
 {% endif %}
 {% if proxy['buffer_size'] is defined %}
 proxy_buffer_size {{ proxy['buffer_size'] }};
@@ -36,7 +11,7 @@ proxy_buffer_size {{ proxy['buffer_size'] }};
 {% if proxy['buffering'] is defined and proxy['buffering'] is boolean %}
 proxy_buffering {{ proxy['buffering'] | ternary('on', 'off') }};
 {% endif %}
-{% if proxy['buffers'] is defined %}
+{% if proxy['buffers']['number'] is defined and proxy['buffers']['number'] is number and proxy['buffers']['size'] is defined %}
 proxy_buffers {{ proxy['buffers']['number'] }} {{ proxy['buffers']['size'] }};
 {% endif %}
 {% if proxy['busy_buffers_size'] is defined %}
@@ -48,17 +23,11 @@ proxy_cache {{ 'off' if not proxy['cache'] else proxy['cache'] }};
 {% if proxy['cache_background_update'] is defined and proxy['cache_background_update'] is boolean %}
 proxy_cache_background_update {{ proxy['cache_background_update'] | ternary('on', 'off') }};
 {% endif %}
-{% if proxy['cache_bypass'] is defined and proxy['cache_bypass'] is string %}
-proxy_cache_bypass {{ proxy['cache_bypass'] }};
-{% elif proxy['cache_bypass'] is defined and proxy['cache_bypass'] is iterable and proxy['cache_bypass'][0] is string %}
-proxy_cache_bypass {{ proxy['cache_bypass'] | join(' ') }};
-{% elif proxy['cache_bypass'] is defined and proxy['cache_bypass'] is iterable %}
-{% for bypass in proxy['cache_bypass'] %}
-{% if bypass is not string %}
-proxy_cache_bypass {{ bypass | join(' ') }};
+{% if proxy['cache_bypass'] is defined and proxy['cache_bypass'] is sequence %}
+{% for bypass in proxy['cache_bypass'] if proxy['cache_bypass'] is not string %}
+proxy_cache_bypass {{ bypass if bypass is string else bypass | join(' ') }};
 {% else %}
-proxy_cache_bypass {{ bypass }};
-{% endif %}
+proxy_cache_bypass {{ proxy['cache_bypass'] }};
 {% endfor %}
 {% endif %}
 {% if proxy['cache_convert_head'] is defined and proxy['cache_convert_head'] is boolean %}
@@ -76,19 +45,39 @@ proxy_cache_lock_age {{ proxy['cache_lock_age'] }};
 {% if proxy['cache_lock_timeout'] is defined %}
 proxy_cache_lock_timeout {{ proxy['cache_lock_timeout'] }};
 {% endif %}
-{% if proxy['cache_max_range_offset'] is defined %}
+{% if proxy['cache_max_range_offset'] is defined and proxy['cache_max_range_offset'] is number %}
 proxy_cache_max_range_offset {{ proxy['cache_max_range_offset'] }};
 {% endif %}
 {% if proxy['cache_methods'] is defined %}
 proxy_cache_methods {{ proxy['cache_methods'] if proxy['cache_methods'] is string else proxy['cache_methods'] | join(' ') }};
 {% endif %}
-{% if proxy['cache_min_uses'] is defined %}
+{% if proxy['cache_min_uses'] is defined and proxy['cache_min_uses'] is number %}
 proxy_cache_min_uses {{ proxy['cache_min_uses'] }};
 {% endif %}
-{% if proxy['cache_purge'] is defined and proxy['cache_purge'] is string %}
-proxy_cache_purge {{ proxy['cache_purge'] }};
-{% elif proxy['cache_purge'] is defined and proxy['cache_purge'] is iterable %}
-proxy_cache_purge {{ proxy['cache_purge'] | join(' ') }};
+{# 'cache_path' directive is only available in the 'http' context #}
+{% if proxy['cache_path'] is defined %}
+{% for proxy in proxy['cache_path'] %}
+proxy_cache_path {{ proxy['path'] -}}
+{{- (' levels=' + proxy['levels'] | string) if proxy['levels'] is defined -}}
+{{- (' use_temp_path=' + (proxy['use_temp_path'] | ternary('on', 'off'))) if (proxy['use_temp_path'] is defined and proxy['use_temp_path'] is boolean) -}}
+{{- (' keys_zone=' + proxy['keys_zone']['name'] | string + ':' + (proxy['keys_zone']['size'] | string)) if (proxy['keys_zone']['name'] is defined and proxy['keys_zone']['size'] is defined) -}}
+{{- (' inactive=' + proxy['inactive'] | string) if proxy['inactive'] is defined -}}
+{{- (' max_size=' + proxy['max_size'] | string) if proxy['max_size'] is defined -}}
+{{- (' min_free=' + proxy['min_free'] | string) if proxy['min_free'] is defined -}}
+{{- (' manager_files=' + proxy['manager_files'] | string) if (proxy['manager_files'] is defined and proxy['manager_files'] is number) -}}
+{{- (' manager_sleep=' + proxy['manager_sleep'] | string) if proxy['manager_sleep'] is defined -}}
+{{- (' manager_threshold=' + proxy['manager_threshold'] | string) if proxy['manager_threshold'] is defined -}}
+{{- (' loader_files=' + proxy['loader_files'] | string) if (proxy['loader_files'] is defined and proxy['loader_files'] is number) -}}
+{{- (' loader_sleep=' + proxy['loader_sleep'] | string) if proxy['loader_sleep'] is defined -}}
+{{- (' loader_threshold=' + proxy['loader_threshold'] | string) if proxy['loader_threshold'] is defined -}}
+{{- (' purger=' + (proxy['purger'] | ternary('on', 'off'))) if (proxy['purger'] is defined and proxy['cache_path']['purger'] is boolean) -}}
+{{- (' purger_files=' + proxy['purger_files'] | string) if (proxy['purger_files'] is defined and proxy['purger_files'] is number) -}}
+{{- (' purger_sleep=' + proxy['purger_sleep'] | string) if proxy['purger_sleep'] is defined -}}
+{{- (' purger_threshold=' + proxy['purger_threshold'] | string) if proxy['purger_threshold'] is defined }};
+{% endfor %}
+{% endif %}
+{% if proxy['cache_purge'] is defined %}
+proxy_cache_purge {{ proxy['cache_purge'] if proxy['cache_purge'] is string else proxy['cache_purge'] | join(' ') }};
 {% endif %}
 {% if proxy['cache_revalidate'] is defined and proxy['cache_revalidate'] is boolean %}
 proxy_cache_revalidate {{ proxy['cache_revalidate'] | ternary('on', 'off') }};
@@ -97,30 +86,32 @@ proxy_cache_revalidate {{ proxy['cache_revalidate'] | ternary('on', 'off') }};
 proxy_cache_use_stale {{ 'off' if not proxy['cache_use_stale'] else (proxy['cache_use_stale'] if proxy['cache_use_stale'] is string else proxy['cache_use_stale'] | join(' ')) }};
 {% endif %}
 {% if proxy['cache_valid'] is defined %}
-{% for proxy in proxy['cache_valid'] %}
-proxy_cache_valid{{ ' ' + ((proxy['code'] | join(' ') | string) if proxy['code'] is iterable else proxy['code'] | string) if proxy['code'] is defined }}{{ ' ' + proxy['time'] | string }};
+{% for cache in proxy['cache_valid'] if proxy['cache_valid'] is not string %}
+proxy_cache_valid{{ (' ' + cache['code'] | string) if (cache['code'] is defined and (cache['code'] is number or cache['code'] == 'any')) else ((' ' + cache['code'] | join(' ')) if cache['code'] is defined) }} {{ cache if cache is string else cache['time'] if cache['time'] is defined }};
+{% else %}
+proxy_cache_valid{{ (' ' + proxy['cache_valid']['code'] | string) if (proxy['cache_valid']['code'] is defined and (proxy['cache_valid']['code'] is number or proxy['cache_valid']['code'] == 'any')) else ((' ' + proxy['cache_valid']['code'] | join(' ')) if proxy['cache_valid']['code'] is defined) }} {{ proxy['cache_valid'] if proxy['cache_valid'] is string else proxy['cache_valid']['time'] if proxy['cache_valid']['time'] is defined }};
 {% endfor %}
 {% endif %}
 {% if proxy['connect_timeout'] is defined %}
 proxy_connect_timeout {{ proxy['connect_timeout'] }};
 {% endif %}
-{% if proxy['cookie_domain'] is defined and proxy['cookie_domain'] is iterable and proxy['cookie_domain'] is not string %}
+{% if proxy['cookie_domain'] is defined and proxy['cookie_domain'] is sequence %}
 {% for domain in proxy['cookie_domain'] %}
-proxy_cookie_domain {{ 'off' if not domain }}{{ domain['domain'] if domain['domain'] is defined }}{{ (' ' + domain['replacement']) if domain['replacement'] is defined }};
+proxy_cookie_domain {{ domain['domain'] if domain['domain'] is defined }}{{ (' ' + domain['replacement']) if domain['replacement'] is defined }};
 {% endfor %}
 {% elif proxy['cookie_domain'] is defined %}
 proxy_cookie_domain {{ 'off' if not proxy['cookie_domain'] }}{{ proxy['cookie_domain']['domain'] if proxy['cookie_domain']['domain'] is defined }}{{ (' ' + proxy['cookie_domain']['replacement']) if proxy['cookie_domain']['replacement'] is defined }};
 {% endif %}
-{% if proxy['cookie_flags'] is defined and proxy['cookie_flags'] is iterable and proxy['cookie_flags'] is not string %}
+{% if proxy['cookie_flags'] is defined and proxy['cookie_flags'] is sequence %}
 {% for flag in proxy['cookie_flags'] %}
-proxy_cookie_flags {{ 'off' if not flag }}{{ flag['cookie'] if flag['cookie'] is defined }}{{ (' ' + (flag['flag'] | join(' '))) if flag['flag'] is defined }};
+proxy_cookie_flags {{ flag['cookie'] if flag['cookie'] is defined }}{{ (' ' + (flag['flag'] if flag['flag'] is string else flag['flag'] | join(' '))) if flag['flag'] is defined }};
 {% endfor %}
 {% elif proxy['cookie_flags'] is defined %}
-proxy_cookie_flags {{ 'off' if not proxy['cookie_flags'] }}{{ proxy['cookie_flags']['cookie'] if proxy['cookie_flags']['cookie'] is defined }}{{ (' ' + (proxy['cookie_flags']['flag'] | join(' '))) if proxy['cookie_flags']['flag'] is defined }};
+proxy_cookie_flags {{ 'off' if not proxy['cookie_flags'] }}{{ proxy['cookie_flags']['cookie'] if proxy['cookie_flags']['cookie'] is defined }}{{ (' ' + ( proxy['cookie_flags']['flag'] if  proxy['cookie_flags']['flag'] is string else  proxy['cookie_flags']['flag'] | join(' '))) if  proxy['cookie_flags']['flag'] is defined }};
 {% endif %}
-{% if proxy['cookie_path'] is defined and proxy['cookie_path'] is iterable and proxy['cookie_path'] is not string %}
+{% if proxy['cookie_path'] is defined and proxy['cookie_path'] is sequence %}
 {% for path in proxy['cookie_path'] %}
-proxy_cookie_path {{ 'off' if not path }}{{ path['path'] if path['path'] is defined }}{{ (' ' + path['replacement']) if path['replacement'] is defined }};
+proxy_cookie_path {{ path['path'] if path['path'] is defined }}{{ (' ' + path['replacement']) if path['replacement'] is defined }};
 {% endfor %}
 {% elif proxy['cookie_path'] is defined %}
 proxy_cookie_path {{ 'off' if not proxy['cookie_path'] }}{{ proxy['cookie_path']['path'] if proxy['cookie_path']['path'] is defined }}{{ (' ' + proxy['cookie_path']['replacement']) if proxy['cookie_path']['replacement'] is defined }};
@@ -134,20 +125,20 @@ proxy_headers_hash_bucket_size {{ proxy['headers_hash_bucket_size'] }};
 {% if proxy['headers_hash_max_size'] is defined %}
 proxy_headers_hash_max_size {{ proxy['headers_hash_max_size'] }};
 {% endif %}
-{% if proxy['hide_header'] is defined and proxy['hide_header'] is string %}
-proxy_hide_header {{ proxy['hide_header'] }};
-{% elif proxy['hide_header'] is defined and proxy['hide_header'] is iterable and proxy['hide_header'] is not string %}
-{% for header in proxy['hide_header'] %}
+{% if proxy['hide_header'] is defined and proxy['hide_header'] is sequence %}
+{% for header in proxy['hide_header'] if proxy['hide_header'] is not string %}
 proxy_hide_header {{ header }};
+{% else %}
+proxy_hide_header {{ proxy['hide_header'] }};
 {% endfor %}
 {% endif %}
-{% if proxy['http_version'] is defined %}
+{% if proxy['http_version'] is defined and proxy['http_version'] in ['1.0', '1.1'] %}
 proxy_http_version {{ proxy['http_version'] }};
 {% endif %}
 {% if proxy['ignore_client_abort'] is defined and proxy['ignore_client_abort'] is boolean %}
 proxy_ignore_client_abort {{ proxy['ignore_client_abort'] | ternary('on', 'off') }};
 {% endif %}
-{% if proxy['ignore_headers'] is defined %}
+{% if proxy['ignore_headers'] is defined and proxy['ignore_headers'] in ['X-Accel-Redirect', 'X-Accel-Expires', 'X-Accel-Limit-Rate', 'X-Accel-Buffering', 'X-Accel-Charset', 'Expires', 'Cache-Control', 'Set-Cookie', 'Vary'] %}
 proxy_ignore_headers {{ proxy['ignore_headers'] if proxy['ignore_headers'] is string else proxy['ignore_headers'] | join(' ') }};
 {% endif %}
 {% if proxy['intercept_errors'] is defined and proxy['intercept_errors'] is boolean %}
@@ -168,15 +159,25 @@ proxy_next_upstream {{ 'off' if not proxy['next_upstream'] else (proxy['next_ups
 {% if proxy['next_upstream_timeout'] is defined %}
 proxy_next_upstream_timeout {{ proxy['next_upstream_timeout'] }};
 {% endif %}
-{% if proxy['next_upstream_tries'] is defined %}
+{% if proxy['next_upstream_tries'] is defined and proxy['next_upstream_tries'] is number %}
 proxy_next_upstream_tries {{ proxy['next_upstream_tries'] }};
 {% endif %}
-{% if proxy['no_cache'] is defined %}
-proxy_no_cache {{ proxy['no_cache'] if proxy['no_cache'] is string else proxy['no_cache'] | join(' ') }};
+{% if proxy['no_cache'] is defined and proxy['no_cache'] is sequence %}
+{% for no_cache in proxy['no_cache'] if proxy['no_cache'] is not string %}
+proxy_no_cache {{ no_cache if no_cache is string else no_cache | join(' ') }};
+{% else %}
+proxy_no_cache {{ proxy['no_cache'] }};
+{% endfor %}
 {% endif %}
-{% if proxy['pass_header'] is defined %}
-{% for header in proxy['pass_header'] %}
+{# 'pass' directive is only available in the 'location' context #}
+{% if proxy['pass'] is defined %}
+proxy_pass {{ proxy['pass'] }};
+{% endif %}
+{% if proxy['pass_header'] is defined and proxy['pass_header'] is sequence %}
+{% for header in proxy['pass_header'] if proxy['pass_header'] is not string %}
 proxy_pass_header {{ header }};
+{% else %}
+proxy_pass_header {{ proxy['pass_header'] }};
 {% endfor %}
 {% endif %}
 {% if proxy['pass_request_body'] is defined and proxy['pass_request_body'] is boolean %}
@@ -188,12 +189,12 @@ proxy_pass_request_headers {{ proxy['pass_request_headers'] | ternary('on', 'off
 {% if proxy['read_timeout'] is defined %}
 proxy_read_timeout {{ proxy['read_timeout'] }};
 {% endif %}
-{% if proxy['redirect'] is defined and proxy['redirect'] is iterable and proxy['redirect'] is not string %}
+{% if proxy['redirect'] is defined and proxy['redirect'] is sequence %}
 {% for redirect in proxy['redirect'] %}
-proxy_redirect {{ (redirect['original'] + ' ' + redirect['replacement']) if redirect['original'] is defined else redirect }};
+proxy_redirect {{ redirect if redirect == 'default' }}{{ ((redirect['original'] | string) + ' ' + (redirect['replacement'] | string)) if (redirect['original'] is defined and redirect['replacement'] is defined) }};
 {% endfor %}
 {% elif proxy['redirect'] is defined %}
-proxy_redirect {{ (proxy['redirect']['original'] + ' ' + proxy['redirect']['replacement']) if proxy['redirect']['original'] is defined else ('off' if not proxy['redirect'] else proxy['redirect']) }};
+proxy_redirect {{ 'off' if not proxy['redirect'] else proxy['redirect'] if proxy['redirect'] == 'default' }}{{ ((proxy['redirect']['original'] | string) + ' ' + (proxy['redirect']['replacement'] | string)) if (proxy['redirect']['original'] is defined and proxy['redirect']['replacement'] is defined) }};
 {% endif %}
 {% if proxy['request_buffering'] is defined and proxy['request_buffering'] is boolean %}
 proxy_request_buffering {{ proxy['request_buffering'] | ternary('on', 'off') }};
@@ -208,8 +209,10 @@ proxy_send_timeout {{ proxy['send_timeout'] }};
 proxy_set_body {{ proxy['set_body'] }};
 {% endif %}
 {% if proxy['set_header'] is defined %}
-{% for header in proxy['set_header'] %}
+{% for header in proxy['set_header'] if (proxy['set_header'] is sequence and proxy['set_header'] is not string) %}
 proxy_set_header {{ header['field'] }} {{ header['value'] }};
+{% else %}
+proxy_set_header {{ proxy['set_header']['field'] }} {{ proxy['set_header']['value'] }};
 {% endfor %}
 {% endif %}
 {% if proxy['socket_keepalive'] is defined and proxy['socket_keepalive'] is boolean %}
@@ -224,12 +227,12 @@ proxy_ssl_certificate_key {{ proxy['ssl_certificate_key'] }};
 {% if proxy['ssl_ciphers'] is defined %}
 proxy_ssl_ciphers {{ proxy['ssl_ciphers'] if proxy['ssl_ciphers'] is string else proxy['ssl_ciphers'] | join(':') }};
 {% endif %}
-{% if proxy['ssl_conf_command'] is defined and proxy['ssl_conf_command'] is iterable and proxy['ssl_conf_command'] is not string %}
-{% for command in proxy['ssl_conf_command'] %}
+{% if proxy['ssl_conf_command'] is defined and proxy['ssl_conf_command'] is sequence %}
+{% for command in proxy['ssl_conf_command'] if proxy['ssl_conf_command'] is not string %}
 proxy_ssl_conf_command {{ command }};
-{% endfor %}
-{% elif proxy['ssl_conf_command'] is defined and proxy['ssl_conf_command'] is string %}
+{% else %}
 proxy_ssl_conf_command {{ proxy['ssl_conf_command'] }};
+{% endfor %}
 {% endif %}
 {% if proxy['ssl_crl'] is defined %}
 proxy_ssl_crl {{ proxy['ssl_crl'] }};
@@ -255,7 +258,7 @@ proxy_ssl_trusted_certificate {{ proxy['ssl_trusted_certificate'] }};
 {% if proxy['ssl_verify'] is defined and proxy['ssl_verify'] is boolean %}
 proxy_ssl_verify {{ proxy['ssl_verify'] | ternary('on', 'off') }};
 {% endif %}
-{% if proxy['ssl_verify_depth'] is defined %}
+{% if proxy['ssl_verify_depth'] is defined and proxy['ssl_verify_depth'] is number %}
 proxy_ssl_verify_depth {{ proxy['ssl_verify_depth'] }};
 {% endif %}
 {% if proxy['store'] is defined %}
@@ -271,12 +274,8 @@ proxy_temp_file_write_size {{ proxy['temp_file_write_size'] }};
 {% endif %}
 {% if proxy['temp_path']['path'] is defined %}
 proxy_temp_path {{ proxy['temp_path']['path'] -}}
-{{- ' 1' if proxy['temp_path']['level'] is defined and proxy['temp_path']['level'] == 1 -}}
-{{- ' 1 2' if proxy['temp_path']['level'] is defined and proxy['temp_path']['level'] == 2 -}}
-{{- ' 1 2 3' if proxy['temp_path']['level'] is defined and proxy['temp_path']['level'] == 3 }};
+{{- ' 1' if proxy['temp_path']['level'] is defined and proxy['temp_path']['level'] is number and proxy['temp_path']['level'] == 1 -}}
+{{- ' 1 2' if proxy['temp_path']['level'] is defined and proxy['temp_path']['level'] is number and proxy['temp_path']['level'] == 2 -}}
+{{- ' 1 2 3' if proxy['temp_path']['level'] is defined and proxy['temp_path']['level'] is number and proxy['temp_path']['level'] == 3 }};
 {% endif %}
-{% endmacro %}
-
-{% macro proxy_pass(proxy) %}
-proxy_pass {{ proxy }};
 {% endmacro %}

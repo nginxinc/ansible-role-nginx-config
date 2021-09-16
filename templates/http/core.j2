@@ -1,0 +1,287 @@
+{{ ansible_managed | comment }}
+
+{# NGINX HTTP Core template -- ngx_http_core_module #}
+{% macro core(core) %}
+{% if core['absolute_redirect'] is defined and core['absolute_redirect'] is boolean %}
+absolute_redirect {{ core['absolute_redirect'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['aio'] is defined %}
+aio {{ (core['aio'] | ternary('on', 'off')) if core['aio'] is boolean -}}
+    {{- ('threads' if core['aio']['threads'] is defined and not core['aio']['threads'] is sameas false) -}}
+    {{- ('=' + core['aio']['threads'] | string) if core['aio']['threads'] is not boolean }};
+{% endif %}
+{% if core['aio_write'] is defined and core['aio_write'] is boolean %}
+aio_write {{ core['aio_write'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['alias'] is defined %}{# 'alias' directive is only available in the 'location' context #}
+alias {{ core['alias'] }};
+{% endif %}
+{% if core['auth_delay'] is defined %}
+auth_delay {{ core['auth_delay'] }};
+{% endif %}
+{% if core['chunked_transfer_encoding'] is defined and core['chunked_transfer_encoding'] is boolean %}
+chunked_transfer_encoding {{ core['chunked_transfer_encoding'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['client_body_buffer_size'] is defined %}
+client_body_buffer_size {{ core['client_body_buffer_size'] }};
+{% endif %}
+{% if core['client_body_in_file_only'] is defined %}
+client_body_in_file_only {{ (core['client_body_in_file_only'] | ternary('on', 'off')) if core['client_body_in_file_only'] is boolean else core['client_body_in_file_only'] if core['client_body_in_file_only'] == 'clean' }};
+{% endif %}
+{% if core['client_body_in_single_buffer'] is defined and core['client_body_in_single_buffer'] is boolean %}
+client_body_in_single_buffer {{ core['client_body_in_single_buffer'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['client_body_temp_path']['path'] is defined and core['client_body_temp_path']['level'] is defined %}
+client_body_temp_path {{ core['client_body_temp_path']['path'] -}}
+{{- ' 1' if core['client_body_temp_path']['level'] is defined and core['client_body_temp_path']['level'] == '1' -}}
+{{- ' 1 2' if core['client_body_temp_path']['level'] is defined and core['client_body_temp_path']['level'] == '2' -}}
+{{- ' 1 2 3' if core['client_body_temp_path']['level'] is defined and core['client_body_temp_path']['level'] == '3' }};
+{% endif %}
+{% if core['client_body_timeout'] is defined %}
+client_body_timeout {{ core['client_body_timeout'] }};
+{% endif %}
+{% if core['client_header_buffer_size'] is defined %}{# 'client_header_buffer_size' directive is not available in the 'location' context #}
+client_header_buffer_size {{ core['client_header_buffer_size'] }};
+{% endif %}
+{% if core['client_header_timeout'] is defined %}{# 'client_header_timeout' directive is not available in the 'location' context #}
+client_header_timeout {{ core['client_header_timeout'] }};
+{% endif %}
+{% if core['client_max_body_size'] is defined %}
+client_max_body_size {{ core['client_max_body_size'] }};
+{% endif %}
+{% if core['connection_pool_size'] is defined %}{# 'connection_pool_size' directive is not available in the 'location' context #}
+connection_pool_size {{ core['connection_pool_size'] }};
+{% endif %}
+{% if core['default_type'] is defined %}
+default_type {{ core['default_type'] }};
+{% endif %}
+{% if core['directio'] is defined %}
+directio {{ 'off' if not core['directio'] else core['directio'] }};
+{% endif %}
+{% if core['directio_alignment'] is defined %}
+directio_alignment {{ core['directio_alignment'] }};
+{% endif %}
+{% if core['disable_symlinks'] is defined %}
+disable_symlinks {{ (core['disable_symlinks'] | ternary('on', 'off')) if core['disable_symlinks'] is boolean else 'if_not_owner' if core['disable_symlinks'] == 'if_not_owner' -}}
+                 {{- core['disable_symlinks']['check'] if core['disable_symlinks']['check'] is defined and core['disable_symlinks']['check'] in ['on', 'if_not_owner'] }}{{ (' from=' + core['disable_symlinks']['from']) if core['disable_symlinks']['from'] is defined }};
+{% endif %}
+{% if core['error_page'] is defined %}
+{% for page in core['error_page'] %}
+error_page {{ page['code'] if page['code'] is number else page['code'] | join(' ') -}}
+{{- (' ' + page['response'] | string) if page['response'] is defined -}}
+{{- (' ' + page['uri'] | string) if page['uri'] is defined }};
+{% endfor %}
+{% endif %}
+{% if core['etag'] is defined and core['etag'] is boolean %}
+etag {{ core['etag'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['if_modified_since'] is defined %}
+if_modified_since {{ 'off' if not core['if_modified_since'] else core['if_modified_since'] if core['if_modified_since'] in ['exact', 'before'] }};
+{% endif %}
+{% if core['ignore_invalid_headers'] is defined and core['ignore_invalid_headers'] is boolean %} {# 'ignore_invalid_headers' directive is not available in the 'location' context #}
+ignore_invalid_headers {{ core['ignore_invalid_headers'] | ternary('on', 'off') }};
+{% endif %}
+{# This does not belong here but we are making an exception #}
+{% if core['include'] is defined and (core['include'] is string or core['include'] is sequence) %}{# ngx_core_module #}
+{% for file in core['include'] if core['include'] is not string %}
+include {{ file }};
+{% else %}
+include {{ core['include'] }};
+{% endfor %}
+{% endif %}
+{# End of exception #}
+{% if core['internal'] is defined and core['internal'] is boolean and core['internal'] | bool %}{# 'internal' directive is only available in the 'location' context #}
+internal;
+{% endif %}
+{% if core['keepalive_disable'] is defined %}
+keepalive_disable {{ core['keepalive_disable'] if core['keepalive_disable'] is string else core['keepalive_disable'] | join(' ') }};
+{% endif %}
+{% if core['keepalive_requests'] is defined and core['keepalive_requests'] is number %}
+keepalive_requests {{ core['keepalive_requests'] }};
+{% endif %}
+{% if core['keepalive_time'] is defined %}
+keepalive_time {{ core['keepalive_time'] }};
+{% endif %}
+{% if core['keepalive_timeout'] is defined %}
+keepalive_timeout {{ core['keepalive_timeout'] if core['keepalive_timeout'] is string else core['keepalive_timeout']['timeout'] if core['keepalive_timeout']['timeout'] is defined }}{{ (' ' + core['keepalive_timeout']['header_timeout'] | string) if core['keepalive_timeout']['header_timeout'] is defined }};
+{% endif %}
+{% if core['large_client_header_buffers']['number'] is defined and core['large_client_header_buffers']['number'] is number and core['large_client_header_buffers']['size'] is defined %}{# 'large_client_header_buffers' directive is not available in the 'location' context #}
+large_client_header_buffers {{ core['large_client_header_buffers']['number'] }} {{ core['large_client_header_buffers']['size'] }};
+{% endif %}
+{% if core['limit_except'] is defined %}{# 'limit_except' directive is only available in the location context #}
+limit_except {{ core['limit_except']['method'] if core['limit_except']['method'] is string else core['limit_except']['method'] | join(' ') }} {
+{% if core['limit_except']['directive'] is sequence %}
+{% for directive in core['limit_except']['directive'] if core['limit_except']['directive'] is not string %}
+    {{ directive }};
+{% else %}
+    {{ core['limit_except']['directive'] }};
+{% endfor %}
+}
+{% endif %}
+{% endif %}
+{% if core['limit_rate'] is defined %}
+limit_rate {{ core['limit_rate'] }};
+{% endif %}
+{% if core['limit_rate_after'] is defined %}
+limit_rate_after {{ core['limit_rate_after'] }};
+{% endif %}
+{% if core['lingering_close'] is defined %}
+lingering_close {{ (core['lingering_close'] | ternary('on', 'off')) if core['lingering_close'] is boolean else core['lingering_close'] if core['lingering_close'] == 'always' }};
+{% endif %}
+{% if core['lingering_time'] is defined %}
+lingering_time {{ core['lingering_time'] }};
+{% endif %}
+{% if core['lingering_timeout'] is defined %}
+lingering_timeout {{ core['lingering_timeout'] }};
+{% endif %}
+{% if core['listen'] is defined %}{# 'listen' directive is only available in the 'server' context #}
+{% for listen in core['listen'] %}
+listen {{ listen['address'] if listen['address'] is defined }}{{ ':' if (listen['address'] is defined and listen['port'] is defined) }}{{ listen['port'] if listen['port'] is defined -}}
+{{- ' default_server' if listen['default_server'] is defined and listen['default_server'] is boolean and listen['default_server'] | bool -}}
+{{- ' ssl' if listen['ssl'] is defined and listen['ssl'] is boolean and listen['ssl'] | bool -}}
+{{- ' http2' if (listen['http2'] is defined and listen['http2'] is boolean and listen['http2'] | bool) else ' spdy' if (listen['spdy'] is defined and listen['spdy'] is boolean and listen['spdy'] | bool) -}}
+{{- ' proxy_protocol' if (listen['proxy_protocol'] is defined and listen['proxy_protocol'] is boolean and listen['proxy_protocol'] | bool) -}}
+{{- (' setfib=' + listen['setfib'] | string) if listen['setfib'] is defined -}}
+{{- (' fastopen=' + listen['fastopen'] | string) if listen['fastopen'] is defined and listen['fastopen'] is number -}}
+{{- (' backlog=' + listen['backlog'] | string) if listen['backlog'] is defined and listen['backlog'] is number -}}
+{{- (' rcvbuf=' + listen['rcvbuf'] | string) if listen['rcvbuf'] is defined -}}
+{{- (' sndbuf=' + listen['sndbuf'] | string) if listen['sndbuf'] is defined -}}
+{{- (' accept_filter=' + listen['accept_filter'] | string) if listen['accept_filter'] is defined -}}
+{{- ' deferred' if (listen['deferred'] is defined and listen['deferred'] is boolean and listen['deferred'] | bool) -}}
+{{- ' bind' if (listen['bind'] is defined and listen['bind'] is boolean and listen['bind'] | bool) -}}
+{{- (' ipv6only=' + listen['ipv6only'] | ternary('on', 'off')) if listen['ipv6only'] is defined -}}
+{{- ' reuseport' if (listen['reuseport'] is defined and listen['reuseport'] is boolean and listen['reuseport'] | bool) -}}
+{{- (' so_keepalive=' + (listen['so_keepalive'] | ternary('on', 'off')) if listen['so_keepalive'] is defined and listen['so_keepalive'] is boolean else ((listen['so_keepalive']['keepidle'] if listen['so_keepalive']['keepidle'] is defined else '') + ':' + (listen['so_keepalive']['keepintvl'] if listen['so_keepalive']['keepintvl'] is defined else '') + ':' + listen['so_keepalive']['keepcnt'] if listen['so_keepalive']['keepcnt'] is defined else '')) }};
+{% endfor %}
+{% endif %}
+{% if core['log_not_found'] is defined and core['log_not_found'] is boolean %}
+log_not_found {{ core['log_not_found'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['log_subrequest'] is defined and core['log_subrequest'] is boolean %}
+log_subrequest {{ core['log_subrequest'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['max_ranges'] is defined and core['max_ranges'] is number %}
+max_ranges {{ core['max_ranges'] }};
+{% endif %}
+{% if core['merge_slashes'] is defined and core['merge_slashes'] is boolean %}{# 'merge_slashes' directive is not available in the 'location' context #}
+merge_slashes {{ core['merge_slashes'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['msie_padding'] is defined and core['msie_padding'] is boolean %}
+msie_padding {{ core['msie_padding'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['msie_refresh'] is defined and core['msie_refresh'] is boolean %}
+msie_refresh {{ core['msie_refresh'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['open_file_cache'] is defined %}
+open_file_cache {{ 'off' if not core['open_file_cache'] else (('max=' + core['open_file_cache']['max'] | string) + ((' inactive=' + core['open_file_cache']['inactive'] | string) if core['open_file_cache']['inactive'] is defined)) }};
+{% endif %}
+{% if core['open_file_cache_errors'] is defined and core['open_file_cache_errors'] is boolean %}
+open_file_cache_errors {{ core['open_file_cache_errors'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['open_file_cache_min_uses'] is defined and core['open_file_cache_min_uses'] is number %}
+open_file_cache_min_uses {{ core['open_file_cache_min_uses'] }};
+{% endif %}
+{% if core['open_file_cache_valid'] is defined %}
+open_file_cache_valid {{ core['open_file_cache_valid'] }};
+{% endif %}
+{% if core['output_buffers']['number'] is defined and core['output_buffers']['size'] %}
+output_buffers {{ core['output_buffers']['number'] }} {{ core['output_buffers']['size'] }};
+{% endif %}
+{% if core['port_in_redirect'] is defined and core['port_in_redirect'] is boolean %}
+port_in_redirect {{ core['port_in_redirect'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['postpone_output'] is defined %}
+postpone_output {{ core['postpone_output'] }};
+{% endif %}
+{% if core['read_ahead'] is defined %}
+read_ahead {{ core['read_ahead'] }};
+{% endif %}
+{% if core['recursive_error_pages'] is defined and core['recursive_error_pages'] is boolean %}
+recursive_error_pages {{ core['recursive_error_pages'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['request_pool_size'] is defined %}{# 'request_pool_size' directive is not available in the 'location' context #}
+request_pool_size {{ core['request_pool_size'] }};
+{% endif %}
+{% if core['reset_timedout_connection'] is defined and core['reset_timedout_connection'] is boolean %}
+reset_timedout_connection {{ core['reset_timedout_connection'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['resolver']['address'] is defined %}
+resolver {{ core['resolver']['address'] if core['resolver']['address'] is string else core['resolver']['address'] | join(' ') -}}
+{{- (' valid=' + core['resolver']['valid'] | string) if core['resolver']['valid'] is defined -}}
+{{- (' ipv6=' + (core['resolver']['ipv6'] | ternary('on', 'off'))) if core['resolver']['ipv6'] is defined and core['resolver']['ipv6'] is boolean -}}
+{{- (' status_zone=' + core['resolver']['status_zone'] | string) if core['resolver']['status_zone'] is defined }};
+{% endif %}
+{% if core['resolver_timeout'] is defined %}
+resolver_timeout {{ core['resolver_timeout'] }};
+{% endif %}
+{% if core['root'] is defined %}
+root {{ core['root'] }};
+{% endif %}
+{% if core['index'] is defined %}{# ngx_http_index_module #}{# This does not belong here but we are making an exception #}
+index {{ core['index'] if core['index'] is string else core['index'] | join(' ') }};
+{% endif %}
+{% if core['satisfy'] is defined and core['satisfy'] in ['all', 'any'] %}
+satisfy {{ core['satisfy'] }};
+{% endif %}
+{% if core['send_lowat'] is defined %}
+send_lowat {{ core['send_lowat'] }};
+{% endif %}
+{% if core['send_timeout'] is defined %}
+send_timeout {{ core['send_timeout'] }};
+{% endif %}
+{% if core['sendfile'] is defined and core['sendfile'] is boolean %}
+sendfile {{ core['sendfile'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['sendfile_max_chunk'] is defined %}
+sendfile_max_chunk {{ core['sendfile_max_chunk'] }};
+{% endif %}
+{% if core['server_name'] is defined %}{# 'server_name' directive is only available in the 'server' context #}
+server_name {{ core['server_name'] if core['server_name'] is string else core['server_name'] | join (' ') }};
+{% endif %}
+{% if core['server_name_in_redirect'] is defined and core['server_name_in_redirect'] is boolean %}
+server_name_in_redirect {{ core['server_name_in_redirect'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['server_names_hash_bucket_size'] is defined %}{# 'server_names_hash_bucket_size' directive is only available in the 'http' context #}
+server_names_hash_bucket_size {{ core['server_names_hash_bucket_size'] }};
+{% endif %}
+{% if core['server_names_hash_max_size'] is defined %}{# 'server_names_hash_max_size' directive is only available in the 'http' context #}
+server_names_hash_max_size {{ core['server_names_hash_max_size'] }};
+{% endif %}
+{% if core['server_tokens'] is defined %}
+server_tokens {{ (core['server_tokens'] | ternary('on', 'off')) if core['server_tokens'] is boolean else core['server_tokens'] }};
+{% endif %}
+{% if core['subrequest_output_buffer_size'] is defined %}
+subrequest_output_buffer_size {{ core['subrequest_output_buffer_size'] }};
+{% endif %}
+{% if core['tcp_nodelay'] is defined and core['tcp_nodelay'] is boolean %}
+tcp_nodelay {{ core['tcp_nodelay'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['tcp_nopush'] is defined and core['tcp_nopush'] is boolean %}
+tcp_nopush {{ core['tcp_nopush'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['try_files']['files'] is defined %}{# 'try_files' directive is not available in the 'http' context #}
+try_files {{ core['try_files']['files'] if core['try_files']['files'] is string else core['try_files']['files'] | join(' ') }} {{ core['try_files']['uri'] if core['try_files']['uri'] is defined else core['try_files']['code'] if core['try_files']['code'] is defined }};
+{% endif %}
+{% if core['types'] is defined %}
+types {
+{% for type in core['types'] %}
+    {{ type['mime'] }} {{type['extensions'] if type['extensions'] is string else type['extensions'] | join(' ') }};
+{% endfor %}
+}
+{% endif %}
+{% if core['types_hash_bucket_size'] is defined %}
+types_hash_bucket_size {{ core['types_hash_bucket_size'] }};
+{% endif %}
+{% if core['types_hash_max_size'] is defined %}
+types_hash_max_size {{ core['types_hash_max_size'] }};
+{% endif %}
+{% if core['underscores_in_headers'] is defined and core['underscores_in_headers'] is boolean %}{# 'underscores_in_headers' directive is not available in the 'location' context #}
+underscores_in_headers {{ core['underscores_in_headers'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['variables_hash_bucket_size'] is defined %}{# 'variables_hash_bucket_size' directive is only available in the 'http' context #}
+variables_hash_bucket_size {{ core['variables_hash_bucket_size'] }};
+{% endif %}
+{% if core['variables_hash_max_size'] is defined %}{# 'variables_hash_max_size' directive is only available in the 'http' context #}
+variables_hash_max_size {{ core['variables_hash_max_size'] }};
+{% endif %}
+{% endmacro %}

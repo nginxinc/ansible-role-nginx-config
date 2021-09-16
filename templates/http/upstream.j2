@@ -1,10 +1,6 @@
 {{ ansible_managed | comment }}
-{# NGINX Upstream template -- Add directives under its corresponding block #}
-{# Format is as follows #}
-{# Left side (context module_name) -- Right side (module name) #}
-{# HTTP NGINX Upstream -- ngx_http_upstream_module #}
 
-{# HTTP Upstreams -- ngx_http_upstream_module #}
+{# NGINX HTTP Upstream template -- ngx_http_upstream_module #}
 {% macro upstream(upstreams) %}
 {% for upstream in upstreams %}
 {% if upstream['name'] is defined %}
@@ -13,17 +9,17 @@ upstream {{ upstream['name'] }} {
 {% for server in upstream['servers'] %}
 {% if server['address'] is defined %}
     server {{ server['address'] -}}
-    {{- (' weight=' + server['weight'] | string) if server['weight'] is defined -}}
-    {{- (' max_conns=' + server['max_conns'] | string) if server['max_conns'] is defined -}}
-    {{- (' max_fails=' + server['max_fails'] | string) if server['max_fails'] is defined -}}
+    {{- (' weight=' + server['weight'] | string) if server['weight'] is defined and server['weight'] is number -}}
+    {{- (' max_conns=' + server['max_conns'] | string) if server['max_conns'] is defined and server['max_conns'] is number -}}
+    {{- (' max_fails=' + server['max_fails'] | string) if server['max_fails'] is defined and server['max_fails'] is number -}}
     {{- (' fail_timeout=' + server['fail_timeout'] | string) if server['fail_timeout'] is defined -}}
-    {{- ' backup' if server['backup'] is defined and server['backup'] | bool -}}
-    {{- ' down' if server['down'] is defined and server['down'] | bool -}}
-    {{- ' resolve' if server['resolve'] is defined and server['resolve'] | bool -}}
-    {{- (' route=' + server['route']) if server['route'] is defined -}}
-    {{- (' service=' + server['service']) if server['service'] is defined -}}
+    {{- ' backup' if server['backup'] is defined and server['backup'] is boolean -}}
+    {{- ' down' if server['down'] is defined and server['down'] is boolean -}}
+    {{- ' resolve' if server['resolve'] is defined and server['resolve'] is boolean -}}
+    {{- (' route=' + server['route'] | string) if server['route'] is defined -}}
+    {{- (' service=' + server['service'] | string) if server['service'] is defined -}}
     {{- (' slow_start=' + server['slow_start'] | string) if server['slow_start'] is defined -}}
-    {{- ' drain' if server['drain'] is defined and server['drain'] | bool }};
+    {{- ' drain' if server['drain'] is defined and server['drain'] is boolean }};
 {% endif %}
 {% endfor %}
 {% endif %}
@@ -34,36 +30,39 @@ upstream {{ upstream['name'] }} {
     state {{ upstream['state'] }};
 {% endif %}
 {% if upstream['hash']['key'] is defined %}
-    hash {{ upstream['hash']['key'] }}{{ ' consistent' if upstream['hash']['consistent'] is defined and upstream['hash']['consistent'] | bool }};
-{% elif upstream['ip_hash'] is defined and upstream['ip_hash'] | bool %}
+    hash {{ upstream['hash']['key'] }}{{ ' consistent' if upstream['hash']['consistent'] is defined and upstream['hash']['consistent'] is boolean }};
+{% elif upstream['ip_hash'] is defined and upstream['ip_hash'] is boolean %}
     ip_hash;
-{% elif upstream['least_conn'] is defined and upstream['least_conn'] | bool %}
+{% elif upstream['least_conn'] is defined and upstream['least_conn'] is boolean %}
     least_conn;
 {% elif upstream['least_time']['response'] is defined  %}
-    least_time {{ upstream['least_time']['response'] }}{{ ' inflight' if upstream['least_time']['inflight'] is defined and upstream['least_time']['inflight'] | bool }};
+    least_time {{ upstream['least_time']['response'] }}{{ ' inflight' if upstream['least_time']['inflight'] is defined and upstream['least_time']['inflight'] is boolean }};
 {% elif upstream['random'] is defined %}
-    random{{ ' two' if upstream['random']['two'] is defined and upstream['random']['two'] | bool }}{{ (' ' + upstream['random']['method']) if upstream['random']['method'] is defined }};
+    random {{ 'two' if upstream['random']['two'] is defined and upstream['random']['two'] is boolean }}{{ (' ' + upstream['random']['method'] | string) if upstream['random']['method'] is defined }};
 {% endif %}
 {% if upstream['queue']['number'] is defined %}
-    queue {{ upstream['queue']['number'] }}{{ (' timeout=' + upstream['queue']['timeout'] | string) if upstream['queue']['timeout'] is defined }};
+    queue {{ upstream['queue']['number'] if upstream['queue']['number'] is number }}{{ (' timeout=' + upstream['queue']['timeout'] | string) if upstream['queue']['timeout'] is defined }};
 {% endif %}
-{% if upstream['keepalive'] is defined %}
+{% if upstream['keepalive'] is defined and upstream['keepalive'] is number %}
     keepalive {{ upstream['keepalive'] }};
 {% endif %}
-{% if upstream['keepalive_requests'] is defined %}
+{% if upstream['keepalive_requests'] is defined and upstream['keepalive_requests'] is number %}
     keepalive_requests {{ upstream['keepalive_requests'] }};
+{% endif %}
+{% if upstream['keepalive_time'] is defined %}
+    keepalive_time {{ upstream['keepalive_time'] }};
 {% endif %}
 {% if upstream['keepalive_timeout'] is defined %}
     keepalive_timeout {{ upstream['keepalive_timeout'] }};
 {% endif %}
-{% if upstream['ntlm'] is defined and upstream['ntlm'] | bool %}
+{% if upstream['ntlm'] is defined and upstream['ntlm'] is boolean and upstream['ntlm'] is boolean %}
     ntlm;
 {% endif %}
 {% if upstream['resolver']['address'] is defined %}
-    resolver {{ upstream['resolver']['address'] | join(' ') -}}
+    resolver {{ upstream['resolver']['address'] if upstream['resolver']['address'] is string else upstream['resolver']['address'] | join(' ') -}}
     {{- (' valid=' + upstream['resolver']['valid'] | string) if upstream['resolver']['valid'] is defined -}}
-    {{- (' ipv6=' + (upstream['resolver']['ipv6'] | ternary('on', 'off'))) if upstream['resolver']['ipv6'] is defined and upstream['resolver']['ipv6'] | bool -}}
-    {{- (' status_zone=' + upstream['resolver']['status_zone']) if upstream['resolver']['status_zone'] is defined }};
+    {{- (' ipv6=' + (upstream['resolver']['ipv6'] | ternary('on', 'off'))) if upstream['resolver']['ipv6'] is defined and upstream['resolver']['ipv6'] is boolean -}}
+    {{- (' status_zone=' + upstream['resolver']['status_zone'] | string) if upstream['resolver']['status_zone'] is defined }};
 {% endif %}
 {% if upstream['resolver_timeout'] is defined %}
     resolver_timeout {{ upstream['resolver_timeout'] }};
@@ -71,18 +70,20 @@ upstream {{ upstream['name'] }} {
 {% if upstream['sticky_cookie']['name'] is defined %}
     sticky cookie {{ upstream['sticky_cookie']['name'] -}}
     {{- (' expires=' + upstream['sticky_cookie']['expires'] | string) if upstream['sticky_cookie']['expires'] is defined -}}
-    {{- (' domain=' + upstream['sticky_cookie']['domain']) if upstream['sticky_cookie']['domain'] is defined -}}
-    {{- ' httponly' if upstream['sticky_cookie']['httponly'] is defined and upstream['sticky_cookie']['httponly'] | bool -}}
-    {{- (' samesite' + upstream['sticky_cookie']['samesite']) if upstream['sticky_cookie']['samesite'] is defined -}}
-    {{- ' secure' if upstream['sticky_cookie']['secure'] is defined and upstream['sticky_cookie']['secure'] | bool -}}
-    {{- (' path=' + upstream['sticky_cookie']['path']) if upstream['sticky_cookie']['path'] is defined }};
+    {{- (' domain=' + upstream['sticky_cookie']['domain'] | string) if upstream['sticky_cookie']['domain'] is defined -}}
+    {{- ' httponly' if upstream['sticky_cookie']['httponly'] is defined and upstream['sticky_cookie']['httponly'] is boolean -}}
+    {{- (' samesite' + upstream['sticky_cookie']['samesite'] | string) if upstream['sticky_cookie']['samesite'] is defined and upstream['sticky_cookie']['samesite'] in ['strict', 'lax', 'none'] -}}
+    {{- ' secure' if upstream['sticky_cookie']['secure'] is defined and upstream['sticky_cookie']['secure'] is boolean -}}
+    {{- (' path=' + upstream['sticky_cookie']['path'] | string) if upstream['sticky_cookie']['path'] is defined }};
 {% elif upstream['sticky_route'] is defined %}
-    sticky route {{ upstream['sticky_route'] | join(' ') }};
+    sticky route {{ upstream['sticky_route'] if upstream['sticky_route'] is string else upstream['sticky_route'] | join(' ') }};
 {% elif upstream['sticky_learn'] is defined %}
-    sticky learn create={{ upstream['sticky_learn']['create'] | join(' create=') }} lookup={{ upstream['sticky_learn']['lookup'] | join(' lookup=') }} zone={{ upstream['sticky_learn']['zone']['name'] + ':' + upstream['sticky_learn']['zone']['size'] | string -}}
+    sticky learn {{ ('create=' + upstream['sticky_learn']['create'] | string) if upstream['sticky_learn']['create'] is string else ('create=' + upstream['sticky_learn']['create'] | join(' create=')) -}}
+    {{- (' lookup=' + upstream['sticky_learn']['lookup'] | string) if upstream['sticky_learn']['lookup'] is string else (' lookup=' + upstream['sticky_learn']['lookup'] | join(' lookup=')) -}}
+    {{- ' zone=' + (upstream['sticky_learn']['zone']['name'] | string) + ':' + (upstream['sticky_learn']['zone']['size'] | string) -}}
     {{- (' timeout=' + upstream['sticky_learn']['timeout'] | string) if upstream['sticky_learn']['timeout'] is defined -}}
-    {{- ' header' if upstream['sticky_learn']['header'] is defined and upstream['sticky_learn']['header'] | bool -}}
-    {{- ' sync' if upstream['sticky_learn']['sync'] is defined and upstream['sticky_learn']['sync'] | bool }};
+    {{- ' header' if upstream['sticky_learn']['header'] is defined and upstream['sticky_learn']['header'] is boolean -}}
+    {{- ' sync' if upstream['sticky_learn']['sync'] is defined and upstream['sticky_learn']['sync'] is boolean }};
 {% endif %}
 }
 {% endif %}
