@@ -149,7 +149,7 @@
               core:
                 default_type: application/octet-stream
                 keepalive_timeout: 65s
-              app_protect_global:
+              app_protect:
                 physical_memory_util_thresholds:
                   high: 100
                   low: 100
@@ -159,7 +159,7 @@
                 failure_mode_action: pass
                 cookie_seed: testseed
                 compressed_requests_action: drop
-              grpc_global:
+              grpc:
                 bind:
                   address: $remote_addr
                   transparent: false
@@ -520,6 +520,11 @@
                       core:
                         root: /usr/share/nginx/html
                         index: frontend_index.html
+                    - location: /api
+                      api:
+                        enable:
+                          write: true
+                        status_zone: two
           - template_file: http/default.conf.j2
             deployment_location: /etc/nginx/conf.d/backend_default.conf
             config:
