@@ -258,9 +258,6 @@
                 cache: false
                 cache_background_update: false
                 cache_bypass: $cookie_test
-                  # - - $cookie_nocache
-                  #   - $arg_nocache$arg_comment
-                  # - $cookie_test
                 cache_convert_head: true
                 cache_key: $scheme$proxy_host$request_uri
                 cache_lock: false
@@ -626,6 +623,8 @@
                       core:
                         index: backend_index.html
                         root: /usr/share/nginx/html
+                    - location: /stub_status
+                      stub_status: true
                     - location: ~ \.php$
                       core:
                         root: /usr/share/nginx/html

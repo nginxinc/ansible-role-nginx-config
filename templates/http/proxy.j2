@@ -169,8 +169,7 @@ proxy_no_cache {{ no_cache if no_cache is string else no_cache | join(' ') }};
 proxy_no_cache {{ proxy['no_cache'] }};
 {% endfor %}
 {% endif %}
-{# 'pass' directive is only available in the 'location' context #}
-{% if proxy['pass'] is defined %}
+{% if proxy['pass'] is defined %}{# 'pass' directive is only available in the 'location' context #}
 proxy_pass {{ proxy['pass'] }};
 {% endif %}
 {% if proxy['pass_header'] is defined and proxy['pass_header'] is sequence %}

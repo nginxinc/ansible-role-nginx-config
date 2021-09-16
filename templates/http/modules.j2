@@ -12,8 +12,7 @@ status_zone {{ api['status_zone'] }};
 {% endmacro %}
 
 {# NGINX OSS HTTP stub status -- ngx_http_stub_status_module #}
-{# 'stub_status' directive is not available in the 'http' context #}
-{% macro stub_status(stub_status) %}
+{% macro stub_status(stub_status) %}{# 'stub_status' directive is not available in the 'http' context #}
 {% if stub_status is boolean and stub_status | bool %}
 stub_status;
 {% endif %}
@@ -173,15 +172,13 @@ access_log {{ 'off' if not log else log['path'] if log['path'] is defined }}{{ (
 {{- (' if=' + log['if']) if log['if'] is defined }};
 {% endfor %}
 {% endif %}
-{# This does not belong here but we are making an exception #}
-{% if log['error'] is defined %}
+{% if log['error'] is defined %}{# This does not belong here but we are making an exception #}
 {% for log in log['error'] if (log['error'] is sequence and log['error'] is not string) %}
 error_log {{ log if log is string else log['file'] }}{{ (' ' + log['level'] | string) if log['level'] is defined }};
 {% else %}
 error_log {{ log['error'] if log['error'] is string else log['error']['file'] }}{{ (' ' + log['error']['level'] | string) if log['error']['level'] is defined }};
 {% endfor %}
 {% endif %}
-{# End of exception #}
 {% if log['open_log_file_cache'] is defined %}
 open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + log['open_log_file_cache']['max'] | string) }}{{ (' inactive=' + log['open_log_file_cache']['inactive'] | string) if log['open_log_file_cache']['inactive'] is defined }}{{ (' min_uses=' + log['open_log_file_cache']['min_uses'] | string) if log['open_log_file_cache']['min_uses'] is defined and log['open_log_file_cache']['min_uses'] is number }}{{ (' valid=' + log['open_log_file_cache']['valid'] | string) if log['open_log_file_cache']['valid'] is defined }};
 {% endif %}

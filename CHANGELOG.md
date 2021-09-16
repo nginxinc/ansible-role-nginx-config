@@ -66,7 +66,6 @@ Template engine updates:
 *   Refactor the `auth` HTTP config template into its own separate `auth` modules file. All the various `auth` related module directives including all `auth_jwt` directives are now available. All variables have changed:
     *   All the various `auth` variables now live within their respective `auth` dictionaries.
     *   `auth` configs are now supported within the `http`, `server`, and `location` contexts.
-
 *   Refactor the `autoindex` HTTP config template into its own separate file `modules` file and added missing `autoindex` module directives. All variables have changed:
     *   The `autoindex` directives now live within the `autoindex` dictionary.
     *   The `autoindex` dictionary now lives in the HTTP template config instead of the Main template config.
@@ -181,7 +180,7 @@ ENHANCEMENTS:
 *   Consolidate Molecule testing scenarios to address changes introduced in Ansible Lint `5.*`.
 *   Specify GitHub actions Ubuntu release.
 *   Minor GitHub template tweaks, including the creation of a SECURITY doc.
-*   Replace Molecule tests using Alpine 3.11 with Alpine 3.10 (to test NGINX App Protect configurations), Debian stretch with Debian buster (stretch has reached its EoL), and update list of supported platforms.
+*   Replace Molecule tests using Debian stretch with Debian buster (stretch has reached its EoL), and update list of supported platforms.
 *   Replace Ansible base with Ansible core. Ansible core will be the "core" Ansible release moving forward from Ansible `2.11`.
 *   Update GitHub actions to add a workflow dispatch option.
 *   Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.

@@ -78,18 +78,16 @@ etag {{ core['etag'] | ternary('on', 'off') }};
 {% if core['if_modified_since'] is defined %}
 if_modified_since {{ 'off' if not core['if_modified_since'] else core['if_modified_since'] if core['if_modified_since'] in ['exact', 'before'] }};
 {% endif %}
-{% if core['ignore_invalid_headers'] is defined and core['ignore_invalid_headers'] is boolean %} {# 'ignore_invalid_headers' directive is not available in the 'location' context #}
+{% if core['ignore_invalid_headers'] is defined and core['ignore_invalid_headers'] is boolean %}{# 'ignore_invalid_headers' directive is not available in the 'location' context #}
 ignore_invalid_headers {{ core['ignore_invalid_headers'] | ternary('on', 'off') }};
 {% endif %}
-{# This does not belong here but we are making an exception #}
-{% if core['include'] is defined and (core['include'] is string or core['include'] is sequence) %}{# ngx_core_module #}
+{% if core['include'] is defined and (core['include'] is string or core['include'] is sequence) %}{# ngx_core_module #}{# This does not belong here but we are making an exception #}
 {% for file in core['include'] if core['include'] is not string %}
 include {{ file }};
 {% else %}
 include {{ core['include'] }};
 {% endfor %}
 {% endif %}
-{# End of exception #}
 {% if core['internal'] is defined and core['internal'] is boolean and core['internal'] | bool %}{# 'internal' directive is only available in the 'location' context #}
 internal;
 {% endif %}

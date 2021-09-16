@@ -55,7 +55,7 @@
 {% endif %}
 {% if item['config']['stub_status'] is defined %}
 {% from 'http/modules.j2' import stub_status with context %}
-{{ stub_status }}
+{{ stub_status(item['config']['stub_status']) }}
 {% endif %}
 
 {% if item['config']['autoindex'] is defined %}
@@ -178,7 +178,7 @@ server {
 {% endif %}
 {% if server['stub_status'] is defined %}
 {% from 'http/modules.j2' import stub_status with context %}
-    {{ stub_status }}
+    {{ stub_status(server['stub_status']) }}
 {% endif %}
 
 {% if server['autoindex'] is defined %}
@@ -320,7 +320,7 @@ server {
 {% endif %}
 {% if location['stub_status'] is defined %}
 {% from 'http/modules.j2' import stub_status with context %}
-        {{ stub_status }}
+        {{ stub_status(location['stub_status']) }}
 {% endif %}
 
 {% if location['autoindex'] is defined %}
