@@ -31,6 +31,7 @@
                 - file: /var/log/nginx/error.log
                   level: notice
               pid: /var/run/nginx.pid
+              worker_rlimit_nofile: 2048
             events:
               worker_connections: 1024
             http:
@@ -149,7 +150,7 @@
               core:
                 default_type: application/octet-stream
                 keepalive_timeout: 65s
-              app_protect:
+              app_protect_waf:
                 physical_memory_util_thresholds:
                   high: 100
                   low: 100

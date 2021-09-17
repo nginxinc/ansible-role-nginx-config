@@ -28,7 +28,7 @@ app_protect_cpu_thresholds high={{ app_protect_waf['cpu_thresholds']['high'] }} 
 app_protect_failure_mode_action {{ app_protect_waf['failure_mode_action'] }};
 {% endif %}
 {% if app_protect_waf['cookie_seed'] is defined %}{# Available only in 'http' context #}
-app_protect_cookie_seed {{ app_papp_protect_waf['cookie_seed'] }};
+app_protect_cookie_seed {{ app_protect_waf['cookie_seed'] }};
 {% endif %}
 {% if app_protect_waf['compressed_requests_action'] is defined and app_protect_waf['compressed_requests_action'] in ['pass', 'drop'] %}{# Available only in 'http' context #}
 app_protect_compressed_requests_action {{ app_protect_waf['compressed_requests_action'] }};
