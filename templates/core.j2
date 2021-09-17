@@ -23,14 +23,14 @@ worker_priority {{ main['worker_priority'] }};
 {% if main['worker_processes'] is defined and (main['worker_processes'] is number or main['worker_processes'] == 'auto') %}
 worker_processes {{ main['worker_processes'] }};
 {% endif %}
-{% if core['worker_rlimit_core'] is defined %}
-worker_rlimit_core {{ core['worker_rlimit_core'] }};
+{% if main['worker_rlimit_core'] is defined %}
+worker_rlimit_core {{ main['worker_rlimit_core'] }};
 {% endif %}
-{% if core['worker_rlimit_nofile'] is defined and core['worker_rlimit_nofile'] is number %}
-worker_rlimit_nofile {{ core['worker_rlimit_nofile'] }};
+{% if main['worker_rlimit_nofile'] is defined and main['worker_rlimit_nofile'] is number %}
+worker_rlimit_nofile {{ main['worker_rlimit_nofile'] }};
 {% endif %}
-{% if core['worker_shutdown_timeout'] is defined %}
-worker_shutdown_timeout {{ core['worker_shutdown_timeout'] }};
+{% if main['worker_shutdown_timeout'] is defined %}
+worker_shutdown_timeout {{ main['worker_shutdown_timeout'] }};
 {% endif %}
 
 {% if main['error_log'] is defined %}
