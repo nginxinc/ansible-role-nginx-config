@@ -36,6 +36,8 @@ Template engine updates:
 *   Refactor the base config templates to simplify the creation of templates as well as development and maintenance moving forward:
     *   Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists, as well as modify the `nginx_config_html_demo_template` variable from a nested dictionary to a list. To update your templates, replace the aforementioned nested dictionary keys by lists (place a dash in front of the topmost nested value within each aforementioned nested dictionary).
     *   Remove/merge the `web_server` and `reverse_proxy` nested dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates, remove both keys and adjust your spacing accordingly.
+    *   Replaced `conf_file_name` and `conf_file_location` with a single variable, `deployment_location`.
+    *   All config related parameters now live under the `config` key in both the core/main and HTTP templates.
 *   Refactor the `nginx_config_main_template` to now include all the respective `core` and `events` directives. The following variables have changed:
     *   `http_enable` no longer exists, neither does `http_settings`. You can still use `http.include` to include files within the `http` context.
     *   `stream_enable` no longer exists, neither does `stream_settings`. You can still use `stream.include` to include files within the `stream` context.
