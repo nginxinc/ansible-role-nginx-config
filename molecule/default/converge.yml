@@ -80,7 +80,7 @@
           path: /var/log/nginx/access.log
           format: main
 
-        nginx_config_http_template_enable: false
+        nginx_config_http_template_enable: true
         nginx_config_http_template:
           - template_file: http/default.conf.j2
             deployment_location: /etc/nginx/conf.d/default.conf
@@ -646,7 +646,7 @@
             html_file_location: /usr/share/nginx/html
             web_server_name: Backend
 
-        nginx_config_stream_template_enable: false
+        nginx_config_stream_template_enable: true
         nginx_config_stream_template:
           - template_file: stream/default.conf.j2
             conf_file_name: stream_default.conf
