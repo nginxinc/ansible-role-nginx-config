@@ -166,7 +166,7 @@ limit_req_zone {{ zone['key'] }} {{ 'zone=' + zone['name'] + ':' + zone['size'] 
 {% macro log(log) %}
 {% if log['format'] is defined %}
 {% for format in log['format'] %}
-log_format {{ format['name'] }}{{ (' escape=' + format['escape']) if format['escape'] is defined and format['escape'] in ['default', 'json', 'none'] }} {{ format['format'] + ';' }}
+log_format {{ format['name'] }}{{ (' escape=' + format['escape']) if format['escape'] is defined and format['escape'] in ['default', 'json', 'none'] }} {{ format['format'] }};
 {% endfor %}
 {% endif %}
 {% if log['access'] is defined and log['access'] is boolean and not log['access'] | bool %}
