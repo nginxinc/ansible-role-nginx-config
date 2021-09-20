@@ -282,4 +282,5 @@ variables_hash_bucket_size {{ core['variables_hash_bucket_size'] }};
 {% if core['variables_hash_max_size'] is defined %}{# 'variables_hash_max_size' directive is only available in the 'http' context #}
 variables_hash_max_size {{ core['variables_hash_max_size'] }};
 {% endif %}
+
 {% endmacro %}

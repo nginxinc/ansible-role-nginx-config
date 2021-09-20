@@ -527,8 +527,7 @@
                         alias: /
                         limit_except:
                           method: GET
-                          directive:
-                            - allow all
+                          directive: "allow all"
                       proxy:
                         pass: http://frontend_servers/
                     - location: /backend

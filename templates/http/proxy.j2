@@ -54,8 +54,7 @@ proxy_cache_methods {{ proxy['cache_methods'] if proxy['cache_methods'] is strin
 {% if proxy['cache_min_uses'] is defined and proxy['cache_min_uses'] is number %}
 proxy_cache_min_uses {{ proxy['cache_min_uses'] }};
 {% endif %}
-{# 'cache_path' directive is only available in the 'http' context #}
-{% if proxy['cache_path'] is defined %}
+{% if proxy['cache_path'] is defined %}{# 'cache_path' directive is only available in the 'http' context #}
 {% for proxy in proxy['cache_path'] %}
 proxy_cache_path {{ proxy['path'] -}}
 {{- (' levels=' + proxy['levels'] | string) if proxy['levels'] is defined -}}
@@ -277,4 +276,5 @@ proxy_temp_path {{ proxy['temp_path']['path'] -}}
 {{- ' 1 2' if proxy['temp_path']['level'] is defined and proxy['temp_path']['level'] is number and proxy['temp_path']['level'] == 2 -}}
 {{- ' 1 2 3' if proxy['temp_path']['level'] is defined and proxy['temp_path']['level'] is number and proxy['temp_path']['level'] == 3 }};
 {% endif %}
+
 {% endmacro %}

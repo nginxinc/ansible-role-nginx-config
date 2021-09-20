@@ -46,6 +46,7 @@ app_protect_user_defined_signatures {{ signature }};
 app_protect_user_defined_signatures {{ app_protect_waf['user_defined_signatures'] }};
 {% endfor %}
 {% endif %}
+
 {% endmacro %}
 
 {# NGINX HTTP App Protect DoS template -- ngx_http_app_protect_dos_module #}
@@ -74,4 +75,5 @@ app_protect_dos_liveness {{ app_protect_dos['liveness']['enable'] | ternary('on'
 {% if app_protect_dos['readiness']['enable'] is defined and app_protect_dos['readiness'] is boolean %}{# Available only in 'http' context #}
 app_protect_dos_readiness {{ app_protect_dos['readiness'] | ternary('on', 'off') }}{{ (' uri:' + app_protect_dos['readiness']['uri'] | string) if app_protect_dos['readiness']['uri'] is defined }}{{ (' port:' + app_protect_dos['readiness']['port'] | string) if app_protect_dos['readiness']['port'] is defined }};
 {% endif %}
+
 {% endmacro %}

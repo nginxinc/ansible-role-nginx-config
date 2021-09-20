@@ -17,6 +17,7 @@ deny {{ deny }};
 deny {{ access['deny'] }};
 {% endfor %}
 {% endif %}
+
 {% endmacro %}
 
 {# NGINX HTTP Auth Basic -- ngx_http_auth_basic_module #}
@@ -27,6 +28,7 @@ auth_basic {{ 'off' if not auth_basic['realm'] else auth_basic['realm'] }};
 {% if auth_basic['user_file'] is defined %}
 auth_basic_user_file {{ auth_basic['user_file'] }};
 {% endif %}
+
 {% endmacro %}
 
 {# NGINX HTTP Auth Request -- ngx_http_auth_request_module #}
@@ -37,6 +39,7 @@ auth_request {{ 'off' if not auth_request['uri'] else auth_request['uri'] }};
 {% if auth_request['set']['variable'] is defined and auth_request['set']['value'] is defined %}
 auth_request_set {{ auth_request['set']['variable'] }} {{ auth_request['set']['value'] }};
 {% endif %}
+
 {% endmacro %}
 
 {# NGINX HTTP Auth JWT -- ngx_http_auth_jwt_module #}

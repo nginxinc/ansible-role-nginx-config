@@ -3,98 +3,91 @@
 {% if item['config']['upstreams'] is defined %}
 {% from 'http/upstream.j2' import upstream with context %}
 {{ upstream(item['config']['upstreams']) }}
-{% endif %}
-
+{%- endif %}
 {% if item['config']['core'] is defined %}
 {% from 'http/core.j2' import core with context %}
 {{ core(item['config']['core']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['ssl'] is defined %}
 {% from 'http/ssl.j2' import ssl with context %}
 {{ ssl(item['config']['ssl']) }}
-{% endif %}
-
+{%- endif %}
 {% if item['config']['app_protect_waf'] is defined %}
 {% from 'http/app_protect.j2' import app_protect_waf with context %}
 {{ app_protect_waf(item['config']['app_protect_waf']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['app_protect_dos'] is defined %}
 {% from 'http/app_protect.j2' import app_protect_dos with context %}
 {{ app_protect_dos(item['config']['app_protect_dos']) }}
-{% endif %}
-
+{%- endif %}
 {% if item['config']['proxy'] is defined %}
 {% from 'http/proxy.j2' import proxy with context %}
 {{ proxy(item['config']['proxy']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['grpc'] is defined %}
 {% from 'http/grpc.j2' import grpc with context %}
 {{ grpc(item['config']['grpc']) }}
-{% endif %}
-
+{%- endif %}
 {% if item['config']['access'] is defined %}
 {% from 'http/auth.j2' import access with context %}
 {{ access(item['config']['access']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['auth_basic'] is defined %}
 {% from 'http/auth.j2' import auth_basic with context %}
 {{ auth_basic(item['config']['auth_basic']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['auth_request'] is defined %}
 {% from 'http/auth.j2' import auth_request with context %}
 {{ auth_request(item['config']['auth_request']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['auth_jwt'] is defined %}
 {% from 'http/auth.j2' import auth_jwt with context %}
 {{ auth_jwt(item['config']['auth_jwt']) }}
-{% endif %}
-
+{%- endif %}
 {% if item['config']['api'] is defined %}
 {% from 'http/modules.j2' import api with context %}
 {{ api(item['config']['api']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['stub_status'] is defined %}
 {% from 'http/modules.j2' import stub_status with context %}
 {{ stub_status(item['config']['stub_status']) }}
-{% endif %}
-
+{%- endif %}
 {% if item['config']['autoindex'] is defined %}
 {% from 'http/modules.j2' import autoindex with context %}
 {{ autoindex(item['config']['autoindex']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['gzip'] is defined %}
 {% from 'http/modules.j2' import gzip with context %}
 {{ gzip(item['config']['gzip']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['headers'] is defined %}
 {% from 'http/modules.j2' import headers with context %}
 {{ headers(item['config']['headers']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['health_check'] is defined %}
 {% from 'http/modules.j2' import health_check with context %}
 {{ health_check(item['config']['health_check']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['keyval'] is defined %}
 {% from 'http/modules.j2' import keyval with context %}
 {{ keyval(item['config']['keyval']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['limit_req'] is defined %}
 {% from 'http/modules.j2' import limit_req with context %}
 {{ limit_req(item['config']['limit_req']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['log'] is defined %}
 {% from 'http/modules.j2' import log with context %}
 {{ log(item['config']['log']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['rewrite'] is defined %}
 {% from 'http/modules.j2' import rewrite with context %}
 {{ rewrite(item['config']['rewrite']) }}
-{% endif %}
+{%- endif %}
 {% if item['config']['sub_filter'] is defined %}
 {% from 'http/modules.j2' import sub_filter with context %}
 {{ sub_filter(item['config']['sub_filter']) }}
-{% endif %}
-
+{%- endif %}
 {% if item['config']['custom_directives'] is defined and item['config']['custom_directives'] is sequence %}
 {% for directive in item['config']['custom_directives'] if item['config']['custom_directives'] is not string %}
 {{ directive }}
@@ -102,7 +95,6 @@
 {{ item['config']['custom_directive'] }}
 {% endfor %}
 {% endif %}
-
 {% if item['config']['servers'] is defined %}
 {% for server in item['config']['servers'] %}
 server {
@@ -110,94 +102,89 @@ server {
 {% from 'http/core.j2' import core with context %}
 {% filter indent(4) %}
     {{ core(server['core']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['ssl'] is defined %}
 {% from 'http/ssl.j2' import ssl with context %}
 {% filter indent(4) %}
     {{ ssl(server['ssl']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
-
 {% if server['app_protect_waf'] is defined %}
 {% from 'http/app_protect.j2' import app_protect_waf with context %}
 {% filter indent(4) %}
     {{ app_protect_waf(server['app_protect_waf']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['app_protect_dos'] is defined %}
 {% from 'http/app_protect.j2' import app_protect_dos with context %}
 {% filter indent(4) %}
     {{ app_protect_dos(server['app_protect_dos']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
-
 {% if server['proxy'] is defined %}
 {% from 'http/proxy.j2' import proxy with context %}
 {% filter indent(4) %}
     {{ proxy(server['proxy']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['grpc'] is defined %}
 {% from 'http/grpc.j2' import grpc with context %}
 {% filter indent(4) %}
     {{ grpc(server['grpc']) }}
-{% endfilter %}
-{% endif %}
-
-{% if server['auth_request'] is defined %}
-{% from 'http/auth.j2' import auth_request with context %}
-{% filter indent(4) %}
-    {{ auth_request(server['auth_request']) }}
-{% endfilter %}
-{% endif %}
-{% if server['auth_basic'] is defined %}
-{% from 'http/auth.j2' import auth_basic with context %}
-{% filter indent(4) %}
-    {{ auth_basic(server['auth_basic']) }}
-{% endfilter %}
-{% endif %}
-{% if server['auth_jwt'] is defined %}
-{% from 'http/auth.j2' import auth_jwt with context %}
-{% filter indent(4) %}
-    {{ auth_jwt(server['auth_jwt']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['access'] is defined %}
 {% from 'http/auth.j2' import access with context %}
 {% filter indent(4) %}
     {{ access(server['access']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
-
+{% if server['auth_request'] is defined %}
+{% from 'http/auth.j2' import auth_request with context %}
+{% filter indent(4) %}
+    {{ auth_request(server['auth_request']) }}
+{%- endfilter %}
+{% endif %}
+{% if server['auth_basic'] is defined %}
+{% from 'http/auth.j2' import auth_basic with context %}
+{% filter indent(4) %}
+    {{ auth_basic(server['auth_basic']) }}
+{%- endfilter %}
+{% endif %}
+{% if server['auth_jwt'] is defined %}
+{% from 'http/auth.j2' import auth_jwt with context %}
+{% filter indent(4) %}
+    {{ auth_jwt(server['auth_jwt']) }}
+{%- endfilter %}
+{% endif %}
 {% if server['api'] is defined %}
 {% from 'http/modules.j2' import api with context %}
 {% filter indent(4) %}
     {{ api(server['api']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['stub_status'] is defined %}
 {% from 'http/modules.j2' import stub_status with context %}
     {{ stub_status(server['stub_status']) }}
-{% endif %}
-
+{%- endif %}
 {% if server['autoindex'] is defined %}
 {% from 'http/modules.j2' import autoindex with context %}
 {% filter indent(4) %}
     {{ autoindex(server['autoindex']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['gzip'] is defined %}
 {% from 'http/modules.j2' import gzip with context %}
 {% filter indent(4) %}
     {{ gzip(server['gzip']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['headers'] is defined %}
 {% from 'http/modules.j2' import headers with context %}
 {% filter indent(4) %}
     {{ headers(server['headers']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['health_check'] is defined %}
 {% from 'http/modules.j2' import health_check with context %}
@@ -215,32 +202,26 @@ server {
 {% from 'http/modules.j2' import limit_req with context %}
 {% filter indent(4) %}
     {{ limit_req(server['limit_req']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['log'] is defined %}
 {% from 'http/modules.j2' import log with context %}
 {% filter indent(4) %}
     {{ log(server['log']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['rewrite'] is defined %}
 {% from 'http/modules.j2' import rewrite with context %}
 {% filter indent(4) %}
     {{ rewrite(server['rewrite']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if server['sub_filter'] is defined %}
 {% from 'http/modules.j2' import sub_filter with context %}
 {% filter indent(4) %}
     {{ sub_filter(server['sub_filter']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
-{% if server['custom_directives'] is defined %}
-{% for directive in server['custom_directives'] %}
-    {{ directive }}
-{% endfor %}
-{% endif %}
-
 {% if server['custom_directives'] is defined and server['custom_directives'] is sequence %}
 {% for directive in server['custom_directives'] if server['custom_directives'] is not string %}
 {% filter indent(4) %}
@@ -250,7 +231,6 @@ server {
     {{ server['custom_directive'] }}
 {% endfor %}
 {% endif %}
-
 {% if server['locations'] is defined %}
 {% for location in server['locations'] %}
     location {{ location['location'] }} {
@@ -258,126 +238,120 @@ server {
 {% from 'http/core.j2' import core with context %}
 {% filter indent(8) %}
         {{ core(location['core']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
-
 {% if location['app_protect_waf'] is defined %}
 {% from 'http/app_protect.j2' import app_protect_waf with context %}
 {% filter indent(8) %}
         {{ app_protect_waf(location['app_protect_waf']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['app_protect_dos'] is defined %}
 {% from 'http/app_protect.j2' import app_protect_dos with context %}
 {% filter indent(8) %}
         {{ app_protect_dos(location['app_protect_dos']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
-
 {% if location['proxy'] is defined %}
 {% from 'http/proxy.j2' import proxy with context %}
 {% filter indent(8) %}
         {{ proxy(location['proxy']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['grpc'] is defined %}
 {% from 'http/grpc.j2' import grpc with context %}
 {% filter indent(8) %}
         {{ grpc(location['grpc']) }}
-{% endfilter %}
-{% endif %}
-
-{% if location['auth_request'] is defined %}
-{% from 'http/auth.j2' import auth_request with context %}
-{% filter indent(8) %}
-        {{ auth_request(location['auth_request']) }}
-{% endfilter %}
-{% endif %}
-{% if location['auth_basic'] is defined %}
-{% from 'http/auth.j2' import auth_basic with context %}
-{% filter indent(8) %}
-        {{ auth_basic(location['auth_basic']) }}
-{% endfilter %}
-{% endif %}
-{% if location['auth_jwt'] is defined %}
-{% from 'http/auth.j2' import auth_jwt with context %}
-{% filter indent(8) %}
-        {{ auth_jwt(location['auth_jwt']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['access'] is defined %}
 {% from 'http/auth.j2' import access with context %}
 {% filter indent(8) %}
     {{ access(location['access']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
-
+{% if location['auth_request'] is defined %}
+{% from 'http/auth.j2' import auth_request with context %}
+{% filter indent(8) %}
+        {{ auth_request(location['auth_request']) }}
+{%- endfilter %}
+{% endif %}
+{% if location['auth_basic'] is defined %}
+{% from 'http/auth.j2' import auth_basic with context %}
+{% filter indent(8) %}
+        {{ auth_basic(location['auth_basic']) }}
+{%- endfilter %}
+{% endif %}
+{% if location['auth_jwt'] is defined %}
+{% from 'http/auth.j2' import auth_jwt with context %}
+{% filter indent(8) %}
+        {{ auth_jwt(location['auth_jwt']) }}
+{%- endfilter %}
+{% endif %}
 {% if location['api'] is defined %}
 {% from 'http/modules.j2' import api with context %}
 {% filter indent(8) %}
         {{ api(location['api']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['stub_status'] is defined %}
 {% from 'http/modules.j2' import stub_status with context %}
         {{ stub_status(location['stub_status']) }}
-{% endif %}
-
+{%- endif %}
 {% if location['autoindex'] is defined %}
 {% from 'http/modules.j2' import autoindex with context %}
 {% filter indent(8) %}
         {{ autoindex(location['autoindex']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['gzip'] is defined %}
 {% from 'http/modules.j2' import gzip with context %}
 {% filter indent(8) %}
         {{ gzip(location['gzip']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['headers'] is defined %}
 {% from 'http/modules.j2' import headers with context %}
 {% filter indent(8) %}
         {{ headers(location['headers']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['health_check'] is defined %}
 {% from 'http/modules.j2' import health_check with context %}
 {% filter indent(8) %}
         {{ health_check(location['health_check']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['keyval'] is defined %}
 {% from 'http/modules.j2' import keyval with context %}
 {% filter indent(8) %}
         {{ keyval(location['keyval']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['limit_req'] is defined %}
 {% from 'http/modules.j2' import limit_req with context %}
 {% filter indent(8) %}
         {{ limit_req(location['limit_req']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['log'] is defined %}
 {% from 'http/modules.j2' import log with context %}
 {% filter indent(8) %}
         {{ log(location['log']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['rewrite'] is defined %}
 {% from 'http/modules.j2' import rewrite with context %}
 {% filter indent(8) %}
         {{ rewrite(location['rewrite']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 {% if location['sub_filter'] is defined %}
 {% from 'http/modules.j2' import sub_filter with context %}
 {% filter indent(8) %}
         {{ sub_filter(location['sub_filter']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
-
 {% if location['custom_directives'] is defined and location['custom_directives'] is sequence %}
 {% for directive in location['custom_directives'] if location['custom_directives'] is not string %}
 {% filter indent(8) %}
@@ -387,6 +361,7 @@ server {
         {{ location['custom_directive'] }}
 {% endfor %}
 {% endif %}
+
     }
 {% endfor %}
 {% endif %}

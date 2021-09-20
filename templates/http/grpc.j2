@@ -110,4 +110,5 @@ grpc_ssl_verify {{ grpc['ssl_verify'] | ternary ('on', 'off') }};
 {% if grpc['ssl_verify_depth'] is defined %}
 grpc_ssl_verify_depth {{ grpc['ssl_verify_depth'] }};
 {% endif %}
+
 {% endmacro %}

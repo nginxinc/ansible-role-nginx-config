@@ -3,14 +3,14 @@
 {% if nginx_config_main_template['config']['main'] is defined %}
 {% from 'core.j2' import main with context %}
 {{ main(nginx_config_main_template['config']['main']) }}
-{% endif %}
+{%- endif %}
 
 events {
 {% if nginx_config_main_template['config']['events'] is defined %}
 {% from 'core.j2' import events with context %}
 {% filter indent(4) %}
     {{ events(nginx_config_main_template['config']['events']) }}
-{% endfilter %}
+{%- endfilter %}
 {% endif %}
 }
 

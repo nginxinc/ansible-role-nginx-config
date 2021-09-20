@@ -105,4 +105,5 @@ ssl_verify_client {{ (ssl['verify_client'] | ternary('on', 'off')) if ssl['verif
 {% if ssl['verify_depth'] is defined and ssl['verify_depth'] is number %}
 ssl_verify_depth {{ ssl['verify_depth'] }};
 {% endif %}
+
 {% endmacro %}
