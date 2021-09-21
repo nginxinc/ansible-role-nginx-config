@@ -1,9 +1,26 @@
 {{ ansible_managed | comment }}
-{# NGINX templates -- Add directives under its corresponding block #}
-{# Format is as follows #}
-{# Left side (context module_name) -- Right side (module name) #}
+{# NGINX minor module templates -- Add directives under its corresponding block #}
 
-{# HTTP NGINX Autoindex -- ngx_http_autoindex_module #}
+{# NGINX Plus HTTP API -- ngx_http_api_module #}
+{% macro api(api) %}
+{% if api['enable'] is defined and ((api['enable'] is boolean and api['enable'] | bool) or api['enable']['write'] is defined) %}{# 'api' directive is only available in the 'location' context #}
+api{{ (' write=' + api['enable']['write'] | ternary('on', 'off')) if (api['enable']['write'] is defined and api['enable']['write'] is boolean) }};
+{% endif %}
+{% if api['status_zone'] %}{# 'status_zone' directive is not available in the 'http' context #}
+status_zone {{ api['status_zone'] }};
+{% endif %}
+
+{% endmacro %}
+
+{# NGINX OSS HTTP stub status -- ngx_http_stub_status_module #}
+{% macro stub_status(stub_status) %}{# 'stub_status' directive is not available in the 'http' context #}
+{% if stub_status is boolean and stub_status | bool %}
+stub_status;
+{% endif %}
+
+{% endmacro %}
+
+{# NGINX HTTP Autoindex -- ngx_http_autoindex_module #}
 {% macro autoindex(autoindex) %}
 {% if autoindex['enable'] is defined and autoindex['enable'] is boolean %}
 autoindex {{ autoindex['enable'] | ternary('on', 'off') }};
@@ -17,43 +34,80 @@ autoindex_format {{ autoindex['format'] }};
 {% if autoindex['localtime'] is defined and autoindex['localtime'] is boolean %}
 autoindex_localtime {{ autoindex['localtime'] | ternary('on', 'off') }};
 {% endif %}
+
 {% endmacro %}
 
-{# HTTP NGINX Headers -- ngx_http_headers_module #}
+{# NGINX HTTP GZIP template -- ngx_http_gzip_module #}
+{% macro gzip(gzip) %}
+{% if gzip['enable'] is defined and gzip['enable'] is boolean %}
+gzip {{ gzip['enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if gzip['buffers']['number'] is defined and gzip['buffers']['size'] is defined %}
+gzip_buffers {{ gzip['buffers']['number'] }} {{ gzip['buffers']['size'] }};
+{% endif %}
+{% if gzip['comp_level'] is defined %}
+gzip_comp_level {{ gzip['comp_level'] }};
+{% endif %}
+{% if gzip['disable'] is defined %}
+gzip_disable {{ gzip['disable'] if gzip['disable'] is string else gzip['disable'] | join(' ') }};
+{% endif %}
+{% if gzip['http_version'] is defined %}
+gzip_http_version {{ gzip['http_version'] }};
+{% endif %}
+{% if gzip['min_length'] is defined %}
+gzip_min_length {{ gzip['min_length'] }};
+{% endif %}
+{% if gzip['proxied'] is defined %}
+gzip_proxied {{ 'off' if not gzip['proxied'] else (gzip['proxied'] if gzip['proxied'] is string else gzip['proxied'] | join(' ')) }};
+{% endif %}
+{% if gzip['types'] is defined %}
+gzip_types {{ gzip['types'] if gzip['types'] is string else gzip['types'] | join(' ') }};
+{% endif %}
+{% if gzip['vary'] is defined and gzip['vary'] is boolean %}
+gzip_vary {{ gzip['vary'] | ternary('on', 'off') }};
+{% endif %}
+
+{% endmacro %}
+
+{# NGINX HTTP Headers -- ngx_http_headers_module #}
 {% macro headers(headers) %}
 {% if headers['add_headers'] is defined %}
-{% for header in headers['add_headers'] %}
+{% for header in headers['add_headers'] if (headers['add_headers'] is sequence and headers['add_headers'] is not string) %}
 add_header {{ header['name'] }} {{ header['value'] }}{{ ' always' if header['always'] is defined and header['always'] is boolean and header['always'] | bool }};
+{% else %}
+add_header {{ headers['add_headers']['name'] }} {{ headers['add_headers']['value'] }}{{ ' always' if headers['add_headers']['always'] is defined and headers['add_headers']['always'] is boolean and headers['add_headers']['always'] | bool }};
 {% endfor %}
 {% endif %}
 {% if headers['add_trailers'] is defined %}
-{% for trailer in headers['add_trailers'] %}
+{% for trailer in headers['add_trailers'] if (headers['add_trailers'] is sequence and headers['add_trailers'] is not string) %}
 add_trailer {{ trailer['name'] }} {{ trailer['value'] }}{{ ' always' if trailer['always'] is defined and trailer['always'] is boolean and trailer['always'] | bool }};
+{% else %}
+add_trailer {{ headers['add_trailers']['name'] }} {{ headers['add_trailers']['value'] }}{{ ' always' if headers['add_trailers']['always'] is defined and headers['add_trailers']['always'] is boolean and headers['add_trailers']['always'] | bool }};
 {% endfor %}
 {% endif %}
 {% if headers['expires'] is defined %}
-{% for expire in headers['expires'] %}
-expires {{ 'off' if not expire else (expire if expire is string) }}{{ 'modified ' if expire['modified'] is defined and expire['modified'] is boolean and expire['modified'] | bool }}{{ expire['time'] if expire['time'] is defined }};
-{% endfor %}
+expires {{ 'off' if not headers['expires'] else (headers['expires'] if headers['expires'] is string) }}{{ 'modified ' if headers['expires']['modified'] is defined and headers['expires']['modified'] is boolean and headers['expires']['modified'] | bool }}{{ headers['expires']['time'] if headers['expires']['time'] is defined }};
 {% endif %}
+
 {% endmacro %}
 
-{# HTTP NGINX Upstream Health Checks -- ngx_http_upstream_hc_module #}
+{# NGINX HTTP Upstream Health Checks -- ngx_http_upstream_hc_module #}
+{# Available only in NGINX Plus #}
 {% macro health_check(health_check) %}
 {% if health_check['health_checks'] is defined %}
 {% for health_check in health_check['health_checks'] %}
 health_check{{ (' interval=' + health_check['interval'] | string) if health_check['interval'] is defined -}}
 {{- (' jitter=' + health_check['jitter'] | string) if health_check['jitter'] is defined -}}
-{{- (' fails=' + health_check['fails'] | string) if health_check['fails'] is defined -}}
-{{- (' passes=' + health_check['passes'] | string) if health_check['passes'] is defined -}}
-{{- (' uri=' + health_check['uri']) if health_check['uri'] is defined -}}
-{{- ' mandatory' if health_check['mandatory'] is defined and health_check['mandatory'] is boolean and health_check['mandatory'] | bool -}}
-{{- ' persistent' if health_check['persistent'] is defined and health_check['persistent'] is boolean and health_check['persistent'] | bool -}}
-{{- (' match=' + health_check['match']) if health_check['match'] is defined -}}
+{{- (' fails=' + health_check['fails'] | string) if (health_check['fails'] is defined and health_check['fails'] is number) -}}
+{{- (' passes=' + health_check['passes'] | string) if (health_check['passes'] is defined and health_check['passes'] is number) -}}
+{{- (' uri=' + health_check['uri'] | string) if health_check['uri'] is defined -}}
+{{- ' mandatory' if (health_check['mandatory'] is defined and health_check['mandatory'] is boolean and health_check['mandatory'] | bool) -}}
+{{- ' persistent' if (health_check['persistent'] is defined and health_check['persistent'] is boolean and health_check['persistent'] | bool) -}}
+{{- (' match=' + health_check['match'] | string) if health_check['match'] is defined -}}
 {{- (' port=' + health_check['port'] | string) if health_check['port'] is defined -}}
-{{- (' type=' + health_check['type']) if health_check['type'] is defined -}}
-{{- (' grpc_service=' + health_check['grpc_service']) if health_check['grpc_service'] is defined -}}
-{{- (' grpc_status=' + health_check['grpc_status']) if health_check['grpc_status'] is defined }};
+{{- ' type=grpc' if (health_check['grpc_service'] is defined or health_check['grpc_status'] is defined) -}}
+{{- (' grpc_service=' + health_check['grpc_service'] | string) if health_check['grpc_service'] is defined -}}
+{{- (' grpc_status=' + health_check['grpc_status'] | string) if health_check['grpc_status'] is defined }};
 {% endfor %}
 {% endif %}
 {% if health_check['match'] is defined %}
@@ -65,9 +119,11 @@ match {{ match['name'] }} {
 }
 {% endfor %}
 {% endif %}
+
 {% endmacro %}
 
-{# HTTP NGINX Keyval -- ngx_http_keyval_module #}
+{# NGINX HTTP Keyval -- ngx_http_keyval_module #}
+{# Available only in NGINX Plus #}
 {% macro keyval(keyval) %}
 {% if keyval['keyvals'] is defined %}
 {% for keyval in keyval['keyvals'] %}
@@ -76,12 +132,13 @@ keyval {{ keyval['key'] }} {{ keyval['variable'] }} {{ 'zone=' + keyval['zone']}
 {% endif %}
 {% if keyval['zones'] is defined %}
 {% for zone in keyval['zones'] %}
-keyval_zone {{ 'zone=' + zone['name'] + ':' + zone['size'] }}{{ (' state=' + zone['state']) if zone['state'] is defined }}{{ (' timeout=' + zone['timeout']) if zone['timeout'] is defined }}{{ (' type=' + zone['type']) if zone['type'] is defined }}{{ ' sync' if zone['sync'] is defined }};
+keyval_zone {{ 'zone=' + zone['name'] + ':' + zone['size'] }}{{ (' state=' + zone['state'] | string) if zone['state'] is defined }}{{ (' timeout=' + zone['timeout'] | string) if zone['timeout'] is defined }}{{ (' type=' + zone['type'] | string) if (zone['type'] is defined and zone['type'] in ['string', 'ip', 'prefix']) }}{{ ' sync' if (zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool) }};
 {% endfor %}
 {% endif %}
+
 {% endmacro %}
 
-{# HTTP NGINX Limit Req -- ngx_http_limit_req_module #}
+{# NGINX HTTP Limit Req -- ngx_http_limit_req_module #}
 {% macro limit_req(limit_req) %}
 {% if limit_req['limit_reqs'] is defined %}
 {% for limit in limit_req['limit_reqs'] %}
@@ -102,13 +159,14 @@ limit_req_status {{ limit_req['status'] }};
 limit_req_zone {{ zone['key'] }} {{ 'zone=' + zone['name'] + ':' + zone['size'] }} {{ 'rate=' + zone['rate'] }}{{ ' sync' if zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool }};
 {% endfor %}
 {% endif %}
+
 {% endmacro %}
 
-{# HTTP NGINX Log -- ngx_http_log_module #}
+{# NGINX HTTP Log -- ngx_http_log_module #}
 {% macro log(log) %}
 {% if log['format'] is defined %}
 {% for format in log['format'] %}
-log_format {{ format['name'] }}{{ (' escape=' + format['escape']) if format['escape'] is defined }} {{ format['format'] }};
+log_format {{ format['name'] }}{{ (' escape=' + format['escape']) if format['escape'] is defined and format['escape'] in ['default', 'json', 'none'] }} {{ format['format'] }};
 {% endfor %}
 {% endif %}
 {% if log['access'] is defined and log['access'] is boolean and not log['access'] | bool %}
@@ -117,43 +175,57 @@ access_log {{ 'off' }};
 {% for log in log['access'] %}
 access_log {{ 'off' if not log else log['path'] if log['path'] is defined }}{{ (' ' + log['format']) if log['format'] is defined -}}
 {{- (' buffer=' + log['buffer'] | string) if log['buffer'] is defined -}}
-{{- ' gzip' if log['gzip'] is defined and log['access']['gzip'] is boolean and log['gzip'] | bool else (' gzip=' + log['gzip'] | string) if log['gzip'] is defined and log['gzip'] is not boolean -}}
-{{- (' flush=' + log['flush'] | string) if log['flush'] is defined }}{{ (' if=' + log['if']) if log['if'] is defined }};
+{{- ' gzip' if log['gzip'] is defined and log['access']['gzip'] is boolean and log['gzip'] | bool else (' gzip=' + log['gzip'] | string) if log['gzip'] is defined and log['gzip'] is string -}}
+{{- (' flush=' + log['flush'] | string) if log['flush'] is defined -}}
+{{- (' if=' + log['if']) if log['if'] is defined }};
+{% endfor %}
+{% endif %}
+{% if log['error'] is defined %}{# This does not belong here but we are making an exception #}
+{% for log in log['error'] if (log['error'] is sequence and log['error'] is not string) %}
+error_log {{ log if log is string else log['file'] }}{{ (' ' + log['level'] | string) if log['level'] is defined }};
+{% else %}
+error_log {{ log['error'] if log['error'] is string else log['error']['file'] }}{{ (' ' + log['error']['level'] | string) if log['error']['level'] is defined }};
 {% endfor %}
 {% endif %}
 {% if log['open_log_file_cache'] is defined %}
-open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + log['open_log_file_cache']['max'] | string) }}{{ (' inactive=' + log['open_log_file_cache']['inactive'] | string) if log['open_log_file_cache']['inactive'] is defined }}{{ (' min_uses=' + log['open_log_file_cache']['min_uses'] | string) if log['open_log_file_cache']['min_uses'] is defined }}{{ (' valid=' + log['open_log_file_cache']['valid'] | string) if log['open_log_file_cache']['valid'] is defined }};
+open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + log['open_log_file_cache']['max'] | string) }}{{ (' inactive=' + log['open_log_file_cache']['inactive'] | string) if log['open_log_file_cache']['inactive'] is defined }}{{ (' min_uses=' + log['open_log_file_cache']['min_uses'] | string) if log['open_log_file_cache']['min_uses'] is defined and log['open_log_file_cache']['min_uses'] is number }}{{ (' valid=' + log['open_log_file_cache']['valid'] | string) if log['open_log_file_cache']['valid'] is defined }};
 {% endif %}
+
 {% endmacro %}
 
-{# HTTP NGINX Rewrite -- ngx_http_rewrite_module #}
+{# NGINX HTTP Rewrite -- ngx_http_rewrite_module #}
 {% macro rewrite(rewrite) %}
 {% if rewrite['return'] is defined %}
-return {{ rewrite['return'] if rewrite['return'] is string or rewrite['return'] is number }}{{ rewrite['return']['code'] if rewrite['return']['code'] is defined }}{{ (' ' + rewrite['return']['text'] | string) if rewrite['return']['text'] is defined }}{{ (' ' + rewrite['return']['url']) if rewrite['return']['url'] is defined }};
+return {{ rewrite['return'] if (rewrite['return'] is string or rewrite['return'] is number) }}{{ rewrite['return']['code'] if rewrite['return']['code'] is defined }}{{ (' ' + rewrite['return']['text'] | string) if rewrite['return']['text'] is defined }}{{ (' ' + rewrite['return']['url']) if rewrite['return']['url'] is defined }};
 {% endif %}
 {% if rewrite['rewrites'] is defined %}
-{% for rewrite in rewrite['rewrites'] %}
-rewrite {{ rewrite['regex'] }} {{ rewrite['replacement'] }}{{ (' ' + rewrite['flag']) if rewrite['flag'] is defined }};
+{% for rewrite in rewrite['rewrites'] if (rewrite['rewrites'] is sequence and rewrite['rewrites'] is not string) %}
+rewrite {{ rewrite['regex'] }} {{ rewrite['replacement'] }}{{ (' ' + rewrite['flag']) if (rewrite['flag'] is defined and rewrite['flag'] in ['last', 'break', 'redirect', 'permanent']) }};
 {% endfor %}
 {% endif %}
 {% if rewrite['log'] is defined and rewrite['log'] is boolean %}
 rewrite_log {{ rewrite['log'] | ternary('on', 'off') }};
 {% endif %}
 {% if rewrite['set'] is defined %}
-{% for set in rewrite['set'] %}
+{% for set in rewrite['set'] if (rewrite['set'] is sequence and rewrite['set'] is not string) %}
 set {{ set['variable'] }} {{ set['value'] }};
+{% else %}
+set {{ rewrite['set']['variable'] }} {{ rewrite['set']['value'] }};
 {% endfor %}
 {% endif %}
 {% if rewrite['uninitialized_variable_warn'] is defined and rewrite['uninitialized_variable_warn'] is boolean %}
 uninitialized_variable_warn {{ rewrite['uninitialized_variable_warn'] | ternary('on', 'off') }};
 {% endif %}
+
 {% endmacro %}
 
-{# HTTP NGINX Sub Filter -- ngx_http_sub_module #}
+{# NGINX HTTP Sub Filter -- ngx_http_sub_module #}
 {% macro sub_filter(sub_filter) %}
 {% if sub_filter['sub_filters'] is defined %}
-{% for sub_filter in sub_filter['sub_filters'] %}
+{% for sub_filter in sub_filter['sub_filters'] if sub_filter['sub_filters'] is not mapping %}
 sub_filter {{ sub_filter['string'] }} {{ sub_filter['replacement'] }};
+{% else %}
+sub_filter {{ sub_filter['sub_filters']['string'] }} {{ sub_filter['sub_filters']['replacement'] }};
 {% endfor %}
 {% endif %}
 {% if sub_filter['last_modified'] is defined and sub_filter['last_modified'] is boolean %}
@@ -165,4 +237,5 @@ sub_filter_once {{ sub_filter['once'] | ternary('on', 'off') }};
 {% if sub_filter['types'] is defined %}
 sub_filter_types {{ sub_filter['types'] if sub_filter['types'] is string else sub_filter['types'] | join(' ') }};
 {% endif %}
+
 {% endmacro %}
