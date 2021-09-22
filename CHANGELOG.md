@@ -35,6 +35,7 @@ Template engine updates:
           - core: {}
             proxy: {}
     ```
+
   * Check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) and [`molecule/default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml) for examples!
 * Refactor the base config templates to simplify the creation of templates as well as development and maintenance moving forward:
   * Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists.
@@ -108,6 +109,7 @@ Template engine updates:
       - regex: (.*).html(.*)
         replacement: $1$2
     ```
+
   * The `return` directive has transitioned from a slightly complex dictionary structure (wherein the `location` variable didn't necessarily have any effect)
 
     ```yaml
@@ -141,6 +143,7 @@ Template engine updates:
       - string: server_hostname
         replacement: $hostname
     ```
+
   * Removed the `server.http_demo_conf` dictionary. Use `server.sub_filters` instead:
 
     ```yaml
@@ -167,6 +170,7 @@ Template engine updates:
         - string: proxied_for_ip
           replacement: $http_x_forwarded_for
     ```
+
   * The `sub_filter` dictionary HTTP context now lives in the HTTP template config instead of the Main template config.
 * Rename some NGINX template config parameters to align with NGINX directive names:
   * Rename `html_file_location` to `root`.
@@ -186,11 +190,11 @@ FEATURES:
     ---
     collections:
       - name: community.general
-        version: 3.2.0
+        version: 3.7.0
       - name: ansible.posix
-        version: 1.2.0
+        version: 1.3.0
       - name: community.docker  # This collection is only used as part of the Molecule testing suite
-        version: 1.7.0
+        version: 1.9.1
     ```
 
 * Explicitly list Jinja2 `2.11.3` as a requirement, as well as detail the minimum supported version (`2.11.x`).
