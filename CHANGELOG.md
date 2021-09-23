@@ -212,6 +212,8 @@ ENHANCEMENTS:
 * Replace Molecule tests using Debian stretch with Debian buster (stretch has reached its EoL), and update list of supported platforms.
 * Replace Ansible base with Ansible core. Ansible core will be the "core" Ansible release moving forward from Ansible `2.11`.
 * Update GitHub actions to add a workflow dispatch option.
+* Update GitHub actions `if` conditionals to use the `contains` function instead of checking for exact names.
+* Remove Debian Buster from the `plus` Molecule scenario since it often fails in the GitHub Actions CI/CD pipeline.
 * Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
 * Ensure the default values for the `nginx.conf` template match the default values found on a fresh NGINX installation.
 
