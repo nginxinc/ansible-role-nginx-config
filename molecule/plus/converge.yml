@@ -207,7 +207,6 @@
                     name: info
                 leeway: 0s
                 type: signed
-                require: jwt
               auth_request:
                 uri: false
                 set:
@@ -818,7 +817,8 @@
                   - variable: $job
                     name: info
                 leeway: 0s
-                type: signed
+                type: nested
+                require: jwt
               auth_request:
                 uri: false
                 set:
