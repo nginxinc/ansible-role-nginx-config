@@ -616,12 +616,19 @@
                     port: 9093
                     backup: true
 
-    - name: Uninstall NGINX App Protect
-      include_role:
-        name: nginxinc.nginx_app_protect
-      vars:
-        nginx_app_protect_waf_state: absent
-        nginx_app_protect_dos_state: absent
+    # - name: Uninstall NGINX App Protect
+    #   include_role:
+    #     name: nginxinc.nginx_app_protect
+    #   vars:
+    #     nginx_app_protect_waf_state: absent
+    #     nginx_app_protect_dos_state: absent  # Not working at the moment
+
+    - name: Uninstall NGINX App Protect packages
+      package:
+        name:
+          - app-protect
+          - app-protect-dos
+        state: absent
 
     - name: Update NGINX
       include_role:
