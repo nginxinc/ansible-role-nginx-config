@@ -616,6 +616,13 @@
                     port: 9093
                     backup: true
 
+    - name: Uninstall NGINX App Protect
+      include_role:
+        name: nginxinc.nginx_app_protect
+      vars:
+        nginx_app_protect_waf_state: absent
+        nginx_app_protect_dos_state: absent
+
     - name: Update NGINX
       include_role:
         name: nginxinc.nginx
@@ -626,6 +633,7 @@
           certificate: ../common/files/license/nginx-repo.crt
           key: ../common/files/license/nginx-repo.key
         nginx_remove_license: false
+
     - name: Configure NGINX part two
       include_role:
         name: ansible-role-nginx-config
