@@ -626,8 +626,10 @@
     - name: Uninstall NGINX App Protect packages
       package:
         name:
-          - app-protect
-          - app-protect-dos
+          # - app-protect
+          # - app-protect-dos
+          - nginx-plus-module-appprotect
+          - nginx-plus-module-appprotectdos
         state: absent
 
     - name: Update NGINX
