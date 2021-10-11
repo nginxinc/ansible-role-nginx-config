@@ -216,6 +216,8 @@ ENHANCEMENTS:
 * Remove Debian Buster from the `plus` Molecule scenario since it often fails in the GitHub Actions CI/CD pipeline.
 * Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
 * Ensure the default values for the `nginx.conf` template match the default values found on a fresh NGINX installation.
+* Change Dependabot frequency from daily to weekly.
+* Minor touch-up of GitHub actions workflows.
 
 BUG FIXES:
 
