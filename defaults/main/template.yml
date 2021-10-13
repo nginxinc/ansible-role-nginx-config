@@ -558,7 +558,8 @@ nginx_config_http_template:
         key_file: /path/to/file
         key_request: /path/to/file
         leeway: 0s
-        type: signed  # One of 'signed' or 'encrypted'
+        type: signed  # One of 'signed', 'encrypted' or 'nested'
+        required: $valid_jwt_iss  # String or list
       api:  # Configure NGINX Plus HTTP API
         enable:  # true  # Set to Boolean directly to simply enable the 'api' directive
           write: true  # Boolean
@@ -575,7 +576,7 @@ nginx_config_http_template:
           number: 32  # Required
           size: 4k  # Required
         comp_level: 1
-        disable: []  # string or list
+        disable: []  # String or list
         http_version: 1.1  # Optional -- One of '1.0' or '1.1'
         min_length: 20
         proxied: []  # Set to 'false' to set to 'off' -- otherwise, you can specify a string or a list

@@ -20,32 +20,22 @@
 - name: Install NGINX Plus
   hosts: all
   tasks:
-    - name: Set repo if Debian
-      set_fact:
-        version: "=24-2~{{ ansible_facts['distribution_release'] }}"
-      when: ansible_facts['os_family'] == "Debian"
-    - name: Set repo if Red Hat
-      set_fact:
-        version: "-24-2.{{ (ansible_facts['distribution']=='Amazon') | ternary('amzn2', ('el' + ansible_facts['distribution_major_version'] | string)) }}.ngx"
-      when: ansible_facts['os_family'] == "RedHat"
-
     - name: Install NGINX
       include_role:
         name: nginxinc.nginx
       vars:
         nginx_type: plus
-        nginx_version: "{{ version }}"
         nginx_license:
           certificate: ../common/files/license/nginx-repo.crt
           key: ../common/files/license/nginx-repo.key
         nginx_remove_license: false
 
-    - name: Install NGINX App Protect WAF and NGINX App Protect DoS
+    - name: Install NGINX App Protect WAF
       include_role:
         name: nginxinc.nginx_app_protect
       vars:
         nginx_app_protect_waf_enable: true
-        nginx_app_protect_dos_enable: true
+        nginx_app_protect_dos_enable: false
         nginx_app_protect_setup_license: false
         nginx_app_protect_remove_license: false
         nginx_app_protect_install_signatures: false

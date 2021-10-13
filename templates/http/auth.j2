@@ -70,7 +70,10 @@ auth_jwt_key_request {{ auth_jwt['key_request'] }};
 {% if auth_jwt['leeway'] is defined %}
 auth_jwt_leeway {{ auth_jwt['leeway'] }};
 {% endif %}
-{% if auth_jwt['type'] is defined and auth_jwt['type'] in ['signed', 'encrypted'] %}
+{% if auth_jwt['type'] is defined and auth_jwt['type'] in ['signed', 'encrypted', 'nested'] %}
 auth_jwt_type {{ auth_jwt['type'] }};
+{% endif %}
+{% if auth_jwt['require'] is defined %}
+auth_jwt_require {{ auth_jwt['require'] if auth_jwt['require'] is string else auth_jwt['require'] | join(' ') }};
 {% endif %}
 {% endmacro %}

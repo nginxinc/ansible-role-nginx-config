@@ -24,7 +24,7 @@
             main:
               load_module:
                 - modules/ngx_http_app_protect_module.so
-                - modules/ngx_http_app_protect_dos_module.so
+                # - modules/ngx_http_app_protect_dos_module.so
               user: nginx
               worker_processes: auto
               error_log:
@@ -206,7 +206,8 @@
                   - variable: $job
                     name: info
                 leeway: 0s
-                type: signed
+                type: nested
+                require: jwt
               auth_request:
                 uri: false
                 set:
@@ -310,13 +311,13 @@
                         dest: syslog:server=10.1.1.1:514
                       - path: /etc/app_protect/conf/log_default.json
                         dest: syslog:server=10.1.1.2:514
-                  app_protect_dos:
-                    enable: true
-                    policy_file: /etc/app_protect/conf/BADOSDefaultPolicy.json
-                    security_log_enable: true
-                    security_log:
-                      path: /etc/app_protect_dos/log-default.json
-                      dest: syslog:server=10.1.1.1:514
+                  # app_protect_dos:
+                  #   enable: true
+                  #   policy_file: /etc/app_protect/conf/BADOSDefaultPolicy.json
+                  #   security_log_enable: true
+                  #   security_log:
+                  #     path: /etc/app_protect_dos/log-default.json
+                  #     dest: syslog:server=10.1.1.1:514
                   auth_jwt:
                     enable:
                       realm: realm
