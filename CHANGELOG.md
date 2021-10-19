@@ -1,10 +1,14 @@
 # Changelog
 
-## 0.4.0 (Unreleased)
+## 0.4.0 (October 19, 2021)
 
 This is a very **big** release which fundamentally refactors the whole NGINX configuration templating engine. Almost all of the templates have undergone some breaking changes. Please take extra caution when upgrading your environment to this release and make sure you test any required changes before using the role in any potential production environments.
 
 Efforts have been made to thoroughly test all these changes and make sure they work as intended, but due to the magnitude of the refactoring work, there will be some bugs that have escaped our tests. If you find any, please open an issue or PR through the usual channels.
+
+DEPRECATION WARNINGS:
+
+The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload_*` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The deprecated parameters will be removed in the next major release (0.5.0), due December 2021.
 
 BREAKING CHANGES:
 
@@ -177,10 +181,6 @@ Template engine updates:
   * Rename `html_file_name` to `index`.
 * NGINX App Protect 3.2 supports multiple log destinations per scope. Changing the `security_log` variable from a dictionary to a list of objects in order to support this.
 * NGINX App Protect 3.5 supports a new timeout directive which allows the user to configure the period of time between reconnect retries of the module to the web application firewall (WAF) engine. Added this as a supported directive.
-
-DEPRECATION WARNINGS:
-
-The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload_*` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The deprecated parameters will be removed in the next major release (0.5.0), due November 2021.
 
 FEATURES:
 
