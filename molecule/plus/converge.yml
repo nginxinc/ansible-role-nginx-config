@@ -236,6 +236,7 @@
                   monitor:
                     uri: http://10.1.1.1:5000/monitor
                     protocol: http2
+                    timeout: 10
                 auth_jwt:
                   enable:
                     realm: realm
@@ -272,6 +273,14 @@
                           dest: syslog:server=10.1.1.1:514
                         - path: /etc/app_protect/conf/log_default.json
                           dest: syslog:server=10.1.1.2:514
+                    app_protect_dos:
+                      enable: true
+                      policy_file: /etc/app_protect/conf/BADOSDefaultPolicy.json
+                      security_log_enable: true
+                      security_log:
+                        path: /etc/app_protect_dos/log-default.json
+                        dest: syslog:server=10.1.1.1:514
+                      monitor: http://10.1.1.1:5000/monitor
                     auth_jwt:
                       enable: false
                       leeway: 0s

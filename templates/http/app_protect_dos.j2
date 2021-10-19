@@ -15,7 +15,11 @@ app_protect_dos_policy_file {{ app_protect_dos['policy_file'] }};
 app_protect_dos_name {{ app_protect_dos['name'] }};
 {% endif %}
 {% if app_protect_dos['monitor'] is defined %}
-app_protect_dos_monitor uri={{ app_protect_dos['monitor']['uri'] | ternary(app_protect_dos['monitor']['uri'], app_protect_dos['monitor']) }}{{ app_protect_dos['monitor']['protocol'] | ternary(' protocol=' + app_protect_dos['monitor']['protocol'], '')}};
+{% if app_protect_dos['monitor'] is mapping %}
+app_protect_dos_monitor uri={{ app_protect_dos['monitor']['uri'] | ternary(app_protect_dos['monitor']['uri'], app_protect_dos['monitor']) }}{{ app_protect_dos['monitor']['protocol'] | ternary(' protocol=' + app_protect_dos['monitor']['protocol'], '') }}{{ app_protect_dos['monitor']['timeout'] | ternary(' timeout=' + app_protect_dos['monitor']['timeout'], '') }};
+{% else %}
+app_protect_dos_monitor {{ app_protect_dos['monitor'] }};
+{% endif %}
 {% endif %}
 {% if app_protect_dos['security_log_enable'] is defined %}
 app_protect_dos_security_log_enable {{ app_protect_dos['security_log_enable'] | ternary('on', 'off') }};

@@ -138,6 +138,7 @@ FEATURES:
       - name: community.docker  # This collection is only used as part of the Molecule testing suite
         version: 1.7.0
     ```
+*   Add support for NGINX App Protect DoS 2.x's expanded `app_protect_dos_monitor` directive. 
 *   Explicitly list Jinja2 `2.11.3` as a requirement, as well as detail the minimum supported version (`2.11.x`).
 *   Implement Release Drafter.
 
