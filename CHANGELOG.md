@@ -200,7 +200,7 @@ FEATURES:
 * Explicitly list Jinja2 `2.11.3` as a requirement, as well as detail the minimum supported version (`2.11.x`).
 * Implement Release Drafter.
 * Add support for configuring NGINX App Protect DoS (Denial of Service) module and directives.
-* Add support for configuring the NGINX Rest API module and the NGINX stub status module
+* Add support for configuring the NGINX Rest API module and the NGINX stub status module.
 
 ENHANCEMENTS:
 
