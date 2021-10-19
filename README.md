@@ -16,28 +16,30 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
 
 ### Ansible
 
-*   This role is developed and tested with [maintained](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) versions of Ansible core (above `2.11`) and Ansible (above `2.9.10`).
-*   When using Ansible base, you will also need to install the following collections:
+* This role is developed and tested with [maintained](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) versions of Ansible core (above `2.11`).
+* When using Ansible core, you will also need to install the following collections:
+
     ```yaml
     ---
     collections:
       - name: community.general
-        version: 3.2.0
+        version: 3.7.0
       - name: ansible.posix
-        version: 1.2.0
+        version: 1.3.0
     ```
+
     **Note:** You can alternatively install the Ansible community distribution (what is known as the "old" Ansible) if you don't want to manage individual collections.
-*   Instructions on how to install Ansible can be found in the [Ansible website](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#upgrading-ansible-from-version-2-9-and-older-to-version-2-10-or-later).
+* Instructions on how to install Ansible can be found in the [Ansible website](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#upgrading-ansible-from-version-2-9-and-older-to-version-2-10-or-later).
 
 ### Jinja2
 
-*   This role uses Jinja2 templates. Ansible base installs Jinja2 by default, but depending on your install and/or upgrade path, you might be running an outdated version of Jinja2. The minimum version of Jinja2 required for the role to properly function is `2.11`.
-*   Instructions on how to install Jinja2 can be found in the [Jinja2 website](https://jinja.palletsprojects.com/en/2.11.x/intro/#installation).
+* This role uses Jinja2 templates. Ansible core installs Jinja2 by default, but depending on your install and/or upgrade path, you might be running an outdated version of Jinja2. The minimum version of Jinja2 required for the role to properly function is `2.11`.
+* Instructions on how to install Jinja2 can be found in the [Jinja2 website](https://jinja.palletsprojects.com/en/2.11.x/intro/#installation).
 
-### Molecule
+### Molecule (Optional)
 
-*   Molecule is used to test the various functionalities of the role. The recommended version of Molecule to test this role is `3.3`.
-*   Instructions on how to install Molecule can be found in the [Molecule website](https://molecule.readthedocs.io/en/latest/installation.html).
+* Molecule is used to test the various functionalities of the role. The recommended version of Molecule to test this role is `3.3`.
+* Instructions on how to install Molecule can be found in the [Molecule website](https://molecule.readthedocs.io/en/latest/installation.html). _You will also need to install the Molecule Docker driver._
 
 ## Installation
 
@@ -57,83 +59,83 @@ The NGINX config Ansible role supports all platforms supported by [NGINX Open So
 
 ```yaml
 Alpine:
-  - 3.10
   - 3.11
   - 3.12
   - 3.13
+  - 3.14
+Amazon Linux:
+  - 2
 CentOS:
   - 7.4+
   - 8
 Debian:
-  - buster
-RedHat:
+  - buster (10)
+  - bullseye (11)
+Red Hat:
   - 7.4+
   - 8
 SUSE/SLES:
   - 12
   - 15
 Ubuntu:
-  - xenial
-  - bionic
-  - focal
-  - groovy
+  - bionic (18.04)
+  - focal (20.04)
+  - hirsute (21.04)
 ```
 
 ### NGINX Plus
 
 ```yaml
 Alpine:
-  - 3.10
   - 3.11
   - 3.12
   - 3.13
-Amazon Linux:
-  - 2018.03
+  - 3.14
 Amazon Linux 2:
   - any
 CentOS:
   - 7.4+
   - 8
 Debian:
-  - buster
+  - buster (10)
+  - bullseye (11)
 FreeBSD:
-  - 11.2+
   - 12.1+
+  - 13
 Oracle Linux:
   - 7.4+
-RedHat:
+Red Hat:
   - 7.4+
   - 8
 SUSE/SLES:
   - 12
   - 15
 Ubuntu:
-  - xenial
-  - bionic
-  - focal
+  - bionic (18.04)
+  - focal (20.04)
 ```
 
 ## Role Variables
 
 This role has multiple variables. The descriptions and defaults for all these variables can be found in the **[`defaults/main/`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/)** folder in the following files:
 
-|Name|Description|
-|----|-----------|
-|**[`main.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/main.yml)**|NGINX simple config variables|
-|**[`selinux.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/selinux.yml)**|Set up SELinux to allow the necessary connections to your NGINX setup|
-|**[`template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml)**|NGINX config template variables|
-|**[`upload.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/upload.yml)**|NGINX config/HTML/SSL upload variables|
+| Name | Description |
+| ---- | ----------- |
+| **[`main.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/main.yml)** | NGINX simple config variables |
+| **[`selinux.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/selinux.yml)** | Set up SELinux to allow the necessary connections to your NGINX setup |
+| **[`template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml)** | NGINX config template variables |
+| **[`upload.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/upload.yml)** | NGINX config/HTML/SSL upload variables |
 
 ## Example Playbooks
 
 Working functional playbook examples can be found in the **[`molecule/`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/)** folder in the following files:
 
-|Name|Description|
-|----|-----------|
-|**[`cleanup_module/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/cleanup_module/converge.yml)**|Cleanup an NGINX config and configure NGINX supported modules|
-|**[`default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml)**|Use the NGINX config templating variables to create an NGINX config|
-|**[`plus/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/plus/converge.yml)**|Use the NGINX config templating variables to create an NGINX Plus config|
-|**[`stable_push/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/stable_push/converge.yml)**|Install NGINX using the stable branch and push a preexisting config from your system to your NGINX instance|
+| Name | Description |
+| ---- | ----------- |
+| **[`cleanup_module/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/cleanup_module/converge.yml)** | Cleanup an NGINX config and configure NGINX supported modules |
+| **[`default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml)** | Use the NGINX config templating variables to create an NGINX config |
+| **[`plus/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/plus/converge.yml)** | Use the NGINX config templating variables to create an NGINX Plus config |
+| **[`stable_push/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/stable_push/converge.yml)** | Install NGINX using the stable branch and push a preexisting config from your system to your NGINX instance |
 
 Do note that if you install this repository via Ansible Galaxy, you will have to replace the role variable in the sample playbooks from `ansible-role-nginx-config` to `nginxinc.nginx_config`.
 
@@ -141,9 +143,9 @@ Do note that if you install this repository via Ansible Galaxy, you will have to
 
 You can find the Ansible NGINX Core collection of roles to install and configure NGINX Open Source, NGINX Plus, and NGINX App Protect [here](https://github.com/nginxinc/ansible-collection-nginx).
 
-You can find the Ansible NGINX role to install NGINX [here](https://github.com/nginxinc/ansible-role-nginx).
+You can find the Ansible NGINX role to install NGINX OSS and NGINX Plus [here](https://github.com/nginxinc/ansible-role-nginx).
 
-You can find the Ansible NGINX App Protect role to install and configure NGINX App Protect [here](https://github.com/nginxinc/ansible-role-nginx-app-protect).
+You can find the Ansible NGINX App Protect role to install and configure NGINX App Protect WAF and NGINX App Protect DoS [here](https://github.com/nginxinc/ansible-role-nginx-app-protect).
 
 You can find the Ansible NGINX Controller collection of roles to install and configure NGINX Controller [here](https://github.com/nginxinc/ansible-collection-nginx_controller).
 

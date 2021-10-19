@@ -1,121 +1,39 @@
 {{ ansible_managed | comment }}
 
-{% if nginx_config_main_template.modules is defined %}
-{% for nginx_module in nginx_config_main_template.modules %}
-load_module {{ nginx_module }};
-{% endfor %}
-{% endif %}
-
-{% if nginx_config_main_template.user is defined %}
-user {{ nginx_config_main_template.user }};
-{% endif %}
-{% if nginx_config_main_template.worker_processes is defined %}
-worker_processes {{ nginx_config_main_template.worker_processes }};
-{% endif %}
-{% if nginx_config_main_template.worker_rlimit_nofile is defined %}
-worker_rlimit_nofile {{ nginx_config_main_template.worker_rlimit_nofile }};
-{% endif %}
-
-{% if nginx_config_main_template.custom_options is defined and nginx_config_main_template.custom_options | length %}
-{% for inline_option in nginx_config_main_template.custom_options %}
-{{ inline_option }}
-{% endfor %}
-{% endif %}
-
-{% if nginx_config_main_template.error_log is defined %}
-error_log {{ nginx_config_main_template.error_log.location }} {{ nginx_config_main_template.error_log.level }};
-{% endif %}
-{% if nginx_config_main_template.pid is defined %}
-pid {{ nginx_config_main_template.pid }};
-{% endif %}
+{% if nginx_config_main_template['config']['main'] is defined %}
+{% from 'core.j2' import main with context %}
+{{ main(nginx_config_main_template['config']['main']) }}
+{%- endif %}
 
 events {
-{% if nginx_config_main_template.worker_connections is defined %}
-    worker_connections {{ nginx_config_main_template.worker_connections }};
-{% endif %}
-{% if nginx_config_main_template.events_custom_options is defined and nginx_config_main_template.events_custom_options | length %}
-{% for inline_option in nginx_config_main_template.events_custom_options %}
-    {{ inline_option }}
-{% endfor %}
+{% if nginx_config_main_template['config']['events'] is defined %}
+{% from 'core.j2' import events with context %}
+{% filter indent(4) %}
+    {{ events(nginx_config_main_template['config']['events']) }}
+{%- endfilter %}
 {% endif %}
 }
 
-{% if nginx_config_main_template.http_enable is defined and nginx_config_main_template.http_enable %}
+{% if nginx_config_main_template['config']['http'] is defined %}
 http {
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-{% if nginx_config_main_template.http_settings.app_protect_global is defined %}
-{% from 'http/app_protect_waf.j2' import app_protect_waf_global with context %}
-{% filter indent(4) %}
-    {{ app_protect_waf_global(nginx_config_main_template.http_settings.app_protect_global) }}
-{% endfilter %}
-{% endif %}
-{% if nginx_config_main_template.http_settings.app_protect is defined %}
-{% from 'http/app_protect_waf.j2' import app_protect_waf_local with context %}
-{% filter indent(4) %}
-    {{ app_protect_waf_local(nginx_config_main_template.http_settings.app_protect) }}
-{% endfilter %}
-{% endif %}
-{% if nginx_config_main_template.http_settings.app_protect_dos is defined %}
-{% from 'http/app_protect_dos.j2' import app_protect_dos_local with context %}
-{% filter indent(4) %}
-    {{ app_protect_dos_local(nginx_config_main_template.http_settings.app_protect_dos) }}
-{% endfilter %}
-{% endif %}
-{% if nginx_config_main_template.http_settings.grpc_global is defined %}
-{% from 'http/grpc.j2' import grpc_global with context %}
-{% filter indent(4) %}
-    {{ grpc_global(nginx_config_main_template.http_settings.grpc_global) }}
-{% endfilter %}
-{% endif %}
-{% if nginx_config_main_template.http_settings.gzip is defined %}
-{% from 'http/gzip.j2' import gzip with context %}
-{% filter indent(4) %}
-    {{ gzip(nginx_config_main_template.http_settings.gzip) }}
-{% endfilter %}
-{% endif %}
-{% if nginx_config_main_template.http_settings.sendfile is defined and nginx_config_main_template.http_settings.sendfile %}
-    sendfile on;
-{% endif %}
-{% if nginx_config_main_template.http_settings.tcp_nopush is defined and nginx_config_main_template.http_settings.tcp_nopush %}
-    tcp_nopush on;
-{% endif %}
-{% if nginx_config_main_template.http_settings.tcp_nodelay is defined and nginx_config_main_template.http_settings.tcp_nodelay %}
-    tcp_nodelay on;
-{% endif %}
-{% if nginx_config_main_template.http_settings.server_tokens is defined and nginx_config_main_template.http_settings.server_tokens | length %}
-    server_tokens {{ nginx_config_main_template.http_settings.server_tokens }};
-{% endif %}
-{% if nginx_config_main_template.http_settings.keepalive_timeout is defined %}
-    keepalive_timeout {{ nginx_config_main_template.http_settings.keepalive_timeout }};
-{% endif %}
-{% if nginx_config_main_template.http_settings.server_names_hash_bucket_size is defined %}
-    server_names_hash_bucket_size {{ nginx_config_main_template.http_settings.server_names_hash_bucket_size }};
-{% endif %}
-{% if nginx_config_main_template.http_settings.server_names_hash_max_size is defined %}
-    server_names_hash_max_size {{ nginx_config_main_template.http_settings.server_names_hash_max_size }};
-{% endif %}
-{% if nginx_config_main_template.http_custom_options is defined and nginx_config_main_template.http_custom_options | length %}
-{% for inline_option in nginx_config_main_template.http_custom_options %}
-    {{ inline_option }}
-{% endfor %}
-{% endif %}
-    include /etc/nginx/conf.d/*.conf;
-{% if nginx_config_main_template.http_custom_includes is defined and nginx_config_main_template.http_custom_includes | length %}
-{% for inline_include in nginx_config_main_template.http_custom_includes %}
-    include {{ inline_include }};
+{% if nginx_config_main_template['config']['http']['include'] is defined and nginx_config_main_template['config']['http']['include'] is sequence %}
+{% for file in nginx_config_main_template['config']['http']['include'] if nginx_config_main_template['config']['http']['include'] is not string %}
+    include {{ file }};
+{% else %}
+    include {{ nginx_config_main_template['config']['http']['include'] }};
 {% endfor %}
 {% endif %}
 }
 {% endif %}
 
-{% if nginx_config_main_template.stream_enable is defined and nginx_config_main_template.stream_enable %}
+{% if nginx_config_main_template['config']['stream'] is defined %}
 stream {
-{% if nginx_config_main_template.stream_custom_options is defined and nginx_config_main_template.stream_custom_options | length %}
-{% for inline_option in nginx_config_main_template.stream_custom_options %}
-    {{ inline_option }}
+{% if nginx_config_main_template['config']['stream']['include'] is defined and nginx_config_main_template['config']['stream']['include'] is sequence %}
+{% for file in nginx_config_main_template['config']['stream']['include'] if nginx_config_main_template['config']['stream']['include'] is not string %}
+    include {{ file }};
+{% else %}
+    include {{ nginx_config_main_template['config']['stream']['include'] }};
 {% endfor %}
 {% endif %}
-    include /etc/nginx/conf.d/stream/*.conf;
 }
 {% endif %}

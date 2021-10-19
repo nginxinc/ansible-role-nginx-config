@@ -30,17 +30,13 @@
           key: ../common/files/license/nginx-repo.key
         nginx_remove_license: false
 
-    - name: Install NGINX App Protect WAF and NGINX App Protect DoS
+    - name: Install NGINX App Protect WAF
       include_role:
         name: nginxinc.nginx_app_protect
       vars:
         nginx_app_protect_waf_enable: true
-        nginx_app_protect_dos_enable: true
+        nginx_app_protect_dos_enable: false
         nginx_app_protect_setup_license: false
         nginx_app_protect_remove_license: false
         nginx_app_protect_install_signatures: false
         nginx_app_protect_install_threat_campaigns: false
-        nginx_app_protect_configure: true
-        nginx_app_protect_security_policy_template_enable: true
-        nginx_app_protect_security_policy_enforcement_mode: blocking
-        nginx_app_protect_log_policy_template_enable: false

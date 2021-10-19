@@ -25,17 +25,17 @@ jobs:
           - stable_push
     steps:
       - name: Check out the codebase
-        if: "!(matrix.scenario == 'plus' && github.event.pull_request.head.repo.full_name != github.repository)"
-        uses: actions/checkout@v2.3.4
+        if: "!(contains(matrix.scenario, 'plus') && github.event.pull_request.head.repo.full_name != github.repository)"
+        uses: actions/checkout@v2.3.5
 
       - name: Set up Python 3
-        if: "!(matrix.scenario == 'plus' && github.event.pull_request.head.repo.full_name != github.repository)"
+        if: "!(contains(matrix.scenario, 'plus') && github.event.pull_request.head.repo.full_name != github.repository)"
         uses: actions/setup-python@v2.2.2
         with:
           python-version: 3.x
 
       - name: Install Molecule dependencies
-        if: "!(matrix.scenario == 'plus' && github.event.pull_request.head.repo.full_name != github.repository)"
+        if: "!(contains(matrix.scenario, 'plus') && github.event.pull_request.head.repo.full_name != github.repository)"
         run: pip3 install -r .github/workflows/requirements/requirements_molecule.txt
 
       - name: Install Ansible base dependencies
@@ -43,10 +43,10 @@ jobs:
         run: ansible-galaxy install -r .github/workflows/requirements/requirements_ansible.yml
 
       - name: Run Molecule tests
-        if: "!(matrix.scenario == 'plus' && github.event.pull_request.head.repo.full_name != github.repository)"
+        if: "!(contains(matrix.scenario, 'plus') && github.event.pull_request.head.repo.full_name != github.repository)"
         run: molecule test -s ${{ matrix.scenario }}
         env:
-          PY_COLORS: "1"
-          ANSIBLE_FORCE_COLOR: "1"
+          PY_COLORS: 1
+          ANSIBLE_FORCE_COLOR: 1
           NGINX_CRT: ${{ secrets.NGINX_CRT }}
           NGINX_KEY: ${{ secrets.NGINX_KEY }}
