@@ -6,7 +6,7 @@
 {% if access['allow'] is defined and access['allow'] is sequence %}
 {% for allow in access['allow'] if access['allow'] is not string %}
 allow {{ allow }};
-{% else %}}
+{% else %}
 allow {{ access['allow'] }};
 {% endfor %}
 {% endif %}
