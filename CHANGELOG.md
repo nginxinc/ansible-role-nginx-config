@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1 (Unreleased)
+
+BUG FIXES:
+
+Fix issue where your `deployment_location` directory would not be properly created.
+
 ## 0.4.0 (October 19, 2021)
 
 This is a very **big** release which fundamentally refactors the whole NGINX configuration templating engine. Almost all of the templates have undergone some breaking changes. Please take extra caution when upgrading your environment to this release and make sure you test any required changes before using the role in any potential production environments.
