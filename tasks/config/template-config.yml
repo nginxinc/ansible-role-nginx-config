@@ -29,7 +29,7 @@
 
 - name: Ensure NGINX main directory exists
   file:
-    path: "{{ nginx_config_main_template.conf_file_location | default('/etc/nginx') }}"
+    path: "{{ nginx_config_main_template.deployment_location | default('/etc/nginx') | dirname }}"
     state: directory
     mode: 0755
   when: nginx_config_main_template_enable | bool
@@ -57,7 +57,7 @@
 
 - name: Ensure NGINX HTTP directory exists
   file:
-    path: "{{ item.conf_file_location | default('/etc/nginx/conf.d/') }}"
+    path: "{{ item.deployment_location | default('/etc/nginx/conf.d/') | dirname }}"
     state: directory
     mode: 0755
   loop: "{{ nginx_config_http_template }}"
