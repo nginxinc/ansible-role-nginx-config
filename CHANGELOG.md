@@ -4,7 +4,7 @@
 
 BUG FIXES:
 
-Fix issue where your `deployment_location` directory would not be properly created.
+Fix issue where your `deployment_location` directory would not be properly created due to an outdated variable.
 
 ## 0.4.0 (October 19, 2021)
 
