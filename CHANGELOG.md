@@ -4,7 +4,8 @@
 
 BUG FIXES:
 
-Fix issue where your `deployment_location` directory would not be properly created due to an outdated variable.
+* Fix issue where your `deployment_location` directory would not be properly created due to an outdated variable.
+* Remove duplicated brace in `http/auth.j2`.
 
 ## 0.4.0 (October 19, 2021)
 
