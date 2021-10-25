@@ -6,7 +6,7 @@
 {% if access['allow'] is defined and access['allow'] is sequence %}
 {% for allow in access['allow'] if access['allow'] is not string %}
 allow {{ allow }};
-{% else %}}
+{% else %}
 allow {{ access['allow'] }};
 {% endfor %}
 {% endif %}
@@ -76,4 +76,5 @@ auth_jwt_type {{ auth_jwt['type'] }};
 {% if auth_jwt['require'] is defined %}
 auth_jwt_require {{ auth_jwt['require'] if auth_jwt['require'] is string else auth_jwt['require'] | join(' ') }};
 {% endif %}
+
 {% endmacro %}
