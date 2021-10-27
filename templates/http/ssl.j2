@@ -68,8 +68,8 @@ ssl_reject_handshake {{ ssl['reject_handshake'] | ternary('on', 'off') }};
 {% if ssl['session_cache'] is defined %}
 ssl_session_cache {{ 'off' if not ssl['session_cache'] -}}
 {{- 'none' if (ssl['session_cache'] == 'none') -}}
-{{- ('builtin' if (ssl['session_cache']['builtin']['enable'] is defined and ssl['session_cache']['builtin']['enable'] is boolean and ssl['session_cache']['builtin']['enable'] | bool)) + (':' + ssl['session_cache']['builtin']['size'] | string) if ssl['session_cache']['builtin']['size'] is defined -}}
-{{- ('shared:' + ssl['session_cache']['shared']['name'] | string + ':' + ssl['session_cache']['shared']['size'] | string) if (ssl['session_cache']['shared']['name'] is defined and ssl['session_cache']['shared']['size'] is defined) }};
+{{- ('builtin' if ssl['session_cache']['builtin']['enable'] is defined and ssl['session_cache']['builtin']['enable'] is boolean and ssl['session_cache']['builtin']['enable'] | bool) + (':' + ssl['session_cache']['builtin']['size'] | string) if ssl['session_cache']['builtin']['size'] is defined -}}
+{{- ('shared:' + ssl['session_cache']['shared']['name'] | string + ':' + ssl['session_cache']['shared']['size'] | string) if ssl['session_cache']['shared']['name'] is defined and ssl['session_cache']['shared']['size'] is defined }};
 {% endif %}
 {% if ssl['session_ticket_key'] is defined and ssl['session_ticket_key'] is not mapping %}
 {% for key in ssl['session_ticket_key'] if ssl['session_ticket_key'] is not string %}

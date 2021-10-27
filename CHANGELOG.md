@@ -6,6 +6,9 @@ BUG FIXES:
 
 * Dictionaries are a sequence per Jinja2 contrary to Python's defaults (dictionaries are not a sequence in Python). The template conditionals assumed the latter.
 * NAP DoS monitor directive would fail if some variables were commented out.
+* NGINX listen `so_keepalive` parameter was not working as intended when setting specific values.
+* Make sure all template objects are properly transformed into strings before doing Jinja2 operations.
+* Remove unnecessary parentheses.
 
 ## 0.4.1 (October 25, 2021)
 

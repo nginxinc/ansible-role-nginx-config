@@ -98,14 +98,14 @@ expires {{ 'off' if not headers['expires'] else (headers['expires'] if headers['
 {% for health_check in health_check['health_checks'] %}
 health_check{{ (' interval=' + health_check['interval'] | string) if health_check['interval'] is defined -}}
 {{- (' jitter=' + health_check['jitter'] | string) if health_check['jitter'] is defined -}}
-{{- (' fails=' + health_check['fails'] | string) if (health_check['fails'] is defined and health_check['fails'] is number) -}}
-{{- (' passes=' + health_check['passes'] | string) if (health_check['passes'] is defined and health_check['passes'] is number) -}}
+{{- (' fails=' + health_check['fails'] | string) if health_check['fails'] is defined and health_check['fails'] is number -}}
+{{- (' passes=' + health_check['passes'] | string) if health_check['passes'] is defined and health_check['passes'] is number -}}
 {{- (' uri=' + health_check['uri'] | string) if health_check['uri'] is defined -}}
-{{- ' mandatory' if (health_check['mandatory'] is defined and health_check['mandatory'] is boolean and health_check['mandatory'] | bool) -}}
-{{- ' persistent' if (health_check['persistent'] is defined and health_check['persistent'] is boolean and health_check['persistent'] | bool) -}}
+{{- ' mandatory' if health_check['mandatory'] is defined and health_check['mandatory'] is boolean and health_check['mandatory'] | bool -}}
+{{- ' persistent' if health_check['persistent'] is defined and health_check['persistent'] is boolean and health_check['persistent'] | bool -}}
 {{- (' match=' + health_check['match'] | string) if health_check['match'] is defined -}}
 {{- (' port=' + health_check['port'] | string) if health_check['port'] is defined -}}
-{{- ' type=grpc' if (health_check['grpc_service'] is defined or health_check['grpc_status'] is defined) -}}
+{{- ' type=grpc' if health_check['grpc_service'] is defined or health_check['grpc_status'] is defined -}}
 {{- (' grpc_service=' + health_check['grpc_service'] | string) if health_check['grpc_service'] is defined -}}
 {{- (' grpc_status=' + health_check['grpc_status'] | string) if health_check['grpc_status'] is defined }};
 {% endfor %}
@@ -127,12 +127,12 @@ match {{ match['name'] }} {
 {% macro keyval(keyval) %}
 {% if keyval['keyvals'] is defined %}{# 'keyval' directive is only available in the 'http' context #}
 {% for keyval in keyval['keyvals'] %}
-keyval {{ keyval['key'] }} {{ keyval['variable'] }} {{ 'zone=' + keyval['zone']}};
+keyval {{ keyval['key'] }} {{ keyval['variable'] }} {{ 'zone=' + keyval['zone'] | string }};
 {% endfor %}
 {% endif %}
 {% if keyval['zones'] is defined %}{# 'keyval_zone' directive is only available in the 'http' context #}
 {% for zone in keyval['zones'] %}
-keyval_zone {{ 'zone=' + zone['name'] + ':' + zone['size'] }}{{ (' state=' + zone['state'] | string) if zone['state'] is defined }}{{ (' timeout=' + zone['timeout'] | string) if zone['timeout'] is defined }}{{ (' type=' + zone['type'] | string) if (zone['type'] is defined and zone['type'] in ['string', 'ip', 'prefix']) }}{{ ' sync' if (zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool) }};
+keyval_zone {{ 'zone=' + zone['name'] | string + ':' + zone['size'] | string }}{{ (' state=' + zone['state'] | string) if zone['state'] is defined }}{{ (' timeout=' + zone['timeout'] | string) if zone['timeout'] is defined }}{{ (' type=' + zone['type'] | string) if zone['type'] is defined and zone['type'] in ['string', 'ip', 'prefix'] }}{{ ' sync' if zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool }};
 {% endfor %}
 {% endif %}
 
@@ -142,7 +142,7 @@ keyval_zone {{ 'zone=' + zone['name'] + ':' + zone['size'] }}{{ (' state=' + zon
 {% macro limit_req(limit_req) %}
 {% if limit_req['limit_reqs'] is defined %}
 {% for limit in limit_req['limit_reqs'] %}
-limit_req {{ 'zone=' + limit['zone'] }}{{ ' burst=' + limit['burst'] | string }}{{ (' nodelay' if not limit['delay'] else (' delay=' + limit['delay'] | string)) if limit['delay'] is defined }};
+limit_req {{ 'zone=' + limit['zone'] | string }}{{ ' burst=' + limit['burst'] | string }}{{ (' nodelay' if not limit['delay'] else (' delay=' + limit['delay'] | string)) if limit['delay'] is defined }};
 {% endfor %}
 {% endif %}
 {% if limit_req['dry_run'] is defined and limit_req['dry_run'] is boolean %}
@@ -156,7 +156,7 @@ limit_req_status {{ limit_req['status'] }};
 {% endif %}
 {% if limit_req['zones'] is defined %}{# 'limit_req_zone' directive is only available in the 'http' context #}
 {% for zone in limit_req['zones'] %}
-limit_req_zone {{ zone['key'] }} {{ 'zone=' + zone['name'] + ':' + zone['size'] }} {{ 'rate=' + zone['rate'] }}{{ ' sync' if zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool }};
+limit_req_zone {{ zone['key'] }} {{ 'zone=' + zone['name'] | string + ':' + zone['size'] | string }} {{ 'rate=' + zone['rate'] | string }}{{ ' sync' if zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool }};
 {% endfor %}
 {% endif %}
 
@@ -166,14 +166,14 @@ limit_req_zone {{ zone['key'] }} {{ 'zone=' + zone['name'] + ':' + zone['size'] 
 {% macro log(log) %}
 {% if log['format'] is defined %}{# 'log_format' directive is only available in the 'http' context #}
 {% for format in log['format'] %}
-log_format {{ format['name'] }}{{ (' escape=' + format['escape']) if format['escape'] is defined and format['escape'] in ['default', 'json', 'none'] }} {{ format['format'] }};
+log_format {{ format['name'] }}{{ (' escape=' + format['escape'] | string) if format['escape'] is defined and format['escape'] in ['default', 'json', 'none'] }} {{ format['format'] }};
 {% endfor %}
 {% endif %}
 {% if log['access'] is defined and log['access'] is boolean and not log['access'] | bool %}
 access_log {{ 'off' }};
 {% elif log['access'] is defined %}
 {% for log in log['access'] %}
-access_log {{ 'off' if not log else log['path'] if log['path'] is defined }}{{ (' ' + log['format']) if log['format'] is defined -}}
+access_log {{ 'off' if not log else log['path'] if log['path'] is defined }}{{ (' ' + log['format'] | string) if log['format'] is defined -}}
 {{- (' buffer=' + log['buffer'] | string) if log['buffer'] is defined -}}
 {{- ' gzip' if log['gzip'] is defined and log['access']['gzip'] is boolean and log['gzip'] | bool else (' gzip=' + log['gzip'] | string) if log['gzip'] is defined and log['gzip'] is string -}}
 {{- (' flush=' + log['flush'] | string) if log['flush'] is defined -}}
@@ -196,11 +196,11 @@ open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + lo
 {# NGINX HTTP Rewrite -- ngx_http_rewrite_module #}
 {% macro rewrite(rewrite) %}
 {% if rewrite['return'] is defined %}{# 'return' directive is not available in the 'http' context #}
-return {{ rewrite['return'] if (rewrite['return'] is string or rewrite['return'] is number) }}{{ rewrite['return']['code'] if rewrite['return']['code'] is defined }}{{ (' ' + rewrite['return']['text'] | string) if rewrite['return']['text'] is defined }}{{ (' ' + rewrite['return']['url']) if rewrite['return']['url'] is defined }};
+return {{ rewrite['return'] if (rewrite['return'] is string or rewrite['return'] is number) }}{{ rewrite['return']['code'] if rewrite['return']['code'] is defined }}{{ (' ' + rewrite['return']['text'] | string) if rewrite['return']['text'] is defined }}{{ (' ' + rewrite['return']['url'] | string) if rewrite['return']['url'] is defined }};
 {% endif %}
 {% if rewrite['rewrites'] is defined %}{# 'rewrite' directive is not available in the 'http' context #}
 {% for rewrite in rewrite['rewrites'] if (rewrite['rewrites'] is sequence and rewrite['rewrites'] is not string) %}
-rewrite {{ rewrite['regex'] }} {{ rewrite['replacement'] }}{{ (' ' + rewrite['flag']) if (rewrite['flag'] is defined and rewrite['flag'] in ['last', 'break', 'redirect', 'permanent']) }};
+rewrite {{ rewrite['regex'] }} {{ rewrite['replacement'] }}{{ (' ' + rewrite['flag'] | string) if rewrite['flag'] is defined and rewrite['flag'] in ['last', 'break', 'redirect', 'permanent'] }};
 {% endfor %}
 {% endif %}
 {% if rewrite['log'] is defined and rewrite['log'] is boolean %}
