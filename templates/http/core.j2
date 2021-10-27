@@ -7,7 +7,7 @@ absolute_redirect {{ core['absolute_redirect'] | ternary('on', 'off') }};
 {% endif %}
 {% if core['aio'] is defined %}
 aio {{ (core['aio'] | ternary('on', 'off')) if core['aio'] is boolean -}}
-    {{- ('threads' if core['aio']['threads'] is defined and not core['aio']['threads'] is sameas false) -}}
+    {{- 'threads' if core['aio']['threads'] is defined and not core['aio']['threads'] is sameas false -}}
     {{- ('=' + core['aio']['threads'] | string) if core['aio']['threads'] is not boolean }};
 {% endif %}
 {% if core['aio_write'] is defined and core['aio_write'] is boolean %}
@@ -62,8 +62,8 @@ directio {{ 'off' if not core['directio'] else core['directio'] }};
 directio_alignment {{ core['directio_alignment'] }};
 {% endif %}
 {% if core['disable_symlinks'] is defined %}
-disable_symlinks {{ (core['disable_symlinks'] | ternary('on', 'off')) if core['disable_symlinks'] is boolean else 'if_not_owner' if core['disable_symlinks'] == 'if_not_owner' -}}
-                 {{- core['disable_symlinks']['check'] if core['disable_symlinks']['check'] is defined and core['disable_symlinks']['check'] in ['on', 'if_not_owner'] }}{{ (' from=' + core['disable_symlinks']['from']) if core['disable_symlinks']['from'] is defined }};
+disable_symlinks {{ core['disable_symlinks'] | ternary('on', 'off') if core['disable_symlinks'] is boolean else 'if_not_owner' if core['disable_symlinks'] == 'if_not_owner' -}}
+                 {{- core['disable_symlinks']['check'] if core['disable_symlinks']['check'] is defined and core['disable_symlinks']['check'] in ['on', 'if_not_owner'] }}{{ (' from=' + core['disable_symlinks']['from'] | string) if core['disable_symlinks']['from'] is defined }};
 {% endif %}
 {% if core['error_page'] is defined and core['error_page'] is not string %}
 {% for page in core['error_page'] if core['error_page'] is not mapping %}
@@ -138,22 +138,23 @@ lingering_timeout {{ core['lingering_timeout'] }};
 {% endif %}
 {% if core['listen'] is defined %}{# 'listen' directive is only available in the 'server' context #}
 {% for listen in core['listen'] %}
-listen {{ listen['address'] if listen['address'] is defined }}{{ ':' if (listen['address'] is defined and listen['port'] is defined) }}{{ listen['port'] if listen['port'] is defined -}}
+listen {{ listen['address'] if listen['address'] is defined }}{{ ':' if listen['address'] is defined and listen['port'] is defined }}{{ listen['port'] if listen['port'] is defined -}}
 {{- ' default_server' if listen['default_server'] is defined and listen['default_server'] is boolean and listen['default_server'] | bool -}}
 {{- ' ssl' if listen['ssl'] is defined and listen['ssl'] is boolean and listen['ssl'] | bool -}}
-{{- ' http2' if (listen['http2'] is defined and listen['http2'] is boolean and listen['http2'] | bool) else ' spdy' if (listen['spdy'] is defined and listen['spdy'] is boolean and listen['spdy'] | bool) -}}
-{{- ' proxy_protocol' if (listen['proxy_protocol'] is defined and listen['proxy_protocol'] is boolean and listen['proxy_protocol'] | bool) -}}
+{{- ' http2' if listen['http2'] is defined and listen['http2'] is boolean and listen['http2'] | bool else ' spdy' if listen['spdy'] is defined and listen['spdy'] is boolean and listen['spdy'] | bool -}}
+{{- ' proxy_protocol' if listen['proxy_protocol'] is defined and listen['proxy_protocol'] is boolean and listen['proxy_protocol'] | bool -}}
 {{- (' setfib=' + listen['setfib'] | string) if listen['setfib'] is defined -}}
 {{- (' fastopen=' + listen['fastopen'] | string) if listen['fastopen'] is defined and listen['fastopen'] is number -}}
 {{- (' backlog=' + listen['backlog'] | string) if listen['backlog'] is defined and listen['backlog'] is number -}}
 {{- (' rcvbuf=' + listen['rcvbuf'] | string) if listen['rcvbuf'] is defined -}}
 {{- (' sndbuf=' + listen['sndbuf'] | string) if listen['sndbuf'] is defined -}}
 {{- (' accept_filter=' + listen['accept_filter'] | string) if listen['accept_filter'] is defined -}}
-{{- ' deferred' if (listen['deferred'] is defined and listen['deferred'] is boolean and listen['deferred'] | bool) -}}
-{{- ' bind' if (listen['bind'] is defined and listen['bind'] is boolean and listen['bind'] | bool) -}}
-{{- (' ipv6only=' + listen['ipv6only'] | ternary('on', 'off')) if listen['ipv6only'] is defined -}}
+{{- ' deferred' if listen['deferred'] is defined and listen['deferred'] is boolean and listen['deferred'] | bool -}}
+{{- ' bind' if listen['bind'] is defined and listen['bind'] is boolean and listen['bind'] | bool -}}
+{{- (' ipv6only=' + listen['ipv6only'] | ternary('on', 'off')) if listen['ipv6only'] is defined and listen['ipv6only'] is boolean -}}
 {{- ' reuseport' if (listen['reuseport'] is defined and listen['reuseport'] is boolean and listen['reuseport'] | bool) -}}
-{{- (' so_keepalive=' + (listen['so_keepalive'] | ternary('on', 'off')) if listen['so_keepalive'] is defined and listen['so_keepalive'] is boolean else ((listen['so_keepalive']['keepidle'] if listen['so_keepalive']['keepidle'] is defined else '') + ':' + (listen['so_keepalive']['keepintvl'] if listen['so_keepalive']['keepintvl'] is defined else '') + ':' + listen['so_keepalive']['keepcnt'] if listen['so_keepalive']['keepcnt'] is defined else '')) }};
+{{- (' so_keepalive=' + listen['so_keepalive'] | ternary('on', 'off')) if listen['so_keepalive'] is defined and listen['so_keepalive'] is boolean -}}
+{{- (' so_keepalive=' + (listen['so_keepalive']['keepidle'] | string if listen['so_keepalive']['keepidle'] is defined) + ':' + (listen['so_keepalive']['keepintvl'] | string if listen['so_keepalive']['keepintvl'] is defined) + ':' + (listen['so_keepalive']['keepcnt'] | string if listen['so_keepalive']['keepcnt'] is defined)) if listen['so_keepalive'] is defined and listen['so_keepalive'] is mapping }};
 {% endfor %}
 {% endif %}
 {% if core['log_not_found'] is defined and core['log_not_found'] is boolean %}
@@ -210,7 +211,7 @@ reset_timedout_connection {{ core['reset_timedout_connection'] | ternary('on', '
 {% if core['resolver']['address'] is defined %}
 resolver {{ core['resolver']['address'] if core['resolver']['address'] is string else core['resolver']['address'] | join(' ') -}}
 {{- (' valid=' + core['resolver']['valid'] | string) if core['resolver']['valid'] is defined -}}
-{{- (' ipv6=' + (core['resolver']['ipv6'] | ternary('on', 'off'))) if core['resolver']['ipv6'] is defined and core['resolver']['ipv6'] is boolean -}}
+{{- (' ipv6=' + core['resolver']['ipv6'] | ternary('on', 'off')) if core['resolver']['ipv6'] is defined and core['resolver']['ipv6'] is boolean -}}
 {{- (' status_zone=' + core['resolver']['status_zone'] | string) if core['resolver']['status_zone'] is defined }};
 {% endif %}
 {% if core['resolver_timeout'] is defined %}
