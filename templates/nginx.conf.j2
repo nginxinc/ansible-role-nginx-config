@@ -16,7 +16,7 @@ events {
 
 {% if nginx_config_main_template['config']['http'] is defined %}
 http {
-{% if nginx_config_main_template['config']['http']['include'] is defined and nginx_config_main_template['config']['http']['include'] is sequence %}
+{% if nginx_config_main_template['config']['http']['include'] is defined and nginx_config_main_template['config']['http']['include'] is not mapping %}
 {% for file in nginx_config_main_template['config']['http']['include'] if nginx_config_main_template['config']['http']['include'] is not string %}
     include {{ file }};
 {% else %}
@@ -28,7 +28,7 @@ http {
 
 {% if nginx_config_main_template['config']['stream'] is defined %}
 stream {
-{% if nginx_config_main_template['config']['stream']['include'] is defined and nginx_config_main_template['config']['stream']['include'] is sequence %}
+{% if nginx_config_main_template['config']['stream']['include'] is defined and nginx_config_main_template['config']['stream']['include'] is not mapping %}
 {% for file in nginx_config_main_template['config']['stream']['include'] if nginx_config_main_template['config']['stream']['include'] is not string %}
     include {{ file }};
 {% else %}

@@ -11,8 +11,8 @@ app_protect_policy_file {{ app_protect_waf['policy_file'] }};
 {% if app_protect_waf['security_log_enable'] is defined and app_protect_waf['security_log_enable'] is boolean %}
 app_protect_security_log_enable {{ app_protect_waf['security_log_enable'] | ternary('on', 'off') }};
 {% endif %}
-{% if app_protect_waf['security_log'] is defined %}
-{% for security_log in app_protect_waf['security_log'] if (app_protect_waf['security_log'] is sequence and app_protect_waf['security_log'] is not string) %}
+{% if app_protect_waf['security_log'] is defined and app_protect_waf['security_log'] is not string %}
+{% for security_log in app_protect_waf['security_log'] if app_protect_waf['security_log'] is not mapping %}
 app_protect_security_log {{ security_log['path'] }} {{ security_log['dest'] }};
 {% else %}
 app_protect_security_log {{ app_protect_waf['security_log']['path'] }} {{ app_protect_waf['security_log']['dest'] }};
@@ -39,7 +39,7 @@ app_protect_reconnect_period_seconds {{ app_protect_waf['reconnect_period_second
 {% if app_protect_waf['request_buffer_overflow_action'] is defined and app_protect_waf['request_buffer_overflow_action'] in ['pass', 'drop'] %}{# Available only in 'http' context #}
 app_protect_request_buffer_overflow_action {{ app_protect_waf['request_buffer_overflow_action'] }};
 {% endif %}
-{% if app_protect_waf['user_defined_signatures'] is defined and app_protect_waf['user_defined_signatures'] is sequence %}{# Available only in 'http' context #}
+{% if app_protect_waf['user_defined_signatures'] is defined and app_protect_waf['user_defined_signatures'] is not mapping %}{# Available only in 'http' context #}
 {% for signature in app_protect_waf['user_defined_signatures'] if app_protect_waf['user_defined_signatures'] is not string %}
 app_protect_user_defined_signatures {{ signature }};
 {% else %}
@@ -62,7 +62,7 @@ app_protect_dos_name {{ app_protect_dos['name'] }};
 {% endif %}
 {% if app_protect_dos['monitor'] is defined and app_protect_dos['monitor'] is mapping %}
 app_protect_dos_monitor uri={{ app_protect_dos['monitor']['uri'] | ternary(app_protect_dos['monitor']['uri'], app_protect_dos['monitor']) }}{{ app_protect_dos['monitor']['protocol'] | ternary((' protocol=' + app_protect_dos['monitor']['protocol'] | string), '') }}{{ app_protect_dos['monitor']['timeout'] | ternary((' timeout=' + app_protect_dos['monitor']['timeout'] | string), '') }};
-{% elif app_protect_dos['monitor'] is defined %}
+{% elif app_protect_dos['monitor'] is defined and app_protect_dos['monitor'] is string %}
 app_protect_dos_monitor {{ app_protect_dos['monitor'] }};
 {% endif %}
 {% if app_protect_dos['security_log_enable'] is defined and app_protect_dos['security_log_enable'] is boolean %}

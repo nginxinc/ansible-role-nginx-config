@@ -2,7 +2,7 @@
 
 {# NGINX Core template -- ngx_core_module #}
 {% macro main(main) %}
-{% if main['load_module'] is defined and main['load_module'] is sequence %}
+{% if main['load_module'] is defined and main['load_module'] is not mapping %}
 {% for module in main['load_module'] if main['load_module'] is not string %}
 load_module {{ module }};
 {% else %}
@@ -34,7 +34,7 @@ worker_shutdown_timeout {{ main['worker_shutdown_timeout'] }};
 {% endif %}
 
 {% if main['error_log'] is defined %}
-{% for log in main['error_log'] if (main['error_log'] is sequence and main['error_log'] is not string) %}
+{% for log in main['error_log'] if (main['error_log'] is not mapping and main['error_log'] is not string) %}
 error_log {{ log if log is string else log['file'] }}{{ (' ' + log['level'] | string) if log['level'] is defined }};
 {% else %}
 error_log {{ main['error_log'] if main['error_log'] is string else main['error_log']['file'] }}{{ (' ' + main['error_log']['level'] | string) if main['error_log']['level'] is defined }};
@@ -52,7 +52,7 @@ debug_points {{ main['debug_points'] }};
 {% endif %}
 
 {% if main['env'] is defined %}
-{% for env in main['env'] if (main['env'] is sequence and main['env'] is not string) %}
+{% for env in main['env'] if (main['env'] is not mapping and main['env'] is not string) %}
 env {{ env if env is string else env['variable'] }}{{ ('=' + env['value'] | string) if env['value'] is defined }};
 {% else %}
 env {{ main['env'] if main['env'] is string else main['env']['variable'] }}{{ ('=' + main['env']['value'] | string) if main['env']['value'] is defined }};
@@ -70,9 +70,11 @@ pcre_jit {{ main['pcre_jit'] | ternary('on', 'off') }};
 {% if main['ssl_engine'] is defined %}
 ssl_engine {{ main['ssl_engine'] }};
 {% endif %}
-{% if main['thread_pool'] is defined %}
-{% for thread in main['thread_pool'] %}
+{% if main['thread_pool'] is defined and main['thread_pool'] is not string %}
+{% for thread in main['thread_pool'] if main['thread_pool'] is not mapping %}
 thread_pool {{ thread['name'] }} {{ ('threads=' + thread['threads'] | string) if thread['threads'] is number }}{{ (' max_queue=' + thread['max_queue'] | string) if thread['max_queue'] is defined and thread['max_queue'] is number }};
+{% else %}
+thread_pool {{ main['thread_pool']['name'] }} {{ ('threads=' + main['thread_pool']['threads'] | string) if main['thread_pool']['threads'] is number }}{{ (' max_queue=' + main['thread_pool']['max_queue'] | string) if main['thread_pool']['max_queue'] is defined and main['thread_pool']['max_queue'] is number }};
 {% endfor %}
 {% endif %}
 {% if main['timer_resolution'] is defined %}
@@ -90,7 +92,7 @@ accept_mutex {{ events['accept_mutex'] | ternary('on', 'off') }};
 {% if events['accept_mutex_delay'] is defined %}
 accept_mutex_delay {{ events['accept_mutex_delay'] }};
 {% endif %}
-{% if events['debug_connection'] is defined and events['debug_connection'] is sequence %}
+{% if events['debug_connection'] is defined and events['debug_connection'] is not mapping %}
 {% for connection in events['debug_connection'] if events['debug_connection'] is not string %}
 debug_connection {{ connection }};
 {% else %}

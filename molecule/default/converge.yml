@@ -46,9 +46,8 @@
               daemon: true
               debug_points: abort
               env:
-                - variable: MALLOC_OPTIONS
-                - variable: PERL5LIB
-                  value: /data/site/modules
+                variable: PERL5LIB
+                value: /data/site/modules
               lock_file: logs/nginx.lock
               master_process: true
               pcre_jit: false
@@ -306,8 +305,10 @@
                 cookie_domain:
                   - domain: localhost
                     replacement: example.com
-                cookie_flags: false  # -- set to false
-                cookie_path: false
+                cookie_flags: false
+                cookie_path:
+                  path: $uri
+                  replacement: $uri
                 force_ranges: false
                 headers_hash_bucket_size: 64
                 headers_hash_max_size: 512
@@ -346,6 +347,17 @@
                   - field: Connection
                     value: close
                 socket_keepalive: false
+                ssl_certificate: /etc/ssl/certs/molecule.crt
+                ssl_certificate_key: /etc/ssl/private/molecule.key
+                ssl_ciphers: HIGH
+                ssl_conf_command:
+                  - Protocol TLSv1.2
+                ssl_name: $proxy_host
+                ssl_protocols: TLSv1.2
+                ssl_server_name: false
+                ssl_session_reuse: true
+                ssl_verify: false
+                ssl_verify_depth: 1
                 store: false
                 store_access:
                   user: rw
@@ -361,23 +373,29 @@
                   transparent: false
                 buffer_size: 4k
                 connect_timeout: 60s
-                hide_header:
-                  - X-Accel-Redirect
-                ignore_headers:
-                  - X-Accel-Redirect
+                hide_header: X-Accel-Redirect
+                ignore_headers: X-Accel-Redirect
                 intercept_errors: false
-                next_upstream:
-                  - timeout
+                next_upstream: timeout
                 next_upstream_timeout: 0
                 next_upstream_tries: 0
-                pass_header:
-                  - X-Accel-Charset
+                pass_header: X-Accel-Charset
                 read_timeout: 60s
                 send_timeout: 60s
                 set_header:
-                  - field: Accept-Encoding
-                    value: '""'
+                  field: Accept-Encoding
+                  value: '""'
                 socket_keepalive: false
+                ssl_certificate: /etc/ssl/certs/molecule.crt
+                ssl_certificate_key: /etc/ssl/private/molecule.key
+                ssl_ciphers: HIGH
+                ssl_conf_command: Protocol TLSv1.2
+                ssl_name: $proxy_host
+                ssl_protocols: TLSv1.2
+                ssl_server_name: false
+                ssl_session_reuse: true
+                ssl_verify: false
+                ssl_verify_depth: 1
               access:
                 allow:
                   - all
@@ -416,9 +434,9 @@
                     value: '"max-age=15768000; includeSubDomains"'
                     always: true
                 add_trailers:
-                  - name: Strict-Transport-Security
-                    value: '"max-age=15768000; includeSubDomains"'
-                    always: false
+                  name: Strict-Transport-Security
+                  value: '"max-age=15768000; includeSubDomains"'
+                  always: false
                 expires:
                   modified: true
                   time: "12h"

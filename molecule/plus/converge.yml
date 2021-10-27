@@ -203,8 +203,8 @@
                     name:
                       - info
                 header_set:
-                  - variable: $job
-                    name: info
+                  variable: $job
+                  name: info
                 leeway: 0s
                 type: nested
                 require: jwt

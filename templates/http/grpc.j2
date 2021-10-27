@@ -11,23 +11,15 @@ grpc_buffer_size {{ grpc['buffer_size'] }};
 {% if grpc['connect_timeout'] is defined %}
 grpc_connect_timeout {{ grpc['connect_timeout'] }};
 {% endif %}
-{% if grpc['hide_header'] is defined and grpc['hide_header'] is sequence %}
+{% if grpc['hide_header'] is defined and grpc['hide_header'] is not mapping %}
 {% for header in grpc['hide_header'] if grpc['hide_header'] is not string %}
 grpc_hide_header {{ header }};
 {% else %}
 grpc_hide_header {{ grpc['hide_header'] }};
 {% endfor %}
 {% endif %}
-{% if grpc['ignore_headers'] is defined and grpc['ignore_headers'] is sequence %}
-{% for header in grpc['ignore_headers'] if grpc['ignore_headers'] is not string %}
-{% if header in ['X-Accel-Redirect', 'X-Accel-Charset'] %}
-grpc_ignore_headers {{ header }};
-{% endif %}
-{% else %}
-{% if grpc['ignore_headers'] in ['X-Accel-Redirect', 'X-Accel-Charset'] %}
-grpc_ignore_headers {{ grpc['ignore_headers'] }};
-{% endif %}
-{% endfor %}
+{% if grpc['ignore_headers'] is defined and grpc['ignore_headers'] in ['X-Accel-Redirect', 'X-Accel-Charset'] %}
+grpc_ignore_headers {{ grpc['ignore_headers'] if grpc['ignore_headers'] is string else grpc['ignore_headers'] | join(' ') }};
 {% endif %}
 {% if grpc['intercept_errors'] is defined and grpc['intercept_errors'] is boolean %}
 grpc_intercept_errors {{ grpc['intercept_errors'] | ternary ('on', 'off') }};
@@ -44,7 +36,7 @@ grpc_next_upstream_tries {{ grpc['next_upstream_tries'] }};
 {% if grpc['pass'] is defined %}{# 'pass' directive is only available in the 'location' context #}
 grpc_pass {{ grpc['pass'] }};
 {% endif %}
-{% if grpc['pass_header'] is defined and grpc['pass_header'] is sequence %}
+{% if grpc['pass_header'] is defined and grpc['pass_header'] is not mapping %}
 {% for header in grpc['pass_header'] if grpc['pass_header'] is not string %}
 grpc_pass_header {{ header }};
 {% else %}
@@ -57,8 +49,8 @@ grpc_read_timeout {{ grpc['read_timeout'] }};
 {% if grpc['send_timeout'] is defined %}
 grpc_send_timeout {{ grpc['send_timeout'] }};
 {% endif %}
-{% if grpc['set_header'] is defined and grpc['set_header'] is sequence %}
-{% for header in grpc['set_header'] if grpc['set_header'] is not string %}
+{% if grpc['set_header'] is defined %}
+{% for header in grpc['set_header'] if grpc['set_header'] is not mapping %}
 grpc_set_header {{ header['field'] }} {{ header['value'] }};
 {% else %}
 grpc_set_header {{ grpc['set_header']['field'] }} {{ grpc['set_header']['value'] }};
@@ -76,7 +68,7 @@ grpc_ssl_certificate_key {{ grpc['ssl_certificate_key'] }};
 {% if grpc['ssl_ciphers'] is defined %}
 grpc_ssl_ciphers {{ grpc['ssl_ciphers'] }};
 {% endif %}
-{% if grpc['ssl_conf_command'] is defined and grpc['ssl_conf_command'] is sequence %}
+{% if grpc['ssl_conf_command'] is defined and grpc['ssl_conf_command'] is not mapping %}
 {% for command in grpc['ssl_conf_command'] if grpc['ssl_conf_command'] is not string %}
 grpc_ssl_conf_command {{ command }};
 {% else %}

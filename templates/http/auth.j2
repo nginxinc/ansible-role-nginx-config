@@ -3,14 +3,14 @@
 
 {# NGINX HTTP Access -- ngx_http_access_module #}
 {% macro access(access) %}
-{% if access['allow'] is defined and access['allow'] is sequence %}
+{% if access['allow'] is defined and access['allow'] is not mapping %}
 {% for allow in access['allow'] if access['allow'] is not string %}
 allow {{ allow }};
 {% else %}
 allow {{ access['allow'] }};
 {% endfor %}
 {% endif %}
-{% if access['deny'] is defined and access['deny'] is sequence %}
+{% if access['deny'] is defined and access['deny'] is not mapping %}
 {% for deny in access['deny'] if access['deny'] is not string %}
 deny {{ deny }};
 {% else %}
@@ -48,14 +48,14 @@ auth_request_set {{ auth_request['set']['variable'] }} {{ auth_request['set']['v
 auth_jwt {{ 'off' if not auth_jwt['enable'] }}{{ auth_jwt['enable']['realm'] if auth_jwt['enable']['realm'] is defined }}{{ (' token=' + auth_jwt['enable']['token'] if auth_jwt['enable']['token'] is defined) }};
 {% endif %}
 {% if auth_jwt['claim_set'] is defined %}{# 'claim_set' is only available in the 'http' context #}
-{% for claim in auth_jwt['claim_set'] if (auth_jwt['claim_set'] is sequence and auth_jwt['claim_set'] is not string) %}
+{% for claim in auth_jwt['claim_set'] if (auth_jwt['claim_set'] is not mapping and auth_jwt['claim_set'] is not string) %}
 auth_jwt_claim_set {{ claim['variable'] }} {{ (claim['name'] if claim['name'] is string else claim['name'] | join(' ')) }};
 {% else %}
 auth_jwt_claim_set {{ auth_jwt['claim_set']['variable'] }} {{ (auth_jwt['claim_set']['name'] if auth_jwt['claim_set']['name'] is string else auth_jwt['claim_set']['name'] | join(' ')) }};
 {% endfor %}
 {% endif %}
 {% if auth_jwt['header_set'] is defined %}{# 'header_set' is only available in the 'http' context #}
-{% for claim in auth_jwt['header_set'] if (auth_jwt['header_set'] is sequence and auth_jwt['header_set'] is not string) %}
+{% for claim in auth_jwt['header_set'] if (auth_jwt['header_set'] is not mapping and auth_jwt['header_set'] is not string) %}
 auth_jwt_header_set {{ claim['variable'] }} {{ (claim['name'] if claim['name'] is string else claim['name'] | join(' ')) }};
 {% else %}
 auth_jwt_header_set {{ auth_jwt['header_set']['variable'] }} {{ (auth_jwt['header_set']['name'] if auth_jwt['header_set']['name'] is string else auth_jwt['header_set']['name'] | join(' ')) }};

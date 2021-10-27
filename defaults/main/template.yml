@@ -16,7 +16,7 @@ nginx_config_main_template:
   deployment_location: /etc/nginx/nginx.conf
   config:
     main:  # Configure NGINX main core directives
-      load_module: modules/ngx_http_js_module.so  # Can be a string or a list
+      load_module: modules/ngx_http_js_module.so  # String or a list
         # - modules/ngx_http_js_module.so
       user:  # nginx  # Can alternatively be a 'user' string
         username: nginx  # Required
@@ -29,7 +29,7 @@ nginx_config_main_template:
       # worker_rlimit_core: 1m
       # worker_rlimit_nofile: 10000  # Number
       # worker_shutdown_timeout: 30m
-      error_log:  # /var/log/nginx/error.log  # Can be a string, a dictionary, or a list of dictionaries. The 'file' variable is only required when setting a 'level'.
+      error_log:  # /var/log/nginx/error.log  # String, a dictionary, or a list of dictionaries. The 'file' variable is only required when setting a 'level'.
         file: /var/log/nginx/error.log  # Required
         level: notice
         # - /var/log/nginx/error.log
@@ -38,7 +38,7 @@ nginx_config_main_template:
       pid: /var/run/nginx.pid
       daemon: true  # Boolean
       # debug_points: abort  # Can be 'abort' or 'stop'
-      # env:  # MALLOC_OPTIONS  # Can be a string, a dictionary, or a list of dictionaries. The 'variable' variable is only required when setting a 'value'.
+      # env:  # MALLOC_OPTIONS  # String, a dictionary, or a list of dictionaries. The 'variable' variable is only required when setting a 'value'.
       #   variable: PERL5LIB  # Required
       #   value: /data/site/modules
       #   - MALLOC_OPTIONS
@@ -48,7 +48,7 @@ nginx_config_main_template:
       # master_process: true  # Boolean
       # pcre_jit: false  # Boolean
       # ssl_engine: device
-      # thread_pool:  # Can be a dictionary or a list of dictionaries.
+      # thread_pool:  # Dictionary or a list of dictionaries
       #   - name: default  # Required
       #     threads: 32  # Required boolean
       #     max_queue: 65536  # Boolean
@@ -57,17 +57,17 @@ nginx_config_main_template:
     events:  # Configure NGINX events
       # accept_mutex: false  # Boolean
       # accept_mutex_delay: 500ms
-      # debug_connection:  # localhost  # Can be a string or a list
+      # debug_connection:  # localhost  # String or a list
       #   - localhost
       # multi_accept: false  # Boolean
       # use: epoll
       # worker_aio_requests: 32  # Number
       worker_connections: 1024  # Number
     http:
-      include: /etc/nginx/conf.d/*.conf  # Can be a string or a list
+      include: /etc/nginx/conf.d/*.conf  # String or a list
         # - /etc/nginx/conf.d/*.conf
     stream:
-      include: /etc/nginx/conf.d/stream/*.conf  # Can be a string or a list
+      include: /etc/nginx/conf.d/stream/*.conf  # String or a list
         # - /etc/nginx/conf.d/stream/*.conf
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
@@ -119,7 +119,7 @@ nginx_config_http_template:
           keepalive_timeout: 60s
           ntlm: false  # Available only in NGINX Plus -- Boolean
           resolver:  # Available only in NGINX Plus
-            address: []  # Required -- Can be a string or a list
+            address: []  # Required -- String or a list
             valid: 30s
             ipv6: false  # Boolean
             status_zone: backend_mem_zone
@@ -132,10 +132,10 @@ nginx_config_http_template:
             samesite: none  # Note -- Must be one of 'strict', 'lax' or 'none'
             secure: true  # Boolean
             path: path
-          sticky_route: []  # Can be a string or a list
+          sticky_route: []  # String or a list
           sticky_learn:  # Available only in NGINX Plus
-            create: []  # Required -- Can be a string or a list
-            lookup: []  # Required -- Can be a string or a list
+            create: []  # Required -- String or a list
+            lookup: []  # Required -- String or a list
             zone:  # Required
               name: client_sessions  # Required
               size: 1m  # Required
@@ -167,8 +167,8 @@ nginx_config_http_template:
         disable_symlinks:  # Can be directly set to 'true', 'false' or 'if_not_owner'. A dictionary is required if you want to set 'from'.
           check: 'on'  # Required  -- Can be set to 'on' or 'if_not_owner'
           from: $document_root
-        error_page:
-          - code:  # Required number -- Can be a number or a list of numbers
+        error_page:  # Dictionary or a list of dictionaries
+          - code:  # Required number -- Number or a list of numbers
               - 404
             response: 404
             uri: /404.html  # Required
@@ -178,10 +178,10 @@ nginx_config_http_template:
         include: path  # Note -- This directive originally belongs in the NGINX core module, but we are making an exception here
         index: path  # Note -- This directive originally belongs in the NGINX index module, but we are making an exception here
         internal: false  # Boolean -- Only available in the 'location' context
-        keepalive_disable: msie6  # Can be a string or a list
+        keepalive_disable: msie6  # String or a list
         keepalive_requests: 1000  # Number
         keepalive_time: 1h
-        keepalive_timeout:  # Can be a string or a dictionary. The latter is required to set 'header_timeout'
+        keepalive_timeout:  # String or a dictionary. The latter is required to set 'header_timeout'.
           timeout: 75s  # Required
           header_timeout: 75s
         large_client_header_buffers:
@@ -189,7 +189,7 @@ nginx_config_http_template:
           size: 8k  # Required
         limit_except:  # Available only in 'location' context
           method: GET  # Required -- Can be a string or a list
-          directive:  # Can be a string or a list
+          directive:  # String or a list
             - allow all
         limit_rate: 0
         limit_rate_after: 0
@@ -238,7 +238,7 @@ nginx_config_http_template:
         request_pool_size: 4k
         reset_timedout_connection: false  # Boolean
         resolver:
-          address: 127.0.0.1  # Required -- Can also be a list
+          address: 127.0.0.1  # Required -- String or a list
           valid: 60s
           ipv6: false  # Boolean
           status_zone: zone  # Only available in NGINX Plus
@@ -260,14 +260,14 @@ nginx_config_http_template:
         tcp_nodelay: true  # Boolean
         tcp_nopush: false  # Boolean
         try_files:
-          files: $uri  # Required - Can be a string or a list
+          files: $uri  # Required - String or a list
             # - $uri1
             # - $uri2
           uri: /uri  # Must set either the 'uri' or 'code' parameter
           code: code  # Must set either the 'uri' or 'code' parameter
-        types:
+        types:  # Dictionary or list of dictionaries
           - mime: text/html  # Required
-            extensions: html  # Required -- Can be a string or a list
+            extensions: html  # Required -- String or a list
               # - html
               # - htm
         types_hash_bucket_size: 64
@@ -277,19 +277,19 @@ nginx_config_http_template:
         variables_hash_max_size: 1024  # Only allowed in 'http' context
       ssl:
         buffer_size: 16k
-        certificate: /path/to/file  # String or list
-        certificate_key: /path/to/file  # String or list
-        ciphers: HIGH  # String or list
+        certificate: /path/to/file  # String or a list
+        certificate_key: /path/to/file  # String or a list
+        ciphers: HIGH  # String or a list
           # - HIGH
           # - "!aNull"
           # - "!MD5"
         client_certificate: /path/to/file
-        conf_command: 'command'  #  String or list
+        conf_command: 'command'  #  String or a list
           # - 'command'
         crl: /path/to/file
         dhparam: /path/to/file
         early_data: false  # Boolean
-        ecdh_curve: auto  # String or list
+        ecdh_curve: auto  # String or a list
           # - prime256v1
         ocsp: false  # Boolean or 'leaf'
         ocsp_cache: false  # Can be set to 'false' or use the 'name'/'size' dict to create a shared cache
@@ -298,7 +298,7 @@ nginx_config_http_template:
         ocsp_responder: <url>
         password_file: /path/to/file
         prefer_server_ciphers: false  # Boolean
-        protocols: TLSv1  # String or list
+        protocols: TLSv1  # String or a list
           # - TLSv1
           # - TLSv1.1
           # - TLSv1.2
@@ -310,7 +310,7 @@ nginx_config_http_template:
           # shared:
           #   name: cache  # Required
           #   size: 16k  # Required
-        session_ticket_key: /path/to/file  # String or list
+        session_ticket_key: /path/to/file  # String or a list
         session_tickets: true  # Boolean
         session_timeout: 5m
         stapling: false  # Boolean
@@ -318,7 +318,7 @@ nginx_config_http_template:
         stapling_responder: <url>
         stapling_verify: false  # Boolean
         trusted_certificate: /path/to/file
-        verify_client: false  # Boolean, 'optional' or 'optional_no_ca'
+        verify_client: false  # Boolean -- 'optional' or 'optional_no_ca'
         verify_depth: 1  # Number
       app_protect_waf:  # Only available when using NGINX App Protect WAF -- Configure NGINX App Protect WAF
         physical_memory_util_thresholds:
@@ -332,13 +332,13 @@ nginx_config_http_template:
         compressed_requests_action: drop  # Can be set to 'pass' or 'drop'
         reconnect_period_seconds: 5  # Number
         request_buffer_overflow_action: pass  # Can be set to 'pass' or 'drop'
-        user_defined_signatures: /path/to/file  # String or list
+        user_defined_signatures: /path/to/file  # String or a list
           # - /path/to/file1
           # - /path/to/file2
         enable: false  # Boolean
         policy_file: /path/to/file
         security_log_enable: false  # Boolean
-        security_log:  # Can be a dictionary or a list of dictionaries
+        security_log:  # Dictionary or a list of dictionaries
           - path: /path/to/file  # Required
             dest: dest  # Required
       app_protect_dos:  # Only available when using NGINX App Protect DoS -- Configure NGINX App Protect DoS
@@ -404,18 +404,19 @@ nginx_config_http_template:
             purger_files: 10  # Number
             purger_sleep: 50ms
             purger_threshold: 50ms
-        cache_purge: sample  # String or list
+        cache_purge: sample  # String or a list
           # - cache_key
           # - cache_purge
         cache_revalidate: false  # Boolean
-        cache_use_stale: false  # String or list -- set to 'false' to set to 'off'
+        cache_use_stale: false  # String or a list -- set to 'false' to set to 'off'
           # - error
           # - timeout
-        cache_valid:  # 10m  # String, dictionary or list of dictionaries. 'time' is required when using 'code'.
+        cache_valid:  # 10m  # String, dictionary or a list of dictionaries. 'time' variable is required when using 'code'.
           - code: 200  # String or list
             # - 201
             # - 202
             time: 10m  # Required
+          - 2m  # Alternative way to specify time
         connect_timeout: 60s
         cookie_domain: false  # Set to 'false' and remove/comment nested variables to disable proxy_cookie_domain. Variables can be a dictionary or list of dictionaries.
           # - domain: localhost  # Required
@@ -430,18 +431,18 @@ nginx_config_http_template:
         force_ranges: false  #  Boolean
         headers_hash_bucket_size: 64
         headers_hash_max_size: 512
-        hide_header: Date  # String or list
+        hide_header: Date  # String or a list
           # - Date
           # - X-Accel-Redirect
         http_version: 1.1  # Can be 1.0 or 1.1
         ignore_client_abort: false  # Boolean
-        ignore_headers: X-Accel-Redirect  # String or list -- can be one of 'X-Accel-Redirect', 'X-Accel-Expires', 'X-Accel-Limit-Rate', 'X-Accel-Buffering', 'X-Accel-Charset', 'Expires', 'Cache-Control', 'Set-Cookie' or 'Vary'.
+        ignore_headers: X-Accel-Redirect  # String or a list -- can be one of 'X-Accel-Redirect', 'X-Accel-Expires', 'X-Accel-Limit-Rate', 'X-Accel-Buffering', 'X-Accel-Charset', 'Expires', 'Cache-Control', 'Set-Cookie' or 'Vary'.
           # - X-Accel-Redirect
         intercept_errors: false  # Boolean
         limit_rate: 0
         max_temp_file_size: 1024m
         method: GET
-        next_upstream: false  # Set to 'false' to disable proxy_next_upstream or include a variable string or list
+        next_upstream: false  # String or a list -- set to 'false' to set to 'off'
           # - error
           # - timeout
         next_upstream_timeout: 0
@@ -451,7 +452,7 @@ nginx_config_http_template:
           #   - $arg_nocache$arg_comment
           # - $arg_nocache$arg_comment
         pass: http://127.0.0.1
-        pass_header: Date  # String or list
+        pass_header: Date  # String or a list
           # - Date
           # - X-Accel-Redirect
         pass_request_body: false  # Boolean
@@ -467,7 +468,7 @@ nginx_config_http_template:
         send_lowat: 0
         send_timeout: 60s
         set_body: body
-        set_header:  # Dictionary or list of dictionaries
+        set_header:  # Dictionary or a list of dictionaries
           field: Host
           value: $proxy_host
           # - field: Connection
@@ -475,14 +476,14 @@ nginx_config_http_template:
         socket_keepalive: false  # Boolean
         ssl_certificate: /path/to/file
         ssl_certificate_key: /path/to/file
-        ssl_ciphers: DEFAULT  # String or list
+        ssl_ciphers: DEFAULT  # String or a list
           # - DEFAULT
-        ssl_conf_command: 'command'  # String or list
+        ssl_conf_command: 'command'  # String or a list
           # - 'command'
         ssl_crl: /path/to/file
         ssl_name: $proxy_host
         ssl_password_file: /path/to/file
-        ssl_protocols: TLSv1  # String or list
+        ssl_protocols: TLSv1  # String or a list
           # - TLSv1
           # - TLSv1.1
           # - TLSv1.2
@@ -506,36 +507,36 @@ nginx_config_http_template:
           transparent: true  # Boolean
         buffer_size: 4k
         connect_timeout: 60s
-        hide_header: []  # string or list
-        ignore_headers: []  # string or list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
+        hide_header: []  # String or a list
+        ignore_headers: []  # String or a list -- 'X-Accel-Redirect' or 'X-Accel-Charset'
         intercept_errors: false  # Boolean
-        next_upstream: []  # string list
+        next_upstream: []  # String or a list
         next_upstream_timeout: 0
         next_upstream_tries: 0
         pass: uri
-        pass_header: []  # string or list
+        pass_header: []  # String or a list
         read_timeout: 60s
         send_timeout: 60s
-        set_header:  # Can be a dictionary or a list of dictionaries
+        set_header:  # Dictionary or a list of dictionaries
           - field: Accept-Encoding  # Required
             value: '""'  # Required
         socket_keepalive: false  # Boolean
         ssl_certificate: /path/to/file
         ssl_certificate_key: /path/to/file
         ssl_ciphers: DEFAULT
-        ssl_conf_command: 'command'  # Can be a string or a list
+        ssl_conf_command: 'command'  # String or a list
         ssl_crl: /path/to/file
         ssl_name: serverName
         ssl_password_file: /path/to/file
-        ssl_protocols: []  # String or list
+        ssl_protocols: []  # String or a list
         ssl_server_name: false  # Boolean
         ssl_session_reuse: true  # Boolean
         ssl_trusted_certificate: /path/to/file
         ssl_verify: false  # Boolean
         ssl_verify_depth: 1
       access:  # Configure HTTP access
-        allow: localhost  # Can be string or list
-        deny: 192.168.1.100  # Can be string or list
+        allow: localhost  # String or a list
+        deny: 192.168.1.100  # String or a list
       auth_basic:  # Configure basic auth
         realm: false  # Set to 'false' to set auth_basic to 'off' -- otherwise, you can specify a 'realm'
         user_file: /path/to/file
@@ -548,18 +549,18 @@ nginx_config_http_template:
         enable:  #  Set to 'false' and remove/comment nested variables to set auth_jwt to 'off'
           realm: realm  # Required
           token: $cookie_auth_token
-        claim_set:  # Can be a dictionary or a list of dictionaries
+        claim_set:  # Dictionary or a list of dictionaries
           - variable: $email  # Required
-            name:  # Required string or list
+            name:  # Required -- String or a list
               - info
-        header_set:  # Can be a dictionary or a list of dictionaries
+        header_set:  # Dictionary or a list of dictionaries
           - variable: $job  # Required
-            name: info  # Required string or list
+            name: info  # Required -- String or a list
         key_file: /path/to/file
         key_request: /path/to/file
         leeway: 0s
         type: signed  # One of 'signed', 'encrypted' or 'nested'
-        required: $valid_jwt_iss  # String or list
+        require: $valid_jwt_iss  # String or a list
       api:  # Configure NGINX Plus HTTP API
         enable:  # true  # Set to Boolean directly to simply enable the 'api' directive
           write: true  # Boolean
@@ -576,11 +577,11 @@ nginx_config_http_template:
           number: 32  # Required
           size: 4k  # Required
         comp_level: 1
-        disable: []  # String or list
+        disable: []  # String or a list
         http_version: 1.1  # Optional -- One of '1.0' or '1.1'
         min_length: 20
         proxied: []  # Set to 'false' to set to 'off' -- otherwise, you can specify a string or a list
-        types: []  # String or list
+        types: []  # String or a list
         vary: false  # Boolean
       headers:  # Configure headers
         add_headers:  # Can be a dictionary or a list of dictionaries
@@ -609,7 +610,7 @@ nginx_config_http_template:
             grpc_status: 12
         match:  # Optional list
           - name: name  # Required
-            conditions: []  # list
+            conditions: []  # Optional list
               # - status 200
       keyval:  # Available only in NGINX Plus -- Configure NGINX Plus key value store
         keyvals:
@@ -652,13 +653,13 @@ nginx_config_http_template:
             gzip: 5  # Can also be set to 'true'
             flush: 10h
             if: $loggable
-        error:  # /var/log/nginx/error.log  # Can be a string, a dictionary, or a list. The 'file' variable is only required when setting a 'level'. This directive does not belong in this module but we are making an exception.
+        error:  # /var/log/nginx/error.log  # String, dictionary, or list. The 'file' variable is only required when setting a 'level'. This directive does not belong in this module but we are making an exception.
           file: /var/log/nginx/error.log  # Required
           level: notice
           # - /var/log/nginx/error.log
           # - file: /var/log/nginx/error.log  # Required
           #   level: notice
-        open_log_file_cache:  # Can also be set to 'false' to set to 'off'
+        open_log_file_cache:  # Set to 'false' to set to 'off'
           max: 1000  # Required
           inactive: 20s
           min_uses: 2  # Number
@@ -673,17 +674,17 @@ nginx_config_http_template:
             replacement: $1$2  # Required
             flag: last  # Can be 'last', 'break', 'redirect' or 'permanent'
         log: false  # Boolean
-        set:  # Can be a dictionary or a list of dictionaries
+        set:  # Dictionary or a list of dictionaries
           - variable: $var  # Required
             value: var  # Required
         uninitialized_variable_warn: true  # Boolean
       sub_filter:  # Configure sub filter directives
-        sub_filters:  # Can be a dictionary or a list of dictionaries
+        sub_filters:  # Dictionary or a list of dictionaries
           - string: server_hostname  # Required
             replacement: $hostname  # Required
         last_modified: false  # Boolean
         once: true  # Boolean
-        types: text/html  # String or list
+        types: text/html  # String or a list
       custom_directives:  # Custom directive for specific use cases not covered by templates -- you need to add a semi-colon at the end of each directive
         - fastcgi_split_path_info ^(.+\.php)(/.+)$;
         - fastcgi_pass unix:/run/php/php7.2-fpm.sock;
