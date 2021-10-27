@@ -65,11 +65,15 @@ directio_alignment {{ core['directio_alignment'] }};
 disable_symlinks {{ (core['disable_symlinks'] | ternary('on', 'off')) if core['disable_symlinks'] is boolean else 'if_not_owner' if core['disable_symlinks'] == 'if_not_owner' -}}
                  {{- core['disable_symlinks']['check'] if core['disable_symlinks']['check'] is defined and core['disable_symlinks']['check'] in ['on', 'if_not_owner'] }}{{ (' from=' + core['disable_symlinks']['from']) if core['disable_symlinks']['from'] is defined }};
 {% endif %}
-{% if core['error_page'] is defined %}
-{% for page in core['error_page'] %}
+{% if core['error_page'] is defined and core['error_page'] is not string %}
+{% for page in core['error_page'] if core['error_page'] is not mapping %}
 error_page {{ page['code'] if page['code'] is number else page['code'] | join(' ') -}}
 {{- (' ' + page['response'] | string) if page['response'] is defined -}}
 {{- (' ' + page['uri'] | string) if page['uri'] is defined }};
+{% else %}
+error_page {{ core['error_page']['code'] if core['error_page']['code'] is number else core['error_page']['code'] | join(' ') -}}
+{{- (' ' + core['error_page']['response'] | string) if core['error_page']['response'] is defined -}}
+{{- (' ' + core['error_page']['uri'] | string) if core['error_page']['uri'] is defined }};
 {% endfor %}
 {% endif %}
 {% if core['etag'] is defined and core['etag'] is boolean %}
@@ -108,7 +112,7 @@ large_client_header_buffers {{ core['large_client_header_buffers']['number'] }} 
 {% endif %}
 {% if core['limit_except'] is defined %}{# 'limit_except' directive is only available in the location context #}
 limit_except {{ core['limit_except']['method'] if core['limit_except']['method'] is string else core['limit_except']['method'] | join(' ') }} {
-{% if core['limit_except']['directive'] is sequence %}
+{% if core['limit_except']['directive'] is not mapping %}
 {% for directive in core['limit_except']['directive'] if core['limit_except']['directive'] is not string %}
     {{ directive }};
 {% else %}
@@ -260,10 +264,12 @@ tcp_nopush {{ core['tcp_nopush'] | ternary('on', 'off') }};
 {% if core['try_files']['files'] is defined %}{# 'try_files' directive is not available in the 'http' context #}
 try_files {{ core['try_files']['files'] if core['try_files']['files'] is string else core['try_files']['files'] | join(' ') }} {{ core['try_files']['uri'] if core['try_files']['uri'] is defined else core['try_files']['code'] if core['try_files']['code'] is defined }};
 {% endif %}
-{% if core['types'] is defined %}
+{% if core['types'] is defined and core['types'] is not string %}
 types {
-{% for type in core['types'] %}
+{% for type in core['types'] if core['types'] is not mapping %}
     {{ type['mime'] }} {{type['extensions'] if type['extensions'] is string else type['extensions'] | join(' ') }};
+{% else %}
+    {{ core['types']['mime'] }} {{core['types']['extensions'] if core['types']['extensions'] is string else core['types']['extensions'] | join(' ') }};
 {% endfor %}
 }
 {% endif %}

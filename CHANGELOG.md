@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2 (Unreleased)
+
+BUG FIXES:
+
+Dictionaries are a sequence per Jinja2 contrary to Python's defaults (dictionaries are not a sequence in Python). The template conditionals assumed the latter.
+
 ## 0.4.1 (October 25, 2021)
 
 BUG FIXES:

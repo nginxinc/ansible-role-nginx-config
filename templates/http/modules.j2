@@ -72,14 +72,14 @@ gzip_vary {{ gzip['vary'] | ternary('on', 'off') }};
 {# NGINX HTTP Headers -- ngx_http_headers_module #}
 {% macro headers(headers) %}
 {% if headers['add_headers'] is defined %}
-{% for header in headers['add_headers'] if (headers['add_headers'] is sequence and headers['add_headers'] is not string) %}
+{% for header in headers['add_headers'] if headers['add_headers'] is not mapping %}
 add_header {{ header['name'] }} {{ header['value'] }}{{ ' always' if header['always'] is defined and header['always'] is boolean and header['always'] | bool }};
 {% else %}
 add_header {{ headers['add_headers']['name'] }} {{ headers['add_headers']['value'] }}{{ ' always' if headers['add_headers']['always'] is defined and headers['add_headers']['always'] is boolean and headers['add_headers']['always'] | bool }};
 {% endfor %}
 {% endif %}
 {% if headers['add_trailers'] is defined %}
-{% for trailer in headers['add_trailers'] if (headers['add_trailers'] is sequence and headers['add_trailers'] is not string) %}
+{% for trailer in headers['add_trailers'] if headers['add_trailers'] is not mapping %}
 add_trailer {{ trailer['name'] }} {{ trailer['value'] }}{{ ' always' if trailer['always'] is defined and trailer['always'] is boolean and trailer['always'] | bool }};
 {% else %}
 add_trailer {{ headers['add_trailers']['name'] }} {{ headers['add_trailers']['value'] }}{{ ' always' if headers['add_trailers']['always'] is defined and headers['add_trailers']['always'] is boolean and headers['add_trailers']['always'] | bool }};
@@ -94,7 +94,7 @@ expires {{ 'off' if not headers['expires'] else (headers['expires'] if headers['
 {# NGINX HTTP Upstream Health Checks -- ngx_http_upstream_hc_module #}
 {# Available only in NGINX Plus #}
 {% macro health_check(health_check) %}
-{% if health_check['health_checks'] is defined %}
+{% if health_check['health_checks'] is defined %}{# 'health_check' directive is only available in the 'location' context #}
 {% for health_check in health_check['health_checks'] %}
 health_check{{ (' interval=' + health_check['interval'] | string) if health_check['interval'] is defined -}}
 {{- (' jitter=' + health_check['jitter'] | string) if health_check['jitter'] is defined -}}
@@ -110,7 +110,7 @@ health_check{{ (' interval=' + health_check['interval'] | string) if health_chec
 {{- (' grpc_status=' + health_check['grpc_status'] | string) if health_check['grpc_status'] is defined }};
 {% endfor %}
 {% endif %}
-{% if health_check['match'] is defined %}
+{% if health_check['match'] is defined and health_check['match'] is not string and health_check['match'] is not mapping %}{# 'match' directive is only available in the 'http' context #}
 {% for match in health_check['match'] %}
 match {{ match['name'] }} {
 {% for condition in match['conditions'] %}
@@ -125,12 +125,12 @@ match {{ match['name'] }} {
 {# NGINX HTTP Keyval -- ngx_http_keyval_module #}
 {# Available only in NGINX Plus #}
 {% macro keyval(keyval) %}
-{% if keyval['keyvals'] is defined %}
+{% if keyval['keyvals'] is defined %}{# 'keyval' directive is only available in the 'http' context #}
 {% for keyval in keyval['keyvals'] %}
 keyval {{ keyval['key'] }} {{ keyval['variable'] }} {{ 'zone=' + keyval['zone']}};
 {% endfor %}
 {% endif %}
-{% if keyval['zones'] is defined %}
+{% if keyval['zones'] is defined %}{# 'keyval_zone' directive is only available in the 'http' context #}
 {% for zone in keyval['zones'] %}
 keyval_zone {{ 'zone=' + zone['name'] + ':' + zone['size'] }}{{ (' state=' + zone['state'] | string) if zone['state'] is defined }}{{ (' timeout=' + zone['timeout'] | string) if zone['timeout'] is defined }}{{ (' type=' + zone['type'] | string) if (zone['type'] is defined and zone['type'] in ['string', 'ip', 'prefix']) }}{{ ' sync' if (zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool) }};
 {% endfor %}
@@ -154,7 +154,7 @@ limit_req_log_level {{ limit_req['log_level'] }};
 {% if limit_req['status'] is defined %}
 limit_req_status {{ limit_req['status'] }};
 {% endif %}
-{% if limit_req['zones'] is defined %}
+{% if limit_req['zones'] is defined %}{# 'limit_req_zone' directive is only available in the 'http' context #}
 {% for zone in limit_req['zones'] %}
 limit_req_zone {{ zone['key'] }} {{ 'zone=' + zone['name'] + ':' + zone['size'] }} {{ 'rate=' + zone['rate'] }}{{ ' sync' if zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool }};
 {% endfor %}
@@ -164,7 +164,7 @@ limit_req_zone {{ zone['key'] }} {{ 'zone=' + zone['name'] + ':' + zone['size'] 
 
 {# NGINX HTTP Log -- ngx_http_log_module #}
 {% macro log(log) %}
-{% if log['format'] is defined %}
+{% if log['format'] is defined %}{# 'log_format' directive is only available in the 'http' context #}
 {% for format in log['format'] %}
 log_format {{ format['name'] }}{{ (' escape=' + format['escape']) if format['escape'] is defined and format['escape'] in ['default', 'json', 'none'] }} {{ format['format'] }};
 {% endfor %}
@@ -181,7 +181,7 @@ access_log {{ 'off' if not log else log['path'] if log['path'] is defined }}{{ (
 {% endfor %}
 {% endif %}
 {% if log['error'] is defined %}{# This does not belong here but we are making an exception #}
-{% for log in log['error'] if (log['error'] is sequence and log['error'] is not string) %}
+{% for log in log['error'] if (log['error'] is not mapping and log['error'] is not string) %}
 error_log {{ log if log is string else log['file'] }}{{ (' ' + log['level'] | string) if log['level'] is defined }};
 {% else %}
 error_log {{ log['error'] if log['error'] is string else log['error']['file'] }}{{ (' ' + log['error']['level'] | string) if log['error']['level'] is defined }};
@@ -195,10 +195,10 @@ open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + lo
 
 {# NGINX HTTP Rewrite -- ngx_http_rewrite_module #}
 {% macro rewrite(rewrite) %}
-{% if rewrite['return'] is defined %}
+{% if rewrite['return'] is defined %}{# 'return' directive is not available in the 'http' context #}
 return {{ rewrite['return'] if (rewrite['return'] is string or rewrite['return'] is number) }}{{ rewrite['return']['code'] if rewrite['return']['code'] is defined }}{{ (' ' + rewrite['return']['text'] | string) if rewrite['return']['text'] is defined }}{{ (' ' + rewrite['return']['url']) if rewrite['return']['url'] is defined }};
 {% endif %}
-{% if rewrite['rewrites'] is defined %}
+{% if rewrite['rewrites'] is defined %}{# 'rewrite' directive is not available in the 'http' context #}
 {% for rewrite in rewrite['rewrites'] if (rewrite['rewrites'] is sequence and rewrite['rewrites'] is not string) %}
 rewrite {{ rewrite['regex'] }} {{ rewrite['replacement'] }}{{ (' ' + rewrite['flag']) if (rewrite['flag'] is defined and rewrite['flag'] in ['last', 'break', 'redirect', 'permanent']) }};
 {% endfor %}
@@ -206,8 +206,8 @@ rewrite {{ rewrite['regex'] }} {{ rewrite['replacement'] }}{{ (' ' + rewrite['fl
 {% if rewrite['log'] is defined and rewrite['log'] is boolean %}
 rewrite_log {{ rewrite['log'] | ternary('on', 'off') }};
 {% endif %}
-{% if rewrite['set'] is defined %}
-{% for set in rewrite['set'] if (rewrite['set'] is sequence and rewrite['set'] is not string) %}
+{% if rewrite['set'] is defined %}{# 'set' directive is not available in the 'http' context #}
+{% for set in rewrite['set'] if (rewrite['set'] is not mapping and rewrite['set'] is not string) %}
 set {{ set['variable'] }} {{ set['value'] }};
 {% else %}
 set {{ rewrite['set']['variable'] }} {{ rewrite['set']['value'] }};

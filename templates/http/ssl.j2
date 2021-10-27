@@ -5,14 +5,14 @@
 {% if ssl['buffer_size'] is defined %}
 ssl_buffer_size {{ ssl['buffer_size'] }};
 {% endif %}
-{% if ssl['certificate'] is defined and ssl['certificate'] is sequence %}
+{% if ssl['certificate'] is defined and ssl['certificate'] is not mapping %}
 {% for certificate in ssl['certificate'] if ssl['certificate'] is not string %}
 ssl_certificate {{ certificate }};
 {% else %}
 ssl_certificate {{ ssl['certificate'] }};
 {% endfor %}
 {% endif %}
-{% if ssl['certificate_key'] is defined and ssl['certificate_key'] is sequence %}
+{% if ssl['certificate_key'] is defined and ssl['certificate_key'] is not mapping %}
 {% for key in ssl['certificate_key'] if ssl['certificate_key'] is not string %}
 ssl_certificate_key {{ key }};
 {% else %}
@@ -25,7 +25,7 @@ ssl_ciphers {{ ssl['ciphers'] if ssl['ciphers'] is string else ssl['ciphers'] | 
 {% if ssl['client_certificate'] is defined %}
 ssl_client_certificate {{ ssl['client_certificate'] }};
 {% endif %}
-{% if ssl['conf_command'] is defined and ssl['conf_command'] is sequence %}
+{% if ssl['conf_command'] is defined and ssl['conf_command'] is not mapping %}
 {% for command in ssl['conf_command'] if ssl['conf_command'] is not string %}
 ssl_conf_command {{ command }};
 {% else %}
@@ -71,7 +71,7 @@ ssl_session_cache {{ 'off' if not ssl['session_cache'] -}}
 {{- ('builtin' if (ssl['session_cache']['builtin']['enable'] is defined and ssl['session_cache']['builtin']['enable'] is boolean and ssl['session_cache']['builtin']['enable'] | bool)) + (':' + ssl['session_cache']['builtin']['size'] | string) if ssl['session_cache']['builtin']['size'] is defined -}}
 {{- ('shared:' + ssl['session_cache']['shared']['name'] | string + ':' + ssl['session_cache']['shared']['size'] | string) if (ssl['session_cache']['shared']['name'] is defined and ssl['session_cache']['shared']['size'] is defined) }};
 {% endif %}
-{% if ssl['session_ticket_key'] is defined and ssl['session_ticket_key'] is sequence %}
+{% if ssl['session_ticket_key'] is defined and ssl['session_ticket_key'] is not mapping %}
 {% for key in ssl['session_ticket_key'] if ssl['session_ticket_key'] is not string %}
 ssl_session_ticket_key {{ key }};
 {% else %}
