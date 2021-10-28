@@ -199,7 +199,7 @@ open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + lo
 return {{ rewrite['return'] if (rewrite['return'] is string or rewrite['return'] is number) }}{{ rewrite['return']['code'] if rewrite['return']['code'] is defined }}{{ (' ' + rewrite['return']['text'] | string) if rewrite['return']['text'] is defined }}{{ (' ' + rewrite['return']['url'] | string) if rewrite['return']['url'] is defined }};
 {% endif %}
 {% if rewrite['rewrites'] is defined %}{# 'rewrite' directive is not available in the 'http' context #}
-{% for rewrite in rewrite['rewrites'] if (rewrite['rewrites'] is sequence and rewrite['rewrites'] is not string) %}
+{% for rewrite in rewrite['rewrites'] if (rewrite['rewrites'] is not mapping and rewrite['rewrites'] is not string) %}
 rewrite {{ rewrite['regex'] }} {{ rewrite['replacement'] }}{{ (' ' + rewrite['flag'] | string) if rewrite['flag'] is defined and rewrite['flag'] in ['last', 'break', 'redirect', 'permanent'] }};
 {% endfor %}
 {% endif %}
