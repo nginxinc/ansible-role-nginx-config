@@ -48,14 +48,14 @@ auth_request_set {{ auth_request['set']['variable'] }} {{ auth_request['set']['v
 auth_jwt {{ 'off' if not auth_jwt['enable'] }}{{ auth_jwt['enable']['realm'] if auth_jwt['enable']['realm'] is defined }}{{ (' token=' + auth_jwt['enable']['token'] | string) if auth_jwt['enable']['token'] is defined }};
 {% endif %}
 {% if auth_jwt['claim_set'] is defined %}{# 'claim_set' is only available in the 'http' context #}
-{% for claim in auth_jwt['claim_set'] if (auth_jwt['claim_set'] is not mapping and auth_jwt['claim_set'] is not string) %}
+{% for claim in auth_jwt['claim_set'] if auth_jwt['claim_set'] is not mapping %}
 auth_jwt_claim_set {{ claim['variable'] }} {{ (claim['name'] if claim['name'] is string else claim['name'] | join(' ')) }};
 {% else %}
 auth_jwt_claim_set {{ auth_jwt['claim_set']['variable'] }} {{ (auth_jwt['claim_set']['name'] if auth_jwt['claim_set']['name'] is string else auth_jwt['claim_set']['name'] | join(' ')) }};
 {% endfor %}
 {% endif %}
 {% if auth_jwt['header_set'] is defined %}{# 'header_set' is only available in the 'http' context #}
-{% for claim in auth_jwt['header_set'] if (auth_jwt['header_set'] is not mapping and auth_jwt['header_set'] is not string) %}
+{% for claim in auth_jwt['header_set'] if auth_jwt['header_set'] is not mapping %}
 auth_jwt_header_set {{ claim['variable'] }} {{ (claim['name'] if claim['name'] is string else claim['name'] | join(' ')) }};
 {% else %}
 auth_jwt_header_set {{ auth_jwt['header_set']['variable'] }} {{ (auth_jwt['header_set']['name'] if auth_jwt['header_set']['name'] is string else auth_jwt['header_set']['name'] | join(' ')) }};

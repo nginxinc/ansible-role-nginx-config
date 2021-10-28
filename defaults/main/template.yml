@@ -175,7 +175,7 @@ nginx_config_http_template:
         etag: true  # Boolean
         if_modified_since: exact  # Can be set to 'off', 'exact' or 'before'
         ignore_invalid_headers: true  # Boolean -- Not available in the 'location' context
-        include: path  # Note -- This directive originally belongs in the NGINX core module, but we are making an exception here
+        include: path  # String or list. Note -- This directive originally belongs in the NGINX core module, but we are making an exception here.
         index: path  # Note -- This directive originally belongs in the NGINX index module, but we are making an exception here
         internal: false  # Boolean -- Only available in the 'location' context
         keepalive_disable: msie6  # String or a list
@@ -685,7 +685,7 @@ nginx_config_http_template:
         last_modified: false  # Boolean
         once: true  # Boolean
         types: text/html  # String or a list
-      custom_directives:  # Custom directive for specific use cases not covered by templates -- you need to add a semi-colon at the end of each directive
+      custom_directives:  # String or list. Custom directive for specific use cases not covered by templates -- you need to add a semi-colon at the end of each directive.
         - fastcgi_split_path_info ^(.+\.php)(/.+)$;
         - fastcgi_pass unix:/run/php/php7.2-fpm.sock;
       servers:
