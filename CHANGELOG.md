@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.2 (Unreleased)
+## 0.4.2 (October 28, 2021)
 
 BUG FIXES:
 
