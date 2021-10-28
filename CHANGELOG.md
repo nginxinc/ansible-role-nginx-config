@@ -9,6 +9,7 @@ BUG FIXES:
 * NGINX listen `so_keepalive` parameter was not working as intended when setting specific values.
 * Make sure all template objects are properly transformed into strings before doing Jinja2 operations.
 * Remove unnecessary parentheses.
+* Fix rewrite option in modules template.
 
 ## 0.4.1 (October 25, 2021)
 
