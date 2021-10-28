@@ -85,7 +85,7 @@ if_modified_since {{ 'off' if not core['if_modified_since'] else core['if_modifi
 {% if core['ignore_invalid_headers'] is defined and core['ignore_invalid_headers'] is boolean %}{# 'ignore_invalid_headers' directive is not available in the 'location' context #}
 ignore_invalid_headers {{ core['ignore_invalid_headers'] | ternary('on', 'off') }};
 {% endif %}
-{% if core['include'] is defined and (core['include'] is string or core['include'] is sequence) %}{# ngx_core_module #}{# This does not belong here but we are making an exception #}
+{% if core['include'] is defined and core['include'] is not mapping %}{# ngx_core_module #}{# This does not belong here but we are making an exception #}
 {% for file in core['include'] if core['include'] is not string %}
 include {{ file }};
 {% else %}
