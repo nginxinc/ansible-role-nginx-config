@@ -10,8 +10,6 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
 
 **Note:** This role is still in active development. There may be unidentified issues and the role variables may change as development continues.
 
-**Note 2:** The role is being currently refactored to use a long term sustainable templating structure (these changes are expected to go live with the role's `0.4.0` release). As such, the documentation found here (on main) reflects the most up to date templates. However, if you are using the latest release available on Ansible Galaxy, please check the `0.3.3` documentation available [here](https://github.com/nginxinc/ansible-role-nginx-config/tree/0.3.3).
-
 ## Requirements
 
 ### Ansible
