@@ -2,18 +2,6 @@
 # Enable uploading NGINX related files to your system.
 # Default for uploading files is false.
 # Default location of files is the files folder within the NGINX Config Ansible role.
-# (DEPRECATED) Upload the main NGINX configuration file.
-nginx_config_main_upload_enable: false
-nginx_config_main_upload_src: config/nginx.conf
-nginx_config_main_upload_dest: /etc/nginx/
-# (DEPRECATED) Upload HTTP NGINX configuration files.
-nginx_config_http_upload_enable: false
-nginx_config_http_upload_src: config/http/*.conf
-nginx_config_http_upload_dest: /etc/nginx/conf.d/
-# (DEPRECATED) Upload Stream NGINX configuration files.
-nginx_config_stream_upload_enable: false
-nginx_config_stream_upload_src: config/stream/*.conf
-nginx_config_stream_upload_dest: /etc/nginx/conf.d/
 # Upload NGINX config files/snippets.
 nginx_config_upload_enable: false
 nginx_config_upload:
