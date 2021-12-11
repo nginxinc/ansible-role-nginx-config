@@ -26,10 +26,3 @@
         nginx_config_upload_ssl_key:
           - src: ../common/files/ssl/molecule.key
             dest: /etc/ssl/private
-
-        # DEPRECATED
-        nginx_config_main_upload_enable: true
-        nginx_config_main_upload_src: ../common/files/nginx.conf
-        nginx_config_http_upload_enable: true
-        nginx_config_http_upload_src: ../common/files/http/*.conf
-        nginx_config_http_upload_dest: /etc/nginx/conf.d/deprecated_http

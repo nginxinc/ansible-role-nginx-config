@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0 (Unreleased)
+
+BREAKING CHANGES:
+
+Remove parameters deprecated in release `0.4.0`. To recap, these are `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*`. Use `nginx_config_upload` instead.
+
 ## 0.4.2 (October 28, 2021)
 
 BUG FIXES:
@@ -25,7 +31,7 @@ Efforts have been made to thoroughly test all these changes and make sure they w
 
 DEPRECATION WARNINGS:
 
-The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload_*` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The deprecated parameters will be removed in the next major release (0.5.0), due December 2021.
+The `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*` parameters have been deprecated in favor of a newly introduced parameter, `nginx_config_upload` (previously `nginx_config_snippet_upload_*`). The new parameter provides greater flexibility in configuring your upload settings in addition to simplifying the upload Ansible tasks. The deprecated parameters will be removed in the next major release (0.5.0), due December 2021.
 
 BREAKING CHANGES:
 
