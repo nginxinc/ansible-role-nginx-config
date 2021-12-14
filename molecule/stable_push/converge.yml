@@ -13,16 +13,21 @@
         nginx_config_upload:
           - src: ../common/files/snippets/location_snippet.conf
             dest: /etc/nginx/snippets
+            backup: true
           - src: ../common/files/http/
             dest: /etc/nginx/conf.d
+            backup: true
         nginx_config_upload_html_enable: true
         nginx_config_upload_html:
           - src: ../common/files/www/index.html
             dest: /usr/share/nginx/html
+            backup: true
         nginx_config_upload_ssl_enable: true
         nginx_config_upload_ssl_crt:
           - src: ../common/files/ssl/molecule.crt
             dest: /etc/ssl/certs
+            backup: true
         nginx_config_upload_ssl_key:
           - src: ../common/files/ssl/molecule.key
             dest: /etc/ssl/private
+            backup: true

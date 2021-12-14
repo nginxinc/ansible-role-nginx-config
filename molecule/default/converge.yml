@@ -16,14 +16,17 @@
         nginx_config_upload_ssl_crt:
           - src: ../common/files/ssl/molecule.crt
             dest: /etc/ssl/certs
+            backup: true
         nginx_config_upload_ssl_key:
           - src: ../common/files/ssl/molecule.key
             dest: /etc/ssl/private
+            backup: true
 
         nginx_config_main_template_enable: true
         nginx_config_main_template:
           template_file: nginx.conf.j2
           deployment_location: /etc/nginx/nginx.conf
+          backup: true
           config:
             main:
               load_module:
@@ -75,6 +78,7 @@
                 - /etc/nginx/conf.d/stream/*.conf
 
         nginx_config_status_enable: true
+        nginx_config_status_backup: true
         nginx_config_status_port: 8080
         nginx_config_status_access_log:
           path: /var/log/nginx/access.log
@@ -82,7 +86,8 @@
 
         nginx_config_http_template_enable: true
         nginx_config_http_template:
-          - config:
+          - backup: true
+            config:
               upstreams:
                 - name: frontend_servers
                   zone:
@@ -661,10 +666,12 @@
           - template_file: www/index.html.j2
             html_file_name: frontend_index.html
             html_file_location: /usr/share/nginx/html
+            backup: true
             web_server_name: Frontend
           - template_file: www/index.html.j2
             html_file_name: backend_index.html
             html_file_location: /usr/share/nginx/html
+            backup: true
             web_server_name: Backend
 
         nginx_config_stream_template_enable: true
@@ -672,6 +679,7 @@
           - template_file: stream/default.conf.j2
             conf_file_name: stream_default.conf
             conf_file_location: /etc/nginx/conf.d/stream
+            backup: true
             network_streams:
               - listen:
                   - ip: 0.0.0.0
