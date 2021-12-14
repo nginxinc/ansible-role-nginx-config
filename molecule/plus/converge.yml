@@ -42,6 +42,7 @@
                 - /etc/nginx/conf.d/stream/*.conf
 
         nginx_config_rest_api_enable: true
+        nginx_config_rest_api_backup: true
         nginx_config_rest_api_write: true
         nginx_config_rest_api_access_log:
           path: /var/log/nginx/access.log

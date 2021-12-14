@@ -6,6 +6,10 @@ BREAKING CHANGES:
 
 Remove parameters deprecated in release `0.4.0`. To recap, these are `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*`. Use `nginx_config_upload` instead.
 
+FEATURES:
+
+Add `backup` parameter to template and upload parameters. Set to `false` if you don't want to keep backups of your previous NGINX config files.
+
 ## 0.4.2 (October 28, 2021)
 
 BUG FIXES:

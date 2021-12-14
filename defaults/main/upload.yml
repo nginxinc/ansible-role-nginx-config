@@ -7,16 +7,20 @@ nginx_config_upload_enable: false
 nginx_config_upload:
   - src: config/snippets/  # You can optionally also include the specific file name
     dest: /etc/nginx/snippets  # You can optionally also include the specific desired file name
+    backup: true
 # Upload HTML files.
 nginx_config_upload_html_enable: false
 nginx_config_upload_html:
   - src: www/index.html
     dest: /usr/share/nginx/html
+    backup: true
 # Upload SSL certificates and keys.
 nginx_config_upload_ssl_enable: false
 nginx_config_upload_ssl_crt:
   - src: ssl/certs/
     dest: /etc/ssl/certs
+    backup: true
 nginx_config_upload_ssl_key:
   - src: ssl/private/
     dest: /etc/ssl/private
+    backup: true
