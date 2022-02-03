@@ -92,7 +92,7 @@
 {% for directive in item['config']['custom_directives'] if item['config']['custom_directives'] is not string %}
 {{ directive }}
 {% else %}
-{{ item['config']['custom_directive'] }}
+{{ item['config']['custom_directives'] }}
 {% endfor %}
 {% endif %}
 {% if item['config']['servers'] is defined %}
@@ -228,7 +228,7 @@ server {
    {{ directive }}
 {% endfilter %}
 {% else %}
-    {{ server['custom_directive'] }}
+    {{ server['custom_directives'] }}
 {% endfor %}
 {% endif %}
 {% if server['locations'] is defined %}
@@ -358,7 +358,7 @@ server {
         {{ directive }}
 {% endfilter %}
 {% else %}
-        {{ location['custom_directive'] }}
+        {{ location['custom_directives'] }}
 {% endfor %}
 {% endif %}
 

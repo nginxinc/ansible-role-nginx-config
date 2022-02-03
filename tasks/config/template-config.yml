@@ -43,6 +43,18 @@
   when: nginx_config_main_template_enable | bool
   notify: (Handler - NGINX Config) Run NGINX
 
+- name: Ensure NGINX client body cache directories exist
+  file:
+    path: "{{ item.config.core.client_body_temp_path.path }}"
+    state: directory
+    owner: "{{ nginx_config_main_template.user | default('nginx') }}"
+    mode: 0755
+  loop:
+    "{{ nginx_config_http_template }}"
+  when:
+    - nginx_config_http_template_enable | bool
+    - item.config.core.client_body_temp_path.path is defined
+
 - name: Ensure NGINX proxy cache directories exist
   file:
     path: "{{ item.1.path }}"
@@ -53,7 +65,7 @@
     - "{{ nginx_config_http_template }}"
     - config.proxy.cache_path
     - skip_missing: true
-  when: nginx_config_main_template_enable | bool
+  when: nginx_config_http_template_enable | bool
 
 - name: Ensure NGINX HTTP directory exists
   file:
