@@ -10,6 +10,10 @@ FEATURES:
 
 Add `backup` variable to template and upload parameters. Set to `false` if you don't want to keep backups of your previous NGINX config files.
 
+BUG FIXES:
+
+Fix a bug when using a single `custom_directives` entry and the http template
+
 ## 0.4.2 (October 28, 2021)
 
 BUG FIXES:
