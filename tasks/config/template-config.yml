@@ -45,15 +45,15 @@
 
 - name: Ensure NGINX client body cache directories exist
   file:
-    path: "{{ item.1.path }}"
+    path: "{{ item.config.core.client_body_temp_path.path }}"
     state: directory
     owner: "{{ nginx_config_main_template.user | default('nginx') }}"
     mode: 0755
-  with_subelements:
-    - "{{ nginx_config_http_template }}"
-    - config.core.client_body_temp_path
-    - skip_missing: true
-  when: nginx_config_http_template_enable | bool
+  loop:
+    "{{ nginx_config_http_template }}"
+  when:
+    - nginx_config_http_template_enable | bool
+    - item.config.core.client_body_temp_path.path is defined
 
 - name: Ensure NGINX proxy cache directories exist
   file:
