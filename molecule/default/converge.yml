@@ -131,7 +131,7 @@
                 client_body_in_file_only: false
                 client_body_in_single_buffer: false
                 client_body_temp_path:
-                  path: /var/cache/nginx
+                  path: /var/cache/nginx/client
                   level: 2
                 client_body_timeout: 60s
                 client_header_buffer_size: 1k

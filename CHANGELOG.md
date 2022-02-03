@@ -8,7 +8,8 @@ Remove parameters deprecated in release `0.4.0`. To recap, these are `nginx_conf
 
 FEATURES:
 
-Add `backup` variable to template and upload parameters. Set to `false` if you don't want to keep backups of your previous NGINX config files.
+* Add `backup` variable to template and upload parameters. Set to `false` if you don't want to keep backups of your previous NGINX config files.
+* Automatically create a NGINX `client_body_temp_path` directory if your NGINX config uses the directive.
 
 BUG FIXES:
 
