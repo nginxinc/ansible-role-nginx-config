@@ -1,125 +1,72 @@
 {{ ansible_managed | comment }}
 
-{% if item.upstreams is defined %}
-{% for upstream in item.upstreams %}
-upstream {{ upstream.name }} {
-{% if upstream.lb_method is defined %}
-    {{ upstream.lb_method }};
-{% endif %}
-    zone {{ upstream.zone_name }} {{ upstream.zone_size }};
-{% for server in upstream.servers %}
-    server {{ server.address }}{{(":" + server.port | string) if server.port is defined}} {% if server.backup is defined and server.backup %}backup{% endif %} {% if server.down is defined and server.down %}down{% else %}weight={{ server.weight | default("1") }} {{ server.health_check | default("") }}{% endif %};
-{% endfor %}
-{% if upstream.sticky_cookie is defined %}
-{% if upstream.sticky_cookie %}
-    sticky cookie srv_id expires=1h  path=/;
-{% endif %}
-{% endif %}
-{% if upstream.custom_options is defined and upstream.custom_options | length %}
-{% for inline_option in upstream.custom_options %}
-    {{ inline_option }}
-{% endfor %}
-{% endif %}
-}
-{% endfor %}
-{% endif %}
+{% if item['config']['upstreams'] is defined %}
+{% from 'stream/upstream.j2' import upstream with context %}
+{{ upstream(item['config']['upstreams']) }}
+{%- endif %}
+{% if item['config']['core'] is defined %}
+{% from 'stream/core.j2' import core with context %}
+{{ core(item['config']['core']) }}
+{%- endif %}
+{% if item['config']['ssl'] is defined %}
+{% from 'stream/ssl.j2' import ssl with context %}
+{{ ssl(item['config']['ssl']) }}
+{%- endif %}
+{% if item['config']['proxy'] is defined %}
+{% from 'stream/proxy.j2' import proxy with context %}
+{{ proxy(item['config']['proxy']) }}
+{%- endif %}
+{% if item['config']['health_check'] is defined %}
+{% from 'stream/modules.j2' import health_check with context %}
+{{ health_check(item['config']['health_check']) }}
+{%- endif %}
+{% if item['config']['keyval'] is defined %}
+{% from 'stream/modules.j2' import keyval with context %}
+{{ keyval(item['config']['keyval']) }}
+{%- endif %}
+{% if item['config']['log'] is defined %}
+{% from 'stream/modules.j2' import log with context %}
+{{ log(item['config']['log']) }}
+{%- endif %}
 
-{% if item.custom_options is defined and item.custom_options | length %}
-{% for inline_option in item.custom_options %}
-{{ inline_option }}
-{% endfor %}
-{% endif %}
-
-{% if item.network_streams is defined %}
-{% for stream in item.network_streams %}
+{% if item['config']['servers'] is defined %}
+{% for server in item['config']['servers'] %}
 server {
-{% for listen in (stream.listen | rejectattr("ip", "defined") | sort(attribute='port') + stream.listen | rejectattr("ip", "undefined") | sort(attribute='port') | sort(attribute='ip')) %}
-    listen {% if listen.ip is defined and listen.ip | length %}{{ listen.ip }}:{% endif %}{{ listen.port }}{% if listen.ssl is defined and listen.ssl %} ssl{% endif %}{% if listen.opts is defined and listen.opts | length %} {{ listen.opts | join(" ") }}{% endif %};
-{% endfor %}
-{% if stream.ssl is defined and stream.ssl %}
-    ssl_certificate {{ stream.ssl.cert }};
-    ssl_certificate_key {{ stream.ssl.key }};
-{% if stream.ssl.trusted_cert is defined %}
-    ssl_trusted_certificate {{ stream.ssl.trusted_cert }};
+{% if server['core'] is defined %}
+{% from 'stream/core.j2' import core with context %}
+{% filter indent(4) %}
+    {{ core(server['core']) }}
+{%- endfilter %}
 {% endif %}
-{% if stream.ssl.dhparam is defined %}
-    ssl_dhparam {{ stream.ssl.dhparam }};
+{% if server['ssl'] is defined %}
+{% from 'stream/ssl.j2' import ssl with context %}
+{% filter indent(4) %}
+    {{ ssl(server['ssl']) }}
+{%- endfilter %}
 {% endif %}
-{% if stream.ssl.protocols is defined %}
-    ssl_protocols {{ stream.ssl.protocols }};
+{% if server['proxy'] is defined %}
+{% from 'stream/proxy.j2' import proxy with context %}
+{% filter indent(4) %}
+    {{ proxy(server['proxy']) }}
+{%- endfilter %}
 {% endif %}
-{% if stream.ssl.ciphers is defined %}
-    ssl_ciphers {{ stream.ssl.ciphers }};
+{% if server['health_check'] is defined %}
+{% from 'stream/modules.j2' import health_check with context %}
+{% filter indent(4) %}
+    {{ health_check(server['health_check']) }}
+{%- endfilter %}
 {% endif %}
-{% if stream.ssl.prefer_server_ciphers is defined and stream.ssl.prefer_server_ciphers %}
-    ssl_prefer_server_ciphers on;
+{% if server['keyval'] is defined %}
+{% from 'stream/modules.j2' import keyval with context %}
+{% filter indent(4) %}
+    {{ keyval(server['keyval']) }}
+{%- endfilter %}
 {% endif %}
-{% if stream.ssl.session_cache is defined %}
-    ssl_session_cache {{ stream.ssl.session_cache }};
-{% endif %}
-{% if stream.ssl.session_timeout is defined %}
-    ssl_session_timeout {{ stream.ssl.session_timeout }};
-{% endif %}
-{% if stream.ssl.disable_session_tickets is defined and stream.ssl.disable_session_tickets %}
-    ssl_session_tickets off;
-{% endif %}
-{% if stream.ssl.ecdh_curve is defined %}
-    ssl_ecdh_curve {{ stream.ssl.ecdh_curve }};
-{% endif %}
-{% endif %}
-{% if stream.include_files is defined and stream.include_files | length %}
-{% for file in stream.include_files %}
-    include "{{ file }}";
-{% endfor %}
-{% endif %}
-    proxy_pass {{ stream.proxy_pass }};
-    proxy_timeout {{ stream.proxy_timeout }};
-    proxy_connect_timeout {{ stream.proxy_connect_timeout }};
-{% if stream.proxy_protocol %}
-    proxy_protocol on;
-{% else %}
-    proxy_protocol off;
-{% endif %}
-{% if stream.proxy_ssl is defined %}
-    proxy_ssl on;
-{% if stream.proxy_ssl.cert is defined %}
-    proxy_ssl_certificate {{ stream.proxy_ssl.cert }};
-{% endif %}
-{% if stream.proxy_ssl.key is defined %}
-    proxy_ssl_certificate_key {{ stream.proxy_ssl.key }};
-{% endif %}
-{% if stream.proxy_ssl.server_name is defined %}
-    proxy_ssl_server_name {{ stream.proxy_ssl.server_name | ternary("on", "off") }};
-{% endif %}
-{% if stream.proxy_ssl.name is defined %}
-    proxy_ssl_name {{ stream.proxy_ssl.name }};
-{% endif %}
-{% if stream.proxy_ssl.protocols is defined %}
-    proxy_ssl_protocols {{ stream.proxy_ssl.protocols }};
-{% endif %}
-{% if stream.proxy_ssl.ciphers is defined %}
-    proxy_ssl_ciphers {{ stream.proxy_ssl.ciphers }};
-{% endif %}
-{% if stream.proxy_ssl.trusted_cert is defined %}
-    proxy_ssl_trusted_certificate {{ stream.proxy_ssl.trusted_cert }};
-{% endif %}
-{% if stream.proxy_ssl.verify is defined %}
-    proxy_ssl_verify {{ stream.proxy_ssl.verify | ternary("on", "off") }};
-{% endif %}
-{% if stream.proxy_ssl.verify_depth is defined %}
-    proxy_ssl_verify_depth {{ stream.proxy_ssl.verify_depth }};
-{% endif %}
-{% if stream.proxy_ssl.session_reuse is defined %}
-    proxy_ssl_session_reuse {{ stream.proxy_ssl.session_reuse | ternary("on", "off") }};
-{% endif %}
-{% endif %}
-{% if stream.health_check_plus %}
-    health_check;
-{% endif %}
-{% if stream.custom_options is defined and stream.custom_options | length %}
-{% for inline_option in stream.custom_options %}
-    {{ inline_option }}
-{% endfor %}
+{% if server['log'] is defined %}
+{% from 'stream/modules.j2' import log with context %}
+{% filter indent(4) %}
+    {{ log(server['log']) }}
+{%- endfilter %}
 {% endif %}
 }
 {% endfor %}
