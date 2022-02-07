@@ -13,7 +13,8 @@ FEATURES:
 
 BUG FIXES:
 
-Fix a bug when using a single `custom_directives` entry and the http template
+* Fix a bug when using a single `custom_directives` entry and the http template
+* Fix check mode issue when running with SELinux enabled. Role no longer reports a change in check mode when setting the host to permissive mode.
 
 ## 0.4.2 (October 28, 2021)
 
