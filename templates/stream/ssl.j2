@@ -1,0 +1,85 @@
+{{ ansible_managed | comment }}
+
+{# NGINX Stream SSL template -- ngx_stream_ssl_module #}
+{% macro ssl(ssl) %}
+{% if ssl['alpn'] is defined %}
+ssl_alpn {{ ssl['alpn'] if ssl['alpn'] is string else ssl['alpn'] | join(' ') }};
+{% endif %}
+{% if ssl['certificate'] is defined and ssl['certificate'] is not mapping %}
+{% for certificate in ssl['certificate'] if ssl['certificate'] is not string %}
+ssl_certificate {{ certificate }};
+{% else %}
+ssl_certificate {{ ssl['certificate'] }};
+{% endfor %}
+{% endif %}
+{% if ssl['certificate_key'] is defined and ssl['certificate_key'] is not mapping %}
+{% for key in ssl['certificate_key'] if ssl['certificate_key'] is not string %}
+ssl_certificate_key {{ key }};
+{% else %}
+ssl_certificate_key {{ ssl['certificate_key'] }};
+{% endfor %}
+{% endif %}
+{% if ssl['ciphers'] is defined %}
+ssl_ciphers {{ ssl['ciphers'] if ssl['ciphers'] is string else ssl['ciphers'] | join(':') }};
+{% endif %}
+{% if ssl['client_certificate'] is defined %}
+ssl_client_certificate {{ ssl['client_certificate'] }};
+{% endif %}
+{% if ssl['conf_command'] is defined and ssl['conf_command'] is not mapping %}
+{% for command in ssl['conf_command'] if ssl['conf_command'] is not string %}
+ssl_conf_command {{ command }};
+{% else %}
+ssl_conf_command {{ ssl['conf_command'] }};
+{% endfor %}
+{% endif %}
+{% if ssl['crl'] is defined %}
+ssl_crl {{ ssl['crl'] }};
+{% endif %}
+{% if ssl['dhparam'] is defined %}
+ssl_dhparam {{ ssl['dhparam'] }};
+{% endif %}
+{% if ssl['ecdh_curve'] is defined %}
+ssl_ecdh_curve {{ ssl['ecdh_curve'] if ssl['ecdh_curve'] is string else ssl['ecdh_curve'] | join(':') }};
+{% endif %}
+{% if ssl['handshake_timeout'] is defined %}
+ssl_handshake_timeout {{ ssl['handshake_timeout'] }};
+{% endif %}
+{% if ssl['password_file'] is defined %}
+ssl_password_file {{ ssl['password_file'] }};
+{% endif %}
+{% if ssl['prefer_server_ciphers'] is defined and ssl['prefer_server_ciphers'] is boolean %}
+ssl_prefer_server_ciphers {{ ssl['prefer_server_ciphers'] | ternary('on', 'off') }};
+{% endif %}
+{% if ssl['protocols'] is defined %}
+ssl_protocols {{ ssl['protocols'] if ssl['protocols'] is string else ssl['protocols'] | join(' ') }};
+{% endif %}
+{% if ssl['session_cache'] is defined %}
+ssl_session_cache {{ 'off' if not ssl['session_cache'] -}}
+{{- 'none' if (ssl['session_cache'] == 'none') -}}
+{{- ('builtin' if ssl['session_cache']['builtin']['enable'] is defined and ssl['session_cache']['builtin']['enable'] is boolean and ssl['session_cache']['builtin']['enable'] | bool) + (':' + ssl['session_cache']['builtin']['size'] | string) if ssl['session_cache']['builtin']['size'] is defined -}}
+{{- ('shared:' + ssl['session_cache']['shared']['name'] | string + ':' + ssl['session_cache']['shared']['size'] | string) if ssl['session_cache']['shared']['name'] is defined and ssl['session_cache']['shared']['size'] is defined }};
+{% endif %}
+{% if ssl['session_ticket_key'] is defined and ssl['session_ticket_key'] is not mapping %}
+{% for key in ssl['session_ticket_key'] if ssl['session_ticket_key'] is not string %}
+ssl_session_ticket_key {{ key }};
+{% else %}
+ssl_session_ticket_key {{ ssl['session_ticket_key'] }};
+{% endfor %}
+{% endif %}
+{% if ssl['session_tickets'] is defined and ssl['session_tickets'] is boolean %}
+ssl_session_tickets {{ ssl['session_tickets'] | ternary('on', 'off') }};
+{% endif %}
+{% if ssl['session_timeout'] is defined %}
+ssl_session_timeout {{ ssl['session_timeout'] }};
+{% endif %}
+{% if ssl['trusted_certificate'] is defined %}
+ssl_trusted_certificate {{ ssl['trusted_certificate'] }};
+{% endif %}
+{% if ssl['verify_client'] is defined %}
+ssl_verify_client {{ (ssl['verify_client'] | ternary('on', 'off')) if ssl['verify_client'] is boolean else ssl['verify_client'] if ssl['verify_client'] in ['optional', 'optional_no_ca'] }};
+{% endif %}
+{% if ssl['verify_depth'] is defined and ssl['verify_depth'] is number %}
+ssl_verify_depth {{ ssl['verify_depth'] }};
+{% endif %}
+
+{% endmacro %}

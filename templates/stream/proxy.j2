@@ -1,0 +1,100 @@
+{{ ansible_managed | comment }}
+
+{# NGINX Stream Proxy template -- ngx_stream_proxy_module #}
+{% macro proxy(proxy) %}
+{% if proxy['bind'] is defined %}
+proxy_bind {{ 'off' if not proxy['bind'] }}{{ (proxy['bind']['address']) if proxy['bind']['address'] is defined }}{{ ' transparent' if (proxy['bind']['transparent'] is defined and proxy['bind']['transparent'] is boolean and proxy['bind']['transparent'] | bool) }};
+{% endif %}
+{% if proxy['buffer_size'] is defined %}
+proxy_buffer_size {{ proxy['buffer_size'] }};
+{% endif %}
+{% if proxy['connect_timeout'] is defined %}
+proxy_connect_timeout {{ proxy['connect_timeout'] }};
+{% endif %}
+{% if proxy['download_rate'] is defined %}
+proxy_download_rate {{ proxy['download_rate'] }};
+{% endif %}
+{% if proxy['half_close'] is defined and proxy['half_close'] is boolean %}
+proxy_half_close {{ proxy['half_close'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['next_upstream'] is defined and proxy['next_upstream'] is boolean %}
+proxy_next_upstream {{ proxy['next_upstream'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['next_upstream_timeout'] is defined %}
+proxy_next_upstream_timeout {{ proxy['next_upstream_timeout'] }};
+{% endif %}
+{% if proxy['next_upstream_tries'] is defined and proxy['next_upstream_tries'] is number %}
+proxy_next_upstream_tries {{ proxy['next_upstream_tries'] }};
+{% endif %}
+{% if proxy['pass'] is defined %}{# 'pass' directive is only available in the 'location' context #}
+proxy_pass {{ proxy['pass'] }};
+{% endif %}
+{% if proxy['protocol'] is defined and proxy['protocol'] is boolean %}
+proxy_protocol {{ proxy['protocol'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['requests'] is defined and proxy['requests'] is number %}
+proxy_requests {{ proxy['requests'] }};
+{% endif %}
+{% if proxy['responses'] is defined and proxy['responses'] is number %}
+proxy_responses {{ proxy['responses'] }};
+{% endif %}
+{% if proxy['session_drop'] is defined and proxy['session_drop'] is boolean %}
+proxy_session_drop {{ proxy['session_drop'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['socket_keepalive'] is defined and proxy['socket_keepalive'] is boolean %}
+proxy_socket_keepalive {{ proxy['socket_keepalive'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['ssl'] is defined and proxy['ssl'] is boolean %}
+proxy_ssl {{ proxy['ssl'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['ssl_certificate'] is defined %}
+proxy_ssl_certificate {{ proxy['ssl_certificate'] }};
+{% endif %}
+{% if proxy['ssl_certificate_key'] is defined %}
+proxy_ssl_certificate_key {{ proxy['ssl_certificate_key'] }};
+{% endif %}
+{% if proxy['ssl_ciphers'] is defined %}
+proxy_ssl_ciphers {{ proxy['ssl_ciphers'] if proxy['ssl_ciphers'] is string else proxy['ssl_ciphers'] | join(':') }};
+{% endif %}
+{% if proxy['ssl_conf_command'] is defined and proxy['ssl_conf_command'] is not mapping %}
+{% for command in proxy['ssl_conf_command'] if proxy['ssl_conf_command'] is not string %}
+proxy_ssl_conf_command {{ command }};
+{% else %}
+proxy_ssl_conf_command {{ proxy['ssl_conf_command'] }};
+{% endfor %}
+{% endif %}
+{% if proxy['ssl_crl'] is defined %}
+proxy_ssl_crl {{ proxy['ssl_crl'] }};
+{% endif %}
+{% if proxy['ssl_name'] is defined %}
+proxy_ssl_name {{ proxy['ssl_name'] }};
+{% endif %}
+{% if proxy['ssl_password_file'] is defined %}
+proxy_ssl_password_file {{ proxy['ssl_password_file'] }};
+{% endif %}
+{% if proxy['ssl_protocols'] is defined %}
+proxy_ssl_protocols {{ proxy['ssl_protocols'] if proxy['ssl_protocols'] is string else proxy['ssl_protocols'] | join(' ') }};
+{% endif %}
+{% if proxy['ssl_server_name'] is defined and proxy['ssl_server_name'] is boolean %}
+proxy_ssl_server_name {{ proxy['ssl_server_name'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['ssl_session_reuse'] is defined and proxy['ssl_session_reuse'] is boolean %}
+proxy_ssl_session_reuse {{ proxy['ssl_session_reuse'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['ssl_trusted_certificate'] is defined %}
+proxy_ssl_trusted_certificate {{ proxy['ssl_trusted_certificate'] }};
+{% endif %}
+{% if proxy['ssl_verify'] is defined and proxy['ssl_verify'] is boolean %}
+proxy_ssl_verify {{ proxy['ssl_verify'] | ternary('on', 'off') }};
+{% endif %}
+{% if proxy['ssl_verify_depth'] is defined and proxy['ssl_verify_depth'] is number %}
+proxy_ssl_verify_depth {{ proxy['ssl_verify_depth'] }};
+{% endif %}
+{% if proxy['timeout'] is defined %}
+proxy_timeout {{ proxy['timeout'] }};
+{% endif %}
+{% if proxy['upload_rate'] is defined %}
+proxy_upload_rate {{ proxy['upload_rate'] }};
+{% endif %}
+
+{% endmacro %}

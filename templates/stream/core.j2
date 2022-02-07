@@ -1,0 +1,57 @@
+{{ ansible_managed | comment }}
+
+{# NGINX Stream Core template -- ngx_stream_core_module #}
+{% macro core(core) %}
+{% if core['include'] is defined and core['include'] is not mapping %}{# ngx_core_module #}{# This does not belong here but we are making an exception #}
+{% for file in core['include'] if core['include'] is not string %}
+include {{ file }};
+{% else %}
+include {{ core['include'] }};
+{% endfor %}
+{% endif %}
+{% if core['listen'] is defined %}{# 'listen' directive is only available in the 'server' context #}
+{% for listen in core['listen'] %}
+listen {{ listen['address'] if listen['address'] is defined }}{{ ':' if listen['address'] is defined and listen['port'] is defined }}{{ listen['port'] if listen['port'] is defined -}}
+{{- ' ssl' if listen['ssl'] is defined and listen['ssl'] is boolean and listen['ssl'] | bool -}}
+{{- ' udp' if listen['udp'] is defined and listen['udp'] is boolean and listen['udp'] | bool -}}
+{{- ' proxy_protocol' if listen['proxy_protocol'] is defined and listen['proxy_protocol'] is boolean and listen['proxy_protocol'] | bool -}}
+{{- (' setfib=' + listen['setfib'] | string) if listen['setfib'] is defined -}}
+{{- (' fastopen=' + listen['fastopen'] | string) if listen['fastopen'] is defined and listen['fastopen'] is number -}}
+{{- (' backlog=' + listen['backlog'] | string) if listen['backlog'] is defined and listen['backlog'] is number -}}
+{{- (' rcvbuf=' + listen['rcvbuf'] | string) if listen['rcvbuf'] is defined -}}
+{{- (' sndbuf=' + listen['sndbuf'] | string) if listen['sndbuf'] is defined -}}
+{{- ' bind' if listen['bind'] is defined and listen['bind'] is boolean and listen['bind'] | bool -}}
+{{- (' ipv6only=' + listen['ipv6only'] | ternary('on', 'off')) if listen['ipv6only'] is defined and listen['ipv6only'] is boolean -}}
+{{- ' reuseport' if (listen['reuseport'] is defined and listen['reuseport'] is boolean and listen['reuseport'] | bool) -}}
+{{- (' so_keepalive=' + listen['so_keepalive'] | ternary('on', 'off')) if listen['so_keepalive'] is defined and listen['so_keepalive'] is boolean -}}
+{{- (' so_keepalive=' + (listen['so_keepalive']['keepidle'] | string if listen['so_keepalive']['keepidle'] is defined) + ':' + (listen['so_keepalive']['keepintvl'] | string if listen['so_keepalive']['keepintvl'] is defined) + ':' + (listen['so_keepalive']['keepcnt'] | string if listen['so_keepalive']['keepcnt'] is defined)) if listen['so_keepalive'] is defined and listen['so_keepalive'] is mapping }};
+{% endfor %}
+{% endif %}
+{% if core['preread_buffer_size'] is defined %}
+preread_buffer_size {{ core['preread_buffer_size'] }};
+{% endif %}
+{% if core['preread_timeout'] is defined %}
+preread_timeout {{ core['preread_timeout'] }};
+{% endif %}
+{% if core['proxy_protocol_timeout'] is defined %}
+proxy_protocol_timeout {{ core['proxy_protocol_timeout'] }};
+{% endif %}
+{% if core['resolver']['address'] is defined %}
+resolver {{ core['resolver']['address'] if core['resolver']['address'] is string else core['resolver']['address'] | join(' ') -}}
+{{- (' valid=' + core['resolver']['valid'] | string) if core['resolver']['valid'] is defined -}}
+{{- (' ipv6=' + core['resolver']['ipv6'] | ternary('on', 'off')) if core['resolver']['ipv6'] is defined and core['resolver']['ipv6'] is boolean -}}
+{{- (' status_zone=' + core['resolver']['status_zone'] | string) if core['resolver']['status_zone'] is defined }};
+{% endif %}
+{% if core['resolver_timeout'] is defined %}
+resolver_timeout {{ core['resolver_timeout'] }};
+{% endif %}
+{% if core['tcp_nodelay'] is defined and core['tcp_nodelay'] is boolean %}
+tcp_nodelay {{ core['tcp_nodelay'] | ternary('on', 'off') }};
+{% endif %}
+{% if core['variables_hash_bucket_size'] is defined %}{# 'variables_hash_bucket_size' directive is only available in the 'stream' context #}
+variables_hash_bucket_size {{ core['variables_hash_bucket_size'] }};
+{% endif %}
+{% if core['variables_hash_max_size'] is defined %}{# 'variables_hash_max_size' directive is only available in the 'stream' context #}
+variables_hash_max_size {{ core['variables_hash_max_size'] }};
+{% endif %}
+{% endmacro %}

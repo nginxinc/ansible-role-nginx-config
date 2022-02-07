@@ -4,7 +4,25 @@
 
 BREAKING CHANGES:
 
-Remove parameters deprecated in release `0.4.0`. To recap, these are `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*`. Use `nginx_config_upload` instead.
+* Remove parameters deprecated in release `0.4.0`. To recap, these are `nginx_config_main_upload_*`, `nginx_config_upload_html_*`, and `nginx_config_stream_upload_*`. Use `nginx_config_upload` instead.
+* Refactor all the `stream` Jinja2 templates!:
+  * Each NGINX module is now contained within its own templating file. Macros are then used, in turn, to import each respective module template into a top level template file.
+  * This avoids confusing and unnecessary code duplication, as well as hard to maintain code.
+  * You will notice that the overall structure of your NGINX config now follows a very simple dictionary structure where each top level key corresponds to an NGINX module. Top level lists are used when dealing with `servers`:
+
+    ```yaml
+    core:
+      root: /usr/share/nginx/html
+    proxy:
+      set_header: []
+    servers:
+      - core: {}
+        proxy: {}
+    ```
+
+  * Check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) and [`molecule/default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml) for examples!
+  * These changes follow in the footsteps of the `http` Jinja2 refactor introduced in the `0.4.0` release. If you want more information on how to port your `stream` configurations, the release notes/changelog for `0.4.0` are a good place to start.
+* Replace `conf_file_name` and `conf_file_location` with `deployment_location` inside `nginx_config_stream_template`.
 
 FEATURES:
 
@@ -54,7 +72,7 @@ General updates:
 
 Template engine updates:
 
-* Refactor all the Jinja2 templates!:
+* Refactor all the `http` Jinja2 templates!:
   * Each NGINX module is now contained within its own templating file. Macros are then used, in turn, to import each respective module template into a top level template file.
   * This avoids confusing and unnecessary code duplication, as well as hard to maintain code.
   * You will notice that the overall structure of your NGINX config now follows a very simple dictionary structure where each top level key corresponds to an NGINX module. Top level lists are used when dealing with `servers` and `locations`:
