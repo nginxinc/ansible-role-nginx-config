@@ -1,0 +1,81 @@
+{{ ansible_managed | comment }}
+{# NGINX minor module templates -- Add directives under its corresponding block #}
+
+{# NGINX Stream Upstream Health Checks -- ngx_stream_upstream_hc_module #}
+{# Available only in NGINX Plus #}
+{% macro health_check(health_check) %}
+{% if health_check['health_checks'] is defined %}{# 'health_check' directive is only available in the 'server' context #}
+{% for health_check in health_check['health_checks'] %}
+health_check{{ (' interval=' + health_check['interval'] | string) if health_check['interval'] is defined -}}
+{{- (' jitter=' + health_check['jitter'] | string) if health_check['jitter'] is defined -}}
+{{- (' fails=' + health_check['fails'] | string) if health_check['fails'] is defined and health_check['fails'] is number -}}
+{{- (' passes=' + health_check['passes'] | string) if health_check['passes'] is defined and health_check['passes'] is number -}}
+{{- (' uri=' + health_check['uri'] | string) if health_check['uri'] is defined -}}
+{{- ' mandatory' if health_check['mandatory'] is defined and health_check['mandatory'] is boolean and health_check['mandatory'] | bool -}}
+{{- ' persistent' if health_check['persistent'] is defined and health_check['persistent'] is boolean and health_check['persistent'] | bool -}}
+{{- (' match=' + health_check['match'] | string) if health_check['match'] is defined -}}
+{{- (' port=' + health_check['port'] | string) if health_check['port'] is defined -}}
+{{- ' udp' if health_check['udp'] is defined and health_check['udp'] is boolean and health_check['udp'] | bool }};
+{% endfor %}
+{% endif %}
+{% if health_check['timeout'] is defined %}
+health_check_timeout {{ health_check['timeout'] }};
+{% endif %}
+{% if health_check['match'] is defined and health_check['match'] is not string and health_check['match'] is not mapping %}{# 'match' directive is only available in the 'stream' context #}
+{% for match in health_check['match'] %}
+match {{ match['name'] }} {
+{% for condition in match['conditions'] %}
+    {{ condition }};
+{% endfor %}
+}
+{% endfor %}
+{% endif %}
+
+{% endmacro %}
+
+{# NGINX Stream Keyval -- ngx_stream_keyval_module #}
+{# Available only in NGINX Plus #}
+{% macro keyval(keyval) %}
+{% if keyval['keyvals'] is defined %}{# 'keyval' directive is only available in the 'stream' context #}
+{% for keyval in keyval['keyvals'] %}
+keyval {{ keyval['key'] }} {{ keyval['variable'] }} {{ 'zone=' + keyval['zone'] | string }};
+{% endfor %}
+{% endif %}
+{% if keyval['zones'] is defined %}{# 'keyval_zone' directive is only available in the 'stream' context #}
+{% for zone in keyval['zones'] %}
+keyval_zone {{ 'zone=' + zone['name'] | string + ':' + zone['size'] | string }}{{ (' state=' + zone['state'] | string) if zone['state'] is defined }}{{ (' timeout=' + zone['timeout'] | string) if zone['timeout'] is defined }}{{ (' type=' + zone['type'] | string) if zone['type'] is defined and zone['type'] in ['string', 'ip', 'prefix'] }}{{ ' sync' if zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool }};
+{% endfor %}
+{% endif %}
+
+{% endmacro %} #}
+
+{# NGINX Stream Log -- ngx_stream_log_module #}
+{% macro log(log) %}
+{% if log['format'] is defined %}{# 'log_format' directive is only available in the 'stream' context #}
+{% for format in log['format'] %}
+log_format {{ format['name'] }}{{ (' escape=' + format['escape'] | string) if format['escape'] is defined and format['escape'] in ['default', 'json', 'none'] }} {{ format['format'] }};
+{% endfor %}
+{% endif %}
+{% if log['access'] is defined and log['access'] is boolean and not log['access'] | bool %}
+access_log {{ 'off' }};
+{% elif log['access'] is defined %}
+{% for log in log['access'] %}
+access_log {{ 'off' if not log else log['path'] if log['path'] is defined }}{{ (' ' + log['format'] | string) if log['format'] is defined -}}
+{{- (' buffer=' + log['buffer'] | string) if log['buffer'] is defined -}}
+{{- ' gzip' if log['gzip'] is defined and log['access']['gzip'] is boolean and log['gzip'] | bool else (' gzip=' + log['gzip'] | string) if log['gzip'] is defined and log['gzip'] is string -}}
+{{- (' flush=' + log['flush'] | string) if log['flush'] is defined -}}
+{{- (' if=' + log['if']) if log['if'] is defined }};
+{% endfor %}
+{% endif %}
+{% if log['error'] is defined %}{# This does not belong here but we are making an exception #}
+{% for log in log['error'] if (log['error'] is not mapping and log['error'] is not string) %}
+error_log {{ log if log is string else log['file'] }}{{ (' ' + log['level'] | string) if log['level'] is defined }};
+{% else %}
+error_log {{ log['error'] if log['error'] is string else log['error']['file'] }}{{ (' ' + log['error']['level'] | string) if log['error']['level'] is defined }};
+{% endfor %}
+{% endif %}
+{% if log['open_log_file_cache'] is defined %}
+open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + log['open_log_file_cache']['max'] | string) }}{{ (' inactive=' + log['open_log_file_cache']['inactive'] | string) if log['open_log_file_cache']['inactive'] is defined }}{{ (' min_uses=' + log['open_log_file_cache']['min_uses'] | string) if log['open_log_file_cache']['min_uses'] is defined and log['open_log_file_cache']['min_uses'] is number }}{{ (' valid=' + log['open_log_file_cache']['valid'] | string) if log['open_log_file_cache']['valid'] is defined }};
+{% endif %}
+
+{% endmacro %}

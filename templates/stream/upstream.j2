@@ -1,0 +1,52 @@
+{{ ansible_managed | comment }}
+
+{# NGINX Stream Upstream template -- ngx_stream_upstream_module #}
+{% macro upstream(upstreams) %}
+{% for upstream in upstreams %}
+{% if upstream['name'] is defined %}
+upstream {{ upstream['name'] }} {
+{% if upstream['servers'] is defined %}
+{% for server in upstream['servers'] %}
+{% if server['address'] is defined %}
+    server {{ server['address'] -}}
+    {{- (' weight=' + server['weight'] | string) if server['weight'] is defined and server['weight'] is number -}}
+    {{- (' max_conns=' + server['max_conns'] | string) if server['max_conns'] is defined and server['max_conns'] is number -}}
+    {{- (' max_fails=' + server['max_fails'] | string) if server['max_fails'] is defined and server['max_fails'] is number -}}
+    {{- (' fail_timeout=' + server['fail_timeout'] | string) if server['fail_timeout'] is defined -}}
+    {{- ' backup' if server['backup'] is defined and server['backup'] is boolean and server['backup'] | bool -}}
+    {{- ' down' if server['down'] is defined and server['down'] is boolean and server['down'] | bool -}}
+    {{- ' resolve' if server['resolve'] is defined and server['resolve'] is boolean and server['resolve'] | bool -}}
+    {{- (' service=' + server['service'] | string) if server['service'] is defined -}}
+    {{- (' slow_start=' + server['slow_start'] | string) if server['slow_start'] is defined }};
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if upstream['zone']['name'] is defined %}
+    zone {{ upstream['zone']['name'] }}{{ (' ' + upstream['zone']['size'] | string) if upstream['zone']['size'] is defined }};
+{% endif %}
+{% if upstream['state'] is defined %}
+    state {{ upstream['state'] }};
+{% endif %}
+{% if upstream['hash']['key'] is defined %}
+    hash {{ upstream['hash']['key'] }}{{ ' consistent' if upstream['hash']['consistent'] is defined and upstream['hash']['consistent'] is boolean }};
+{% elif upstream['least_conn'] is defined and upstream['least_conn'] is boolean %}
+    least_conn;
+{% elif upstream['least_time']['response'] is defined  %}
+    least_time {{ upstream['least_time']['response'] }}{{ ' inflight' if upstream['least_time']['inflight'] is defined and upstream['least_time']['inflight'] is boolean }};
+{% elif upstream['random'] is defined %}
+    random {{ 'two' if upstream['random']['two'] is defined and upstream['random']['two'] is boolean }}{{ (' ' + upstream['random']['method'] | string) if upstream['random']['method'] is defined }};
+{% endif %}
+{% if upstream['resolver']['address'] is defined %}
+    resolver {{ upstream['resolver']['address'] if upstream['resolver']['address'] is string else upstream['resolver']['address'] | join(' ') -}}
+    {{- (' valid=' + upstream['resolver']['valid'] | string) if upstream['resolver']['valid'] is defined -}}
+    {{- (' ipv6=' + upstream['resolver']['ipv6'] | ternary('on', 'off')) if upstream['resolver']['ipv6'] is defined and upstream['resolver']['ipv6'] is boolean -}}
+    {{- (' status_zone=' + upstream['resolver']['status_zone'] | string) if upstream['resolver']['status_zone'] is defined }};
+{% endif %}
+{% if upstream['resolver_timeout'] is defined %}
+    resolver_timeout {{ upstream['resolver_timeout'] }};
+{% endif %}
+}
+{% endif %}
+{% endfor %}
+
+{% endmacro %}

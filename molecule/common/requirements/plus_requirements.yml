@@ -1,6 +1,8 @@
 ---
 roles:
   - name: nginxinc.nginx
-    version: 0.21.3
+    version: 0.22.0
   - name: nginxinc.nginx_app_protect
-    version: 0.7.0
+    # version: 0.7.0
+    src: https://github.com/nginxinc/ansible-role-nginx-app-protect
+    version: bf514e6
