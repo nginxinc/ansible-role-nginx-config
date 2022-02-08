@@ -678,8 +678,8 @@ nginx_config_status_file_location: /etc/nginx/conf.d/status.conf
 nginx_config_status_backup: true
 nginx_config_status_port: 8080  # Optional -- Defaults to 8080
 nginx_config_status_access_log:  # Optional -- Set to 'false' and remove/comment nested variables to disable access log
-  location: /var/log/nginx/access.log  # Required
-  name: main  # Required
+  path: /var/log/nginx/access.log  # Required
+  format: main  # Required
 nginx_config_status_allow:  # Optional
   - 127.0.0.1
 nginx_config_status_deny:  # Optional
@@ -695,8 +695,8 @@ nginx_config_rest_api_backup: true
 nginx_config_rest_api_port: 8080  # Optional-- Defaults to 8080
 nginx_config_rest_api_write: false  # Optional
 nginx_config_rest_api_access_log:  # Optional -- Set to 'false' and remove/comment nested variables to disable access log
-  location: /var/log/nginx/access.log  # Required
-  name: main  # Required
+  path: /var/log/nginx/access.log  # Required
+  format: main  # Required
 nginx_config_rest_api_allow:  # Optional
   - 127.0.0.1
 nginx_config_rest_api_deny:  # Optional
