@@ -34,6 +34,7 @@ BUG FIXES:
 * Fix a bug when using a single `custom_directives` entry and the http template.
 * Fix typo in the REST API template.
 * Fix incorrect REST API and status log variable names in [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml).
+* Fix bugged conditional check in the `http/ssl.j2` Jinja2 template.
 
 ## 0.4.2 (October 28, 2021)
 
