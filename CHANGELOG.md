@@ -35,6 +35,7 @@ BUG FIXES:
 * Fix check mode issue when running with SELinux enabled. Role no longer reports a change in check mode when setting the host to permissive mode.
 * Fix typo in the REST API template.
 * Fix incorrect REST API and status log variable names in [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml).
+* Fix bugged conditional check in the `http/ssl.j2` Jinja2 template.
 
 ## 0.4.2 (October 28, 2021)
 
