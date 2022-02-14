@@ -23,6 +23,7 @@ BREAKING CHANGES:
   * Check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) and [`molecule/default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml) for examples!
   * These changes follow in the footsteps of the `http` Jinja2 refactor introduced in the `0.4.0` release. If you want more information on how to port your `stream` configurations, the release notes/changelog for `0.4.0` are a good place to start.
 * Replace `conf_file_name` and `conf_file_location` with `deployment_location` inside `nginx_config_stream_template`.
+* Replace `html_file_name` and `html_file_location` with `deployment_location` inside `nginx_config_html_demo_template`.
 
 FEATURES:
 
