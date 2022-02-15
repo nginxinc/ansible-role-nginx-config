@@ -225,7 +225,7 @@ server {
 {% if server['custom_directives'] is defined and server['custom_directives'] is not mapping %}
 {% for directive in server['custom_directives'] if server['custom_directives'] is not string %}
 {% filter indent(4) %}
-   {{ directive }}
+    {{ directive }}
 {% endfilter %}
 {% else %}
     {{ server['custom_directives'] }}

@@ -28,11 +28,11 @@ upstream {{ upstream['name'] }} {
     state {{ upstream['state'] }};
 {% endif %}
 {% if upstream['hash']['key'] is defined %}
-    hash {{ upstream['hash']['key'] }}{{ ' consistent' if upstream['hash']['consistent'] is defined and upstream['hash']['consistent'] is boolean }};
+    hash {{ upstream['hash']['key'] }}{{ ' consistent' if upstream['hash']['consistent'] is defined and upstream['hash']['consistent'] is boolean and upstream['hash']['consistent'] | bool }};
 {% elif upstream['least_conn'] is defined and upstream['least_conn'] is boolean %}
     least_conn;
 {% elif upstream['least_time']['response'] is defined  %}
-    least_time {{ upstream['least_time']['response'] }}{{ ' inflight' if upstream['least_time']['inflight'] is defined and upstream['least_time']['inflight'] is boolean }};
+    least_time {{ upstream['least_time']['response'] }}{{ ' inflight' if upstream['least_time']['inflight'] is defined and upstream['least_time']['inflight'] is boolean and upstream['least_time']['inflight'] | bool }};
 {% elif upstream['random'] is defined %}
     random {{ 'two' if upstream['random']['two'] is defined and upstream['random']['two'] is boolean }}{{ (' ' + upstream['random']['method'] | string) if upstream['random']['method'] is defined }};
 {% endif %}

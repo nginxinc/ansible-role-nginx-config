@@ -28,7 +28,13 @@
 {% from 'stream/modules.j2' import log with context %}
 {{ log(item['config']['log']) }}
 {%- endif %}
-
+{% if item['config']['custom_directives'] is defined and item['config']['custom_directives'] is not mapping %}
+{% for directive in item['config']['custom_directives'] if item['config']['custom_directives'] is not string %}
+{{ directive }}
+{% else %}
+{{ item['config']['custom_directives'] }}
+{% endfor %}
+{% endif %}
 {% if item['config']['servers'] is defined %}
 {% for server in item['config']['servers'] %}
 server {
@@ -67,6 +73,15 @@ server {
 {% filter indent(4) %}
     {{ log(server['log']) }}
 {%- endfilter %}
+{%- endif %}
+{% if server['custom_directives'] is defined and server['custom_directives'] is not mapping %}
+{% for directive in server['custom_directives'] if server['custom_directives'] is not string %}
+{% filter indent(4) %}
+    {{ directive }}
+{% endfilter %}
+{% else %}
+    {{ server['custom_directives'] }}
+{% endfor %}
 {% endif %}
 }
 {% endfor %}
