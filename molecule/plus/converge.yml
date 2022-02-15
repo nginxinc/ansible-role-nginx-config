@@ -601,10 +601,6 @@
             config:
               upstreams:
                 - name: stream_upstream
-                  zone:
-                    name: stream_zone
-                    size: 64k
-                  least_conn: true
                   servers:
                     - address: 0.0.0.0:9091
                       weight: 1
@@ -614,6 +610,10 @@
                       backup: false
                       down: false
                       resolve: false
+                  zone:
+                    name: stream_zone
+                    size: 64k
+                  least_conn: true
               core:
                 preread_buffer_size: 16k
                 preread_timeout: 30s
@@ -659,6 +659,7 @@
                 requests: 0
                 responses: 0
                 session_drop: false
+                socket_keepalive: false
                 ssl: false
                 ssl_certificate: /etc/ssl/certs/molecule.crt
                 ssl_certificate_key: /etc/ssl/private/molecule.key

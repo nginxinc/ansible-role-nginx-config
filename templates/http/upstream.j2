@@ -30,13 +30,13 @@ upstream {{ upstream['name'] }} {
     state {{ upstream['state'] }};
 {% endif %}
 {% if upstream['hash']['key'] is defined %}
-    hash {{ upstream['hash']['key'] }}{{ ' consistent' if upstream['hash']['consistent'] is defined and upstream['hash']['consistent'] is boolean }};
+    hash {{ upstream['hash']['key'] }}{{ ' consistent' if upstream['hash']['consistent'] is defined and upstream['hash']['consistent'] is boolean and upstream['hash']['consistent'] | bool }};
 {% elif upstream['ip_hash'] is defined and upstream['ip_hash'] is boolean %}
     ip_hash;
 {% elif upstream['least_conn'] is defined and upstream['least_conn'] is boolean %}
     least_conn;
 {% elif upstream['least_time']['response'] is defined  %}
-    least_time {{ upstream['least_time']['response'] }}{{ ' inflight' if upstream['least_time']['inflight'] is defined and upstream['least_time']['inflight'] is boolean }};
+    least_time {{ upstream['least_time']['response'] }}{{ ' inflight' if upstream['least_time']['inflight'] is defined and upstream['least_time']['inflight'] is boolean and upstream['least_time']['inflight'] | bool }};
 {% elif upstream['random'] is defined %}
     random {{ 'two' if upstream['random']['two'] is defined and upstream['random']['two'] is boolean }}{{ (' ' + upstream['random']['method'] | string) if upstream['random']['method'] is defined }};
 {% endif %}
@@ -55,7 +55,7 @@ upstream {{ upstream['name'] }} {
 {% if upstream['keepalive_timeout'] is defined %}
     keepalive_timeout {{ upstream['keepalive_timeout'] }};
 {% endif %}
-{% if upstream['ntlm'] is defined and upstream['ntlm'] is boolean and upstream['ntlm'] is boolean %}
+{% if upstream['ntlm'] is defined and upstream['ntlm'] is boolean and upstream['ntlm'] | bool %}
     ntlm;
 {% endif %}
 {% if upstream['resolver']['address'] is defined %}
@@ -72,7 +72,7 @@ upstream {{ upstream['name'] }} {
     {{- (' expires=' + upstream['sticky_cookie']['expires'] | string) if upstream['sticky_cookie']['expires'] is defined -}}
     {{- (' domain=' + upstream['sticky_cookie']['domain'] | string) if upstream['sticky_cookie']['domain'] is defined -}}
     {{- ' httponly' if upstream['sticky_cookie']['httponly'] is defined and upstream['sticky_cookie']['httponly'] is boolean and upstream['sticky_cookie']['httponly'] | bool -}}
-    {{- (' samesite' + upstream['sticky_cookie']['samesite'] | string) if upstream['sticky_cookie']['samesite'] is defined and upstream['sticky_cookie']['samesite'] in ['strict', 'lax', 'none'] -}}
+    {{- (' samesite=' + upstream['sticky_cookie']['samesite'] | string) if upstream['sticky_cookie']['samesite'] is defined and upstream['sticky_cookie']['samesite'] in ['strict', 'lax', 'none'] -}}
     {{- ' secure' if upstream['sticky_cookie']['secure'] is defined and upstream['sticky_cookie']['secure'] is boolean and upstream['sticky_cookie']['secure'] | bool -}}
     {{- (' path=' + upstream['sticky_cookie']['path'] | string) if upstream['sticky_cookie']['path'] is defined }};
 {% elif upstream['sticky_route'] is defined %}
