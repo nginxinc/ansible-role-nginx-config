@@ -1,7 +1,7 @@
 ---
 - name: Ensure HTML directory exists
   file:
-    path: "{{ item.html_file_location | default('/usr/share/nginx/html') }}"
+    path: "{{ item.deployment_location | default('/usr/share/nginx/html') | dirname }}"
     state: directory
     mode: 0755
   loop: "{{ nginx_config_html_demo_template }}"
@@ -10,7 +10,7 @@
 - name: Dynamically generate HTML files
   template:
     src: "{{ item.template_file | default('www/index.html.j2') }}"
-    dest: "{{ item.html_file_location | default('/usr/share/nginx/html') }}/{{ item.html_file_name | default('index.html') }}"
+    dest: "{{ item.deployment_location | default('/usr/share/nginx/html/index.html') }}"
     backup: "{{ item.backup  | default(true) }}"
     mode: 0644
   loop: "{{ nginx_config_html_demo_template }}"

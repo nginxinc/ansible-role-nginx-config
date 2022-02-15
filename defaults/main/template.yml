@@ -3,8 +3,7 @@
 nginx_config_html_demo_template_enable: false
 nginx_config_html_demo_template:
   - template_file: www/index.html.j2
-    html_file_name: index.html
-    html_file_location: /usr/share/nginx/html
+    deployment_location: /usr/share/nginx/html/index.html
     web_server_name: Default
     backup: true
 

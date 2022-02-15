@@ -668,13 +668,11 @@
         nginx_config_html_demo_template_enable: true
         nginx_config_html_demo_template:
           - template_file: www/index.html.j2
-            html_file_name: frontend_index.html
-            html_file_location: /usr/share/nginx/html
+            deployment_location: /usr/share/nginx/html/frontend_index.html
             backup: true
             web_server_name: Frontend
           - template_file: www/index.html.j2
-            html_file_name: backend_index.html
-            html_file_location: /usr/share/nginx/html
+            deployment_location: /usr/share/nginx/html/backend_index.html
             backup: true
             web_server_name: Backend
 
