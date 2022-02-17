@@ -21,11 +21,11 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
     ---
     collections:
       - name: community.general
-        version: 3.8.0
+        version: 4.4.0
       - name: ansible.posix
         version: 1.3.0
       - name: community.docker  # Only required if you plan to use Molecule (see below)
-        version: 2.0.0
+        version: 2.1.1
     ```
 
     **Note:** You can alternatively install the Ansible community distribution (what is known as the "old" Ansible) if you don't want to manage individual collections.
@@ -39,7 +39,7 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
 ### Molecule (Optional)
 
 * Molecule is used to test the various functionalities of the role. The recommended version of Molecule to test this role is `3.3`.
-* Instructions on how to install Molecule can be found in the [Molecule website](https://molecule.readthedocs.io/en/latest/installation.html). _You will also need to install the Molecule Docker driver._
+* Instructions on how to install Molecule can be found in the [Molecule website](https://molecule.readthedocs.io/en/latest/installation.html). *You will also need to install the Molecule Docker driver.*
 * To run the NGINX Plus/App Protect config Molecule tests, you must copy your NGINX Plus/App Protect license to the role's [`files/license`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/files/license/) folder.
 
 You can alternatively add your NGINX Plus/App Protect repository certificate and key to the local environment. Run the following commands to export these files as base64-encoded variables and execute the Molecule tests:
@@ -168,4 +168,4 @@ You can find the Ansible NGINX Unit role to install NGINX Unit [here](https://gi
 
 [Alessandro Fael Garcia](https://github.com/alessfg)
 
-&copy; [F5 Networks, Inc.](https://www.f5.com/) 2020 - 2021
+&copy; [F5 Networks, Inc.](https://www.f5.com/) 2020 - 2022
