@@ -30,6 +30,10 @@ FEATURES:
 * Add `backup` variable to template and upload parameters. Set to `false` if you don't want to keep backups of your previous NGINX config files.
 * Automatically create a NGINX `client_body_temp_path` directory if your NGINX config uses the directive.
 
+ENHANCEMENTS:
+
+Bump the Ansible `community.general` collection to `4.4.0` and `community.docker` collection to `2.1.1`.
+
 BUG FIXES:
 
 * Fix a bug when using a single `custom_directives` entry and the http template.
