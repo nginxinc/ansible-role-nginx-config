@@ -1,6 +1,6 @@
 ---
 - name: Find NGINX config files
-  find:
+  ansible.builtin.find:
     paths: "{{ item.directory }}"
     patterns: "*.conf"
     recurse: "{{ item.recurse | default(false) }}"
@@ -9,7 +9,7 @@
   register: nginx_config_files
 
 - name: Remove NGINX config files
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   loop: "{{ nginx_config_files.results | map(attribute='files') | sum(start=[]) | map(attribute='path') | list

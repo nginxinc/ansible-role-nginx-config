@@ -2,14 +2,14 @@
 - name: Upload NGINX config snippets
   block:
     - name: Ensure NGINX config snippet directories exist
-      file:
+      ansible.builtin.file:
         path: "{{ item.dest | dirname if item.dest.endswith('.conf') else item.dest | default('/etc/nginx') }}"
         state: directory
         mode: 0755
       loop: "{{ nginx_config_upload }}"
 
     - name: Upload NGINX config snippet files
-      copy:
+      ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest | default('/etc/nginx/') }}"
         backup: "{{ item.backup | default(true) }}"
@@ -21,14 +21,14 @@
 - name: Upload HTML files
   block:
     - name: Ensure HTML directory exists
-      file:
+      ansible.builtin.file:
         path: "{{ item.dest | dirname if item.dest.endswith('.html') else item.dest | default('/usr/share/nginx/html') }}"
         state: directory
         mode: 0755
       loop: "{{ nginx_config_upload_html }}"
 
     - name: Upload HTML files
-      copy:
+      ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest | default('/usr/share/nginx/html') }}"
         backup: "{{ item.backup | default(true) }}"
@@ -40,14 +40,14 @@
 - name: Upload NGINX SSL certificates and keys
   block:
     - name: Ensure SSL certificate and key directories exist
-      file:
+      ansible.builtin.file:
         path: "{{ item.dest }}"
         state: directory
         mode: 0755
       loop: "{{ nginx_config_upload_ssl_crt +  nginx_config_upload_ssl_key }}"
 
     - name: Upload NGINX SSL certificates
-      copy:
+      ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest | default('/etc/ssl/certs') }}"
         backup: "{{ item.backup | default(true) }}"
@@ -55,7 +55,7 @@
       loop: "{{ nginx_config_upload_ssl_crt }}"
 
     - name: Upload NGINX SSL keys
-      copy:
+      ansible.builtin.copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest | default('/etc/ssl/private') }}"
         backup: "{{ item.backup | default(true) }}"
