@@ -2,6 +2,10 @@
 
 ## 0.5.1 (Unreleased)
 
+FEATURES:
+
+Rename all modules to use the fully qualified collection name (FQCN) per Ansible guidelines.
+
 BUG FIXES:
 
 Ansible check mode runs will no longer fail if NGINX has not yet been installed.
