@@ -1,6 +1,6 @@
 ---
 - name: (Handler - NGINX Config) Check NGINX
-  command: nginx -t
+  ansible.builtin.command: nginx -t
   args:
     chdir: /etc/nginx/
   register: config_check
@@ -10,7 +10,7 @@
   listen: (Handler - NGINX Config) Run NGINX
 
 - name: (Handler - NGINX Config) Print NGINX error if syntax check fails
-  debug:
+  ansible.builtin.debug:
     var: config_check.stderr_lines
   failed_when: config_check.rc != 0
   when:
@@ -20,7 +20,7 @@
   listen: (Handler - NGINX Config) Run NGINX
 
 - name: (Handler - NGINX Config) Start/reload NGINX
-  service:
+  ansible.builtin.service:
     name: nginx
     state: reloaded
   when:

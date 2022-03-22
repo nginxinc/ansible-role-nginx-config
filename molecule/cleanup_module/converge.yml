@@ -3,7 +3,7 @@
   hosts: all
   tasks:
     - name: Configure NGINX
-      include_role:
+      ansible.builtin.include_role:
         name: ansible-role-nginx-config
       vars:
         nginx_config_debug_output: true

@@ -2,14 +2,14 @@
 - name: (CentOS/RHEL) Install dependencies
   block:
     - name: (CentOS/RHEL 6/7) Install dependencies
-      yum:
+      ansible.builtin.yum:
         name:
           - policycoreutils-python
           - setools
       when: ansible_facts['distribution_major_version'] is version('8', '!=')
 
     - name: (CentOS/RHEL 8) Install dependencies
-      yum:
+      ansible.builtin.yum:
         name:
           - libselinux-utils
           - policycoreutils

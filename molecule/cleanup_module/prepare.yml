@@ -3,14 +3,14 @@
   hosts: all
   tasks:
     - name: Install NGINX
-      include_role:
+      ansible.builtin.include_role:
         name: nginxinc.nginx
       vars:
         nginx_modules:
           - njs
 
     - name: Create mock NGINX configuration file
-      file:
+      ansible.builtin.file:
         path: /etc/nginx/conf.d/mock.conf
         state: touch
         mode: 0644
