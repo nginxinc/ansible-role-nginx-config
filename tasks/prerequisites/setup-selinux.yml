@@ -18,25 +18,25 @@
   when: ansible_facts['os_family'] == "RedHat"
 
 - name: Set SELinux mode to permissive
-  selinux:
+  ansible.posix.selinux:
     state: permissive
     policy: targeted
   when: not (ansible_check_mode and nginx_config_selinux_enforcing)
 
 - name: Allow SELinux HTTP network connections
-  seboolean:
+  ansible.posix.seboolean:
     name: httpd_can_network_connect
     state: true
     persistent: true
 
 - name: Allow SELinux HTTP network connections
-  seboolean:
+  ansible.posix.seboolean:
     name: httpd_can_network_relay
     state: true
     persistent: true
 
 - name: Allow SELinux TCP connections on status ports
-  seport:
+  community.general.selinux:
     ports: "{{ nginx_config_status_port }}"
     proto: tcp
     setype: http_port_t
@@ -44,7 +44,7 @@
   when: nginx_config_status_port is defined
 
 - name: Allow SELinux TCP connections on Rest API ports
-  seport:
+  community.general.selinux:
     ports: "{{ nginx_config_rest_api_port }}"
     proto: tcp
     setype: http_port_t
@@ -52,7 +52,7 @@
   when: nginx_config_rest_api_port is defined
 
 - name: Allow SELinux TCP connections on specific ports
-  seport:
+  community.general.selinux:
     ports: "{{ nginx_config_selinux_tcp_ports }}"
     proto: tcp
     setype: http_port_t
@@ -60,7 +60,7 @@
   when: nginx_config_selinux_tcp_ports is defined
 
 - name: Allow SELinux UDP connections on specific ports
-  seport:
+  community.general.selinux:
     ports: "{{ nginx_config_selinux_udp_ports }}"
     proto: udp
     setype: http_port_t
@@ -68,7 +68,7 @@
   when: nginx_config_selinux_udp_ports is defined
 
 - name: Set SELinux mode to enforcing
-  selinux:
+  ansible.posix.selinux:
     state: enforcing
     policy: targeted
   when: nginx_config_selinux_enforcing
