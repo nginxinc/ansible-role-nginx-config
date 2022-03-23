@@ -62,10 +62,9 @@
     state: directory
     owner: "{{ nginx_config_main_template.user | default('nginx') }}"
     mode: 0755
-  with_subelements:
-    - "{{ nginx_config_http_template }}"
-    - config.proxy.cache_path
-    - skip_missing: true
+  loop: "{{ nginx_config_http_template | subelements('config.proxy.cache_path', skip_missing=True) }}"
+  loop_control:
+    label: "{{ item.1.path | default('config.proxy.cache_path.path undefined') }}"
   when: nginx_config_http_template_enable | bool
 
 - name: Ensure NGINX HTTP directory exists
