@@ -8,7 +8,8 @@ Rename all modules to use the fully qualified collection name (FQCN) per Ansible
 
 ENHANCEMENTS:
 
-Bump the Ansible `community.general` collection to `4.6.1` and `community.docker` collection to `2.2.1`.
+* Bump the Ansible `community.general` collection to `4.6.1` and `community.docker` collection to `2.2.1`.
+* Add labels to loops in `tasks/config/template-config.yml` to reduce amount of output data.
 
 BUG FIXES:
 
