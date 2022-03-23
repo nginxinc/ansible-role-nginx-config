@@ -49,7 +49,7 @@
     state: directory
     owner: "{{ nginx_config_main_template.user | default('nginx') }}"
     mode: 0755
-  loop: "{{ nginx_config_http_template | map(attribute='config') }}"
+  loop: "{{ nginx_config_http_template }}"
   loop_control:
     label: "{{ item.config.core.client_body_temp_path.path | default('config.core.client_body_temp_path.path undefined') }}"
   when:
