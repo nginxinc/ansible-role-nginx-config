@@ -253,6 +253,15 @@ server_names_hash_max_size {{ core['server_names_hash_max_size'] }};
 {% if core['server_tokens'] is defined %}
 server_tokens {{ (core['server_tokens'] | ternary('on', 'off')) if core['server_tokens'] is boolean else core['server_tokens'] }};
 {% endif %}
+{% if core['split_clients'] is defined %}
+{% if core['split_clients']['content'] is defined and core['split_clients']['content'] is string or core['split_clients']['content'] is iterable and core['split_clients']['string'] is defined and core['split_clients']['string'] is string and core['split_clients']['variable'] is defined and core['split_clients']['variable'] is string %}
+split_clients {{ core['split_clients']['string'] }} {{ core['split_clients']['variable'] }} {
+{% for content_line in core['split_clients']['content'] %}
+    {{ content_line }};
+{% endfor %}
+}
+{% endif %}
+{% endif %}
 {% if core['subrequest_output_buffer_size'] is defined %}
 subrequest_output_buffer_size {{ core['subrequest_output_buffer_size'] }};
 {% endif %}
