@@ -80,9 +80,17 @@
 {% from 'http/modules.j2' import log with context %}
 {{ log(item['config']['log']) }}
 {%- endif %}
+{% if item['config']['map'] is defined %}
+{% from 'http/modules.j2' import map with context %}
+{{ map(item['config']['map']) }}
+{%- endif %}
 {% if item['config']['rewrite'] is defined %}
 {% from 'http/modules.j2' import rewrite with context %}
 {{ rewrite(item['config']['rewrite']) }}
+{%- endif %}
+{% if item['config']['split_clients'] is defined %}
+{% from 'http/modules.j2' import split_clients with context %}
+{{ split_clients(item['config']['split_clients']) }}
 {%- endif %}
 {% if item['config']['sub_filter'] is defined %}
 {% from 'http/modules.j2' import sub_filter with context %}

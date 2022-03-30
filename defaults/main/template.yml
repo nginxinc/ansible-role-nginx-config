@@ -255,10 +255,6 @@ nginx_config_http_template:
         server_names_hash_bucket_size: 32  # Available only in the 'http' context
         server_names_hash_max_size: 512  # Available only in the 'http' context
         server_tokens: true  # Can also one of 'build' or a string
-        split_clients:
-          content:  # Required -- String or a list of strings
-          string:  # Required -- String
-          variable:  # Required -- String
         subrequest_output_buffer_size: 4k
         tcp_nodelay: true  # Boolean
         tcp_nopush: false  # Boolean
@@ -634,6 +630,17 @@ nginx_config_http_template:
           inactive: 20s
           min_uses: 2  # Number
           valid: 1m
+      map:  # Configure maps
+        hash_bucket_size: 64
+        hash_max_size: 2048
+        mappings:  # Dictionary or list of dictionaries
+          string: $remote_addr  # Required
+          variable: $upstream  # Required
+          hostnames: false  # Boolean
+          volatile: false  # Boolean
+          content:  # Dictionary or list of dictionaries
+            - value: default
+              new_value: 0
       rewrite:  # Configure rewrite directives
         return:  # Can also be set to a return URL or code directly -- Not available in the 'http' context
           code: 200  # Required -- You have to set either 'code' or 'url'
@@ -648,6 +655,14 @@ nginx_config_http_template:
           - variable: $var  # Required
             value: var  # Required
         uninitialized_variable_warn: true  # Boolean
+      split_clients:  # Configure split_clients -- Available only in the 'http' context
+        string: $remote_addr  # Required
+        variable: $upstream  # Required
+        content:  # List of dictionaries -- Percentages must add up to 100%
+          - percentage: 20%  # Required
+            value: appv2  # Required
+          - percentage: "*"  # Required
+            value: app  # Required
       sub_filter:  # Configure sub_filter directives
         sub_filters:  # Dictionary or a list of dictionaries
           - string: server_hostname  # Required

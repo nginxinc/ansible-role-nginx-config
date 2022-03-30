@@ -193,6 +193,30 @@ open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + lo
 
 {% endmacro %}
 
+{# NGINX HTTP Map -- ngx_http_map_module #}
+{% macro map(map) %}
+{% if map['hash_bucket_size'] is defined %}
+map_hash_bucket_size {{ map['hash_bucket_size'] }};
+{% endif %}
+{% if map['hash_max_size'] is defined %}
+map_hash_max_size {{ map['hash_max_size'] }};
+{% endif %}
+{% if map['mappings']['string'] is defined and map['mappings']['variable'] is defined %}
+map {{ map['mappings']['string'] }} {{ map['mappings']['variable'] }} {
+    {{ 'hostnames;' if map['mappings']['hostnames'] is defined and map['mappings']['hostnames'] is boolean and map['mappings']['hostnames'] | bool }}
+    {{ 'volatile;' if map['mappings']['volatile'] is defined and map['mappings']['volatile'] is boolean and map['mappings']['volatile'] | bool }}
+{% if map['mappings']['content'] is defined %}
+{% for content_line in map['mappings']['content'] if map['mappings']['content'] is not mapping %}
+    {{ content_line['value'] }} {{ content_line['new_value'] }};
+{% else %}
+    {{ map['mappings']['content']['value'] }} {{ map['mappings']['content']['new_value'] }};
+{% endfor %}
+{% endif %}
+}
+{% endif %}
+
+{% endmacro %}
+
 {# NGINX HTTP Rewrite -- ngx_http_rewrite_module #}
 {% macro rewrite(rewrite) %}
 {% if rewrite['return'] is defined %}{# 'return' directive is not available in the 'http' context #}
@@ -217,6 +241,22 @@ set {{ rewrite['set']['variable'] }} {{ rewrite['set']['value'] }};
 {% endif %}
 {% if rewrite['uninitialized_variable_warn'] is defined and rewrite['uninitialized_variable_warn'] is boolean %}
 uninitialized_variable_warn {{ rewrite['uninitialized_variable_warn'] | ternary('on', 'off') }};
+{% endif %}
+
+{% endmacro %}
+
+{# NGINX HTTP Split Clients -- ngx_http_split_clients_module #}
+{% macro split_clients(split_clients) %}{# 'split_clients' directive is only available in the 'http' context #}
+{% if split_clients['string'] is defined and split_clients['variable'] is defined %}
+split_clients {{ split_clients['string'] }} {{ split_clients['variable'] }} {
+{% if split_clients['content'] is defined %}
+{% for content_line in split_clients['content'] if split_clients['content'] is not mapping  %}
+    {{ content_line['percentage'] }} {{ content_line['value'] }};
+{% else %}
+    {{ split_clients['content']['percentage'] }} {{ split_clients['content']['value'] }};
+{% endfor %}
+{% endif %}
+}
 {% endif %}
 
 {% endmacro %}
