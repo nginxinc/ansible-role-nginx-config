@@ -201,18 +201,26 @@ map_hash_bucket_size {{ map['hash_bucket_size'] }};
 {% if map['hash_max_size'] is defined %}
 map_hash_max_size {{ map['hash_max_size'] }};
 {% endif %}
-{% if map['mappings']['string'] is defined and map['mappings']['variable'] is defined %}
-map {{ map['mappings']['string'] }} {{ map['mappings']['variable'] }} {
-    {{ 'hostnames;' if map['mappings']['hostnames'] is defined and map['mappings']['hostnames'] is boolean and map['mappings']['hostnames'] | bool }}
-    {{ 'volatile;' if map['mappings']['volatile'] is defined and map['mappings']['volatile'] is boolean and map['mappings']['volatile'] | bool }}
-{% if map['mappings']['content'] is defined %}
-{% for content_line in map['mappings']['content'] if map['mappings']['content'] is not mapping %}
+{% if map['mappings'] is defined and map['mappings'] is iterable %}
+{% for map_data in map['mappings'] %}
+{% if map_data['string'] is defined and map_data['variable'] is defined %}
+map {{ map_data['string'] }} {{ map_data['variable'] }} {
+{% if map_data['hostnames'] is defined and map_data['hostnames'] is boolean and map_data['hostnames'] | bool %}
+    hostnames;
+{% endif %}
+{% if map_data['volatile'] is defined and map_data['volatile'] is boolean and map_data['volatile'] | bool %}
+    volatile;
+{% endif %}
+{% if map_data['content'] is defined %}
+{% for content_line in map_data['content'] if map_data['content'] is not mapping %}
     {{ content_line['value'] }} {{ content_line['new_value'] }};
 {% else %}
-    {{ map['mappings']['content']['value'] }} {{ map['mappings']['content']['new_value'] }};
+    {{ map_data['content']['value'] }} {{ map_data['content']['new_value'] }};
 {% endfor %}
 {% endif %}
 }
+{% endif %}
+{% endfor %}
 {% endif %}
 
 {% endmacro %}
