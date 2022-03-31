@@ -630,7 +630,7 @@ nginx_config_http_template:
           inactive: 20s
           min_uses: 2  # Number
           valid: 1m
-      map:  # Configure maps
+      map:  # Configure maps -- Available only in the 'http' context
         hash_bucket_size: 64
         hash_max_size: 2048
         mappings:  # Dictionary or list of dictionaries

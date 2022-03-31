@@ -124,13 +124,13 @@ match {{ match['name'] }} {
 
 {# NGINX HTTP Keyval -- ngx_http_keyval_module #}
 {# Available only in NGINX Plus #}
-{% macro keyval(keyval) %}
-{% if keyval['keyvals'] is defined %}{# 'keyval' directive is only available in the 'http' context #}
+{% macro keyval(keyval) %}{# 'keyval' module is only available in the 'http' context #}
+{% if keyval['keyvals'] is defined %}
 {% for keyval in keyval['keyvals'] %}
 keyval {{ keyval['key'] }} {{ keyval['variable'] }} {{ 'zone=' + keyval['zone'] | string }};
 {% endfor %}
 {% endif %}
-{% if keyval['zones'] is defined %}{# 'keyval_zone' directive is only available in the 'http' context #}
+{% if keyval['zones'] is defined %}
 {% for zone in keyval['zones'] %}
 keyval_zone {{ 'zone=' + zone['name'] | string + ':' + zone['size'] | string }}{{ (' state=' + zone['state'] | string) if zone['state'] is defined }}{{ (' timeout=' + zone['timeout'] | string) if zone['timeout'] is defined }}{{ (' type=' + zone['type'] | string) if zone['type'] is defined and zone['type'] in ['string', 'ip', 'prefix'] }}{{ ' sync' if zone['sync'] is defined and zone['sync'] is boolean and zone['sync'] | bool }};
 {% endfor %}
@@ -194,14 +194,14 @@ open_log_file_cache {{ 'off' if not log['open_log_file_cache'] else ('max=' + lo
 {% endmacro %}
 
 {# NGINX HTTP Map -- ngx_http_map_module #}
-{% macro map(map) %}
+{% macro map(map) %}{# 'map' module is only available in the 'http' context #}
 {% if map['hash_bucket_size'] is defined %}
 map_hash_bucket_size {{ map['hash_bucket_size'] }};
 {% endif %}
 {% if map['hash_max_size'] is defined %}
 map_hash_max_size {{ map['hash_max_size'] }};
 {% endif %}
-{% if map['mappings'] is defined and map['mappings'] is iterable %}
+{% if map['mappings'] is defined %}
 {% for map_data in map['mappings'] %}
 {% if map_data['string'] is defined and map_data['variable'] is defined %}
 map {{ map_data['string'] }} {{ map_data['variable'] }} {
