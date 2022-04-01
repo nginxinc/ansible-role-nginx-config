@@ -278,9 +278,35 @@
                   inactive: 20s
                   min_uses: 2
                   valid: 1m
+              map:
+                hash_bucket_size: 128
+                hash_max_size: 4096
+                mappings:
+                  - string: $http_host
+                    variable: $name
+                    hostnames: true
+                    volatile: true
+                    content:
+                      - value: example.com
+                        new_value: 1
+                  - string: $http_user_agent
+                    variable: $isblockaccess_ua
+                    content:
+                      - value: "default"
+                        new_value: 0
+                      - value: '"~jndi:ldap"'
+                        new_value: 1
               rewrite:
                 log: false
                 uninitialized_variable_warn: false
+              split_clients:
+                string: $remote_addr
+                variable: $upstream_split
+                content:
+                  - percentage: 20%
+                    value: appv2
+                  - percentage: "*"
+                    value: app
               sub_filter:
                 sub_filters:
                   - string: server_hostname

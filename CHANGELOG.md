@@ -10,6 +10,7 @@ ENHANCEMENTS:
 
 * Bump the Ansible `community.general` collection to `4.6.1` and `community.docker` collection to `2.2.1`.
 * Add labels to loops in `tasks/config/template-config.yml` to reduce amount of output data.
+* Add the `map` and `split_clients` directives into the `http` core template.
 
 BUG FIXES:
 
