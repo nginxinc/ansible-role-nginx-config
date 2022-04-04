@@ -1,12 +1,15 @@
 ---
 # Set SELinux enforcing for NGINX (Centos/Redhat only) - you may need to open ports on your own
 nginx_config_selinux: false
+
 # Enable enforcing mode if true. Permissive if false (audit only, no enforcing) globally (only works with nginx_config_selinux: true)
 nginx_config_selinux_enforcing: true
+
 # List of TCP ports to add to http_port_t type (80 and 443 have this type already)
 # nginx_config_selinux_tcp_ports:
 #   - 80
 #   - 443
+
 # List of UDP ports to add to http_port_t type
 # nginx_config_selinux_udp_ports:
 #   - 80
