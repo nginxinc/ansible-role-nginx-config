@@ -84,6 +84,10 @@
 {% from 'http/modules.j2' import map with context %}
 {{ map(item['config']['map']) }}
 {%- endif %}
+{% if item['config']['realip'] is defined %}
+{% from 'http/modules.j2' import realip with context %}
+{{ realip(item['config']['realip']) }}
+{%- endif %}
 {% if item['config']['rewrite'] is defined %}
 {% from 'http/modules.j2' import rewrite with context %}
 {{ rewrite(item['config']['rewrite']) }}
@@ -218,6 +222,12 @@ server {
     {{ log(server['log']) }}
 {%- endfilter %}
 {% endif %}
+{% if server['realip'] is defined %}
+{% from 'http/modules.j2' import realip with context %}
+{% filter indent(4) %}
+    {{ realip(server['realip']) }}
+{%- endfilter %}
+{% endif %}
 {% if server['rewrite'] is defined %}
 {% from 'http/modules.j2' import rewrite with context %}
 {% filter indent(4) %}
@@ -346,6 +356,12 @@ server {
 {% from 'http/modules.j2' import log with context %}
 {% filter indent(8) %}
         {{ log(location['log']) }}
+{%- endfilter %}
+{% endif %}
+{% if location['realip'] is defined %}
+{% from 'http/modules.j2' import realip with context %}
+{% filter indent(8) %}
+        {{ realip(location['realip']) }}
 {%- endfilter %}
 {% endif %}
 {% if location['rewrite'] is defined %}
