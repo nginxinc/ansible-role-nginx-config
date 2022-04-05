@@ -641,6 +641,10 @@ nginx_config_http_template:
           content:  # Dictionary or list of dictionaries
             - value: default
               new_value: 0
+      realip:  # Configure RealIP directives
+        set_real_ip_from: 0.0.0.0
+        real_ip_header: X-Real-IP
+        real_ip_recursive: false  # Boolean
       rewrite:  # Configure rewrite directives
         return:  # Can also be set to a return URL or code directly -- Not available in the 'http' context
           code: 200  # Required -- You have to set either 'code' or 'url'
