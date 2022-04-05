@@ -184,6 +184,11 @@
                   - field: Accept-Encoding
                     value: '""'
                 socket_keepalive: false
+              gunzip:
+                enable: true
+                buffers:
+                  number: 32
+                  size: 4k
               gzip:
                 enable: true
                 buffers:
@@ -519,6 +524,8 @@
                         last_modified: false
                         once: true
                     - location: /backend
+                      mirror:
+                        uri: /mirror
                       proxy_pass: http://backend_servers/
                       proxy:
                         set_header:
@@ -530,6 +537,10 @@
                             value: $proxy_add_x_forwarded_for
                           - field: X-Forwarded-Proto
                             value: $scheme
+                    - location: /mirror
+                      internal: true
+                      proxy:
+                        pass: http://127.0.0.1/
           - template_file: http/default.conf.j2
             deployment_location: /etc/nginx/conf.d/frontend_default.conf
             config:
