@@ -422,6 +422,11 @@
                 exact_size: true
                 format: html
                 localtime: true
+              gunzip:
+                enable: true
+                buffers:
+                  number: 32
+                  size: 4k
               gzip:
                 enable: true
                 buffers:
@@ -589,11 +594,17 @@
                         limit_except:
                           method: GET
                           directive: "allow all"
+                      mirror:
+                        uri: /mirror
                       proxy:
                         pass: http://frontend_servers/
                     - location: /backend
                       proxy:
                         pass: http://backend_servers/
+                    - location: /mirror
+                      internal: true
+                      proxy:
+                        pass: http://127.0.0.1/
           - template_file: http/default.conf.j2
             deployment_location: /etc/nginx/conf.d/frontend_default.conf
             config:
