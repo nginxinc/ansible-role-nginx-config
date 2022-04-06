@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.1 (Unreleased)
+## 0.5.1 (April 6, 2022)
 
 FEATURES:
 
@@ -12,6 +12,7 @@ ENHANCEMENTS:
 * Add labels to loops in `tasks/config/template-config.yml` to reduce amount of output data.
 * Implement `gunzip`, `map`, `mirror`, `realip` and `split_clients` modules into `http` templates.
 * Streamline configuring SELinux.
+* Update Dependabot to trigger updates at the same time across all NGINX core roles at the same time and to avoid triggering release drafter on GitHub actions dependency updates.
 
 BUG FIXES:
 
