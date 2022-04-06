@@ -21,7 +21,7 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
     ---
     collections:
       - name: community.general
-        version: 4.6.1
+        version: 4.7.0
       - name: ansible.posix
         version: 1.3.0
       - name: community.docker  # Only required if you plan to use Molecule (see below)
