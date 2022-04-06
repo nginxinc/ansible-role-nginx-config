@@ -56,6 +56,10 @@
 {% from 'http/modules.j2' import autoindex with context %}
 {{ autoindex(item['config']['autoindex']) }}
 {%- endif %}
+{% if item['config']['gunzip'] is defined %}
+{% from 'http/modules.j2' import gunzip with context %}
+{{ gunzip(item['config']['gunzip']) }}
+{%- endif %}
 {% if item['config']['gzip'] is defined %}
 {% from 'http/modules.j2' import gzip with context %}
 {{ gzip(item['config']['gzip']) }}
@@ -83,6 +87,10 @@
 {% if item['config']['map'] is defined %}
 {% from 'http/modules.j2' import map with context %}
 {{ map(item['config']['map']) }}
+{%- endif %}
+{% if item['config']['mirror'] is defined %}
+{% from 'http/modules.j2' import mirror with context %}
+{{ mirror(item['config']['mirror']) }}
 {%- endif %}
 {% if item['config']['realip'] is defined %}
 {% from 'http/modules.j2' import realip with context %}
@@ -186,6 +194,12 @@ server {
     {{ autoindex(server['autoindex']) }}
 {%- endfilter %}
 {% endif %}
+{% if server['gunzip'] is defined %}
+{% from 'http/modules.j2' import gunzip with context %}
+{% filter indent(4) %}
+    {{ gunzip(server['gunzip']) }}
+{%- endfilter %}
+{% endif %}
 {% if server['gzip'] is defined %}
 {% from 'http/modules.j2' import gzip with context %}
 {% filter indent(4) %}
@@ -220,6 +234,12 @@ server {
 {% from 'http/modules.j2' import log with context %}
 {% filter indent(4) %}
     {{ log(server['log']) }}
+{%- endfilter %}
+{% endif %}
+{% if server['mirror'] is defined %}
+{% from 'http/modules.j2' import mirror with context %}
+{% filter indent(4) %}
+    {{ mirror(server['mirror']) }}
 {%- endfilter %}
 {% endif %}
 {% if server['realip'] is defined %}
@@ -322,6 +342,12 @@ server {
         {{ autoindex(location['autoindex']) }}
 {%- endfilter %}
 {% endif %}
+{% if location['gunzip'] is defined %}
+{% from 'http/modules.j2' import gunzip with context %}
+{% filter indent(8) %}
+        {{ gunzip(location['gunzip']) }}
+{%- endfilter %}
+{% endif %}
 {% if location['gzip'] is defined %}
 {% from 'http/modules.j2' import gzip with context %}
 {% filter indent(8) %}
@@ -356,6 +382,12 @@ server {
 {% from 'http/modules.j2' import log with context %}
 {% filter indent(8) %}
         {{ log(location['log']) }}
+{%- endfilter %}
+{% endif %}
+{% if location['mirror'] is defined %}
+{% from 'http/modules.j2' import mirror with context %}
+{% filter indent(8) %}
+        {{ mirror(location['mirror']) }}
 {%- endfilter %}
 {% endif %}
 {% if location['realip'] is defined %}

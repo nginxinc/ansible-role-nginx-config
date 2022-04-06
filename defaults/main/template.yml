@@ -538,6 +538,11 @@ nginx_config_http_template:
         exact_size: true  # Boolean
         format: html
         localtime: false  # Boolean
+      gunzip:  # Configure GUNZIP
+        enable: true  # Boolean
+        buffers:
+          number: 32  # Required
+          size: 4k  # Required
       gzip:  # Configure GZIP
         enable: true  # Boolean
         buffers:
@@ -641,6 +646,9 @@ nginx_config_http_template:
           content:  # Dictionary or list of dictionaries
             - value: default
               new_value: 0
+      mirror:  # Configure Mirror directives
+        request_body: true  # Boolean
+        uri: false  # Required -- String or a list of strings -- Can alternatively be set to 'false'
       realip:  # Configure RealIP directives
         set_real_ip_from: 0.0.0.0
         real_ip_header: X-Real-IP
