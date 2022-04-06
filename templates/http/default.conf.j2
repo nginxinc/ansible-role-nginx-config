@@ -305,7 +305,7 @@ server {
 {% if location['access'] is defined %}
 {% from 'http/auth.j2' import access with context %}
 {% filter indent(8) %}
-    {{ access(location['access']) }}
+        {{ access(location['access']) }}
 {%- endfilter %}
 {% endif %}
 {% if location['auth_request'] is defined %}
