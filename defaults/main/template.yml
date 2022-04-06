@@ -81,7 +81,7 @@ nginx_config_http_template:
     deployment_location: /etc/nginx/conf.d/default.conf
     backup: true
     config:
-      upstreams:  # Configure NGINX upstreams
+      upstreams:  # Configure upstreams
         - name: backend  # Required
           servers:  # Cannot be used if 'state' directive is defined
             - address: localhost  # Required -- You can use an IP address, a Unix socket, or a domain -- include port details inline if necessary
@@ -346,7 +346,7 @@ nginx_config_http_template:
           enable: true  # Required
           uri: example.com
           port: 80
-      proxy:  # Configure Proxy
+      proxy:  # Configure proxy settings
         bind:  # Set to 'false' and remove/comment nested variables to disable proxy_bind
           address: 0.0.0.0  # Required
           transparent: false  # Boolean
@@ -501,7 +501,7 @@ nginx_config_http_template:
         ssl_trusted_certificate: /path/to/file
         ssl_verify: false  # Boolean
         ssl_verify_depth: 1
-      access:  # Configure HTTP access
+      access:  # Configure access settings
         allow: localhost  # String or a list of strings
         deny: 192.168.1.100  # String or a list of strings
       auth_basic:  # Configure basic auth
@@ -528,7 +528,7 @@ nginx_config_http_template:
         leeway: 0s
         type: signed  # Can be set to 'signed', 'encrypted' or 'nested'
         require: $valid_jwt_iss  # String or a list of strings
-      api:  # Available only in NGINX Plus -- Configure NGINX Plus HTTP API
+      api:  # Available only in NGINX Plus -- Configure HTTP API
         enable:  # true  # Set to Boolean directly to simply enable the 'api' directive -- Available only in the 'location' context
           write: true  # Boolean
         status_zone: one  # Not available in the 'http' context
@@ -567,7 +567,7 @@ nginx_config_http_template:
         expires:  # false  # Can alternatively be set to 'false'
           modified: true  # Boolean
           time: "12h"
-      health_check:  # Available only in NGINX Plus -- Configure NGINX Plus health checks
+      health_check:  # Available only in NGINX Plus -- Configure active health checks
         health_checks:  # Available only in the 'location' context
           - interval: 5s
             jitter: 0
@@ -583,7 +583,7 @@ nginx_config_http_template:
         match:  # Available only in the 'http' context
           - name: name  # Required
             conditions: []
-      keyval:  # Available only in NGINX Plus -- Configure NGINX Plus key value store
+      keyval:  # Available only in NGINX Plus -- Configure key value store
         keyvals:  # Available only in the 'http' context
           - key: key  # Required
             variable: $var  # Required
@@ -646,14 +646,14 @@ nginx_config_http_template:
           content:  # Dictionary or list of dictionaries
             - value: default
               new_value: 0
-      mirror:  # Configure Mirror directives
+      mirror:  # Configure mirrors
         request_body: true  # Boolean
-        uri: false  # Required -- String or a list of strings -- Can alternatively be set to 'false'
-      realip:  # Configure RealIP directives
+        uri: false  # String or a list of strings -- Can alternatively be set to 'false'
+      realip:  # Configure RealIP
         set_real_ip_from: 0.0.0.0
         real_ip_header: X-Real-IP
         real_ip_recursive: false  # Boolean
-      rewrite:  # Configure rewrite directives
+      rewrite:  # Configure rewrites
         return:  # Can also be set to a return URL or code directly -- Not available in the 'http' context
           code: 200  # Required -- You have to set either 'code' or 'url'
           text: text  # Only available when using 'code'
@@ -675,7 +675,7 @@ nginx_config_http_template:
             value: appv2  # Required
           - percentage: "*"  # Required
             value: app  # Required
-      sub_filter:  # Configure sub_filter directives
+      sub_filter:  # Configure sub filters
         sub_filters:  # Dictionary or a list of dictionaries
           - string: server_hostname  # Required
             replacement: $hostname  # Required
@@ -747,7 +747,7 @@ nginx_config_stream_template:
   - template_file: stream/default.conf.j2
     deployment_location: /etc/nginx/conf.d/streams/stream_default.conf
     config:
-      upstreams:  # Configure NGINX upstreamds
+      upstreams:  # Configure upstreams
         - name: stream_upstream  # Required
           servers:
             - address: 0.0.0.0:9091  # Required
@@ -811,7 +811,7 @@ nginx_config_stream_template:
         tcp_nodelay: true  # Boolean
         variables_hash_bucket_size: 64
         variables_hash_max_size: 1024
-      ssl:  # Configure Stream SSL
+      ssl:  # Configure SSL
         alpn: http/1.1  # String or a list of strings
         certificate: /etc/ssl/certs/molecule.crt  # String or a list of strings
         certificate_key: /etc/ssl/private/molecule.key  # String or a list of strings
@@ -844,7 +844,7 @@ nginx_config_stream_template:
         trusted_certificate: /path/to/file
         verify_client: false  # Boolean -- Can also be set to 'optional' or 'optional_no_ca'
         verify_depth: 1  # Number
-      proxy:  # Configure Stream Proxy
+      proxy:  # Configure proxy settings
         bind:  # Set to 'false' and remove/comment nested variables to disable proxy_bind
           address: 0.0.0.0  # Required
           transparent: false  # Boolean
@@ -878,7 +878,7 @@ nginx_config_stream_template:
         ssl_verify_depth: 1  # Number
         timeout: 10m
         upload_rate: 0
-      health_check:  # Available only in NGINX Plus -- Configure NGINX Plus health checks
+      health_check:  # Available only in NGINX Plus -- Configure active health checks
         health_checks:  # Available only in the 'server' context
           - interval: 5s
             jitter: 0
@@ -895,7 +895,7 @@ nginx_config_stream_template:
             conditions:
               - status 200
         timeout: 60s
-      keyval:  # Available only in NGINX Plus -- Configure NGINX Plus key value store
+      keyval:  # Available only in NGINX Plus -- Configure key value store
         keyvals:  # Available only in the 'stream' context
           - key: key  # Required
             variable: $var  # Required

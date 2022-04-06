@@ -37,7 +37,7 @@ autoindex_localtime {{ autoindex['localtime'] | ternary('on', 'off') }};
 
 {% endmacro %}
 
-{# NGINX HTTP GUNZIP template -- ngx_http_gunzip_module #}
+{# NGINX HTTP GUNZIP -- ngx_http_gunzip_module #}
 {% macro gunzip(gunzip) %}
 {% if gunzip['enable'] is defined and gunzip['enable'] is boolean %}
 gunzip {{ gunzip['enable'] | ternary('on', 'off') }};
@@ -48,7 +48,7 @@ gunzip_buffers {{ gunzip['buffers']['number'] }} {{ gunzip['buffers']['size'] }}
 
 {% endmacro %}
 
-{# NGINX HTTP GZIP template -- ngx_http_gzip_module #}
+{# NGINX HTTP GZIP -- ngx_http_gzip_module #}
 {% macro gzip(gzip) %}
 {% if gzip['enable'] is defined and gzip['enable'] is boolean %}
 gzip {{ gzip['enable'] | ternary('on', 'off') }};
@@ -238,7 +238,6 @@ map {{ map_data['string'] }} {{ map_data['variable'] }} {
 
 {# NGINX HTTP Mirror -- ngx_http_mirror_module #}
 {% macro mirror(mirror) %}
-{% if mirror is defined %}
 {% if mirror['uri'] is defined and mirror['uri'] is not mapping %}
 {%  for uri in mirror['uri'] if mirror['uri'] is not string %}
 mirror {{ 'off' if not uri else uri }};
@@ -248,7 +247,6 @@ mirror {{ 'off' if not mirror['uri'] else mirror['uri'] }};
 {% endif %}
 {% if mirror['request_body'] is defined and mirror['request_body'] is boolean %}
 mirror_request_body {{ mirror['request_body'] | ternary('on', 'off') }};
-{% endif %}
 {% endif %}
 
 {% endmacro %}
