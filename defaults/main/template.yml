@@ -17,8 +17,8 @@ nginx_config_main_template:
   backup: true
   config:
     main:  # Configure NGINX main core directives
-      load_module: modules/ngx_http_js_module.so  # String or a list of strings
-        # - modules/ngx_http_js_module.so
+      # load_module: modules/ngx_http_js_module.so  # String or a list of strings
+      #   - modules/ngx_http_js_module.so
       user:  # nginx  # Can alternatively be set to a 'username' string
         username: nginx  # Required
         group: nginx
@@ -66,9 +66,9 @@ nginx_config_main_template:
       worker_connections: 1024  # Number
     http:
       include: /etc/nginx/conf.d/*.conf  # String or a list of strings
-    stream:
-      include:  # String or a list of strings
-        - /etc/nginx/conf.d/stream/*.conf
+    # stream:
+    #   include:  # String or a list of strings
+    #     - /etc/nginx/conf.d/stream/*.conf
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase

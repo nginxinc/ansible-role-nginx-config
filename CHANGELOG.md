@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.2 (Unreleased)
+
+BUG FIXES:
+
+Improve the NGINX main config defaults to bring them closer to the standard NGINX defaults on a fresh NGINX install.
+
 ## 0.5.1 (April 6, 2022)
 
 FEATURES:
