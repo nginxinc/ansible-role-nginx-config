@@ -65,7 +65,9 @@ nginx_config_main_template:
       # worker_aio_requests: 32  # Number
       worker_connections: 1024  # Number
     http:
-      include: /etc/nginx/conf.d/*.conf  # String or a list of strings
+      include:  # String or a list of strings
+        - /etc/nginx/mime.types
+        - /etc/nginx/conf.d/*.conf
     # stream:
     #   include:  # String or a list of strings
     #     - /etc/nginx/conf.d/stream/*.conf
