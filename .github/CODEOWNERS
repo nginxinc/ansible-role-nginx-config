@@ -2,5 +2,5 @@
 #####################
 
 * @alessfg
-.github/workflows/*
+/.github/workflows/
 *.md
