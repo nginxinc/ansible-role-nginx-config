@@ -2,6 +2,10 @@
 
 ## 0.5.2 (Unreleased)
 
+ENHANCEMENTS:
+
+Bump the Ansible `community.general` collection to `5.1.1`, `ansible.posix` collection to `1.4.0` and `community.docker` collection to `2.6.0`.
+
 BUG FIXES:
 
 Improve the NGINX main config defaults to bring them closer to the standard NGINX defaults on a fresh NGINX install.
