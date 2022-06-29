@@ -118,7 +118,8 @@ health_check{{ (' interval=' + health_check['interval'] | string) if health_chec
 {{- (' port=' + health_check['port'] | string) if health_check['port'] is defined -}}
 {{- ' type=grpc' if health_check['grpc_service'] is defined or health_check['grpc_status'] is defined -}}
 {{- (' grpc_service=' + health_check['grpc_service'] | string) if health_check['grpc_service'] is defined -}}
-{{- (' grpc_status=' + health_check['grpc_status'] | string) if health_check['grpc_status'] is defined }};
+{{- (' grpc_status=' + health_check['grpc_status'] | string) if health_check['grpc_status'] is defined -}}
+{{- (' keepalive_time=' + health_check['keepalive_time'] | string) if health_check['keepalive_time'] is defined }};
 {% endfor %}
 {% endif %}
 {% if health_check['match'] is defined and health_check['match'] is not string and health_check['match'] is not mapping %}{# 'match' directive is only available in the 'http' context #}

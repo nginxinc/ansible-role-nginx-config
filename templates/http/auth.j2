@@ -74,7 +74,7 @@ auth_jwt_leeway {{ auth_jwt['leeway'] }};
 auth_jwt_type {{ auth_jwt['type'] }};
 {% endif %}
 {% if auth_jwt['require'] is defined %}
-auth_jwt_require {{ auth_jwt['require'] if auth_jwt['require'] is string else auth_jwt['require'] | join(' ') }};
+auth_jwt_require {{ auth_jwt['require']['values'] if auth_jwt['require']['values'] is string else auth_jwt['require']['values'] | join(' ') }}{{ (' ' + auth_jwt['require']['error'] | string) if auth_jwt['require']['error'] in ['401', '403'] }};
 {% endif %}
 
 {% endmacro %}

@@ -4,7 +4,10 @@
 
 ENHANCEMENTS:
 
-Bump the Ansible `community.general` collection to `5.1.1`, `ansible.posix` collection to `1.4.0` and `community.docker` collection to `2.6.0`.
+* Bump the Ansible `community.general` collection to `5.1.1`, `ansible.posix` collection to `1.4.0` and `community.docker` collection to `2.6.0`.
+* Add support for the latest NGINX Plus R26 directives:
+  * `auth_jwt_require` now allows you to optionally set the `error` code you wish to return.
+  * `health_check` now lets you set a `keepalive_time`.
 
 BUG FIXES:
 
