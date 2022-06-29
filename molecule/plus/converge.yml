@@ -214,7 +214,7 @@
                 leeway: 0s
                 type: nested
                 require:
-                  values: jwt
+                  values: $jwt_claim_iss
                   error: 403
               auth_request:
                 uri: false
