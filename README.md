@@ -68,43 +68,43 @@ The NGINX config Ansible role supports all platforms supported by [NGINX Open So
 
 ```yaml
 Alpine:
-  - 3.11
-  - 3.12
   - 3.13
   - 3.14
+  - 3.15
+  - 3.16
 Amazon Linux:
   - 2
 CentOS:
   - 7.4+
-  - 8
 Debian:
   - buster (10)
   - bullseye (11)
 Red Hat:
   - 7.4+
   - 8
+  - 9
 SUSE/SLES:
   - 12
   - 15
 Ubuntu:
   - bionic (18.04)
   - focal (20.04)
-  - hirsute (21.04)
+  - impish (21.10)
+  - jammy (22.04)
 ```
 
 ### NGINX Plus
 
 ```yaml
 Alpine:
-  - 3.11
-  - 3.12
   - 3.13
   - 3.14
+  - 3.15
+  - 3.16
 Amazon Linux 2:
   - any
 CentOS:
   - 7.4+
-  - 8
 Debian:
   - buster (10)
   - bullseye (11)
@@ -116,12 +116,14 @@ Oracle Linux:
 Red Hat:
   - 7.4+
   - 8
+  - 9
 SUSE/SLES:
   - 12
   - 15
 Ubuntu:
   - bionic (18.04)
   - focal (20.04)
+  - jammy (22.04)
 ```
 
 ## Role Variables

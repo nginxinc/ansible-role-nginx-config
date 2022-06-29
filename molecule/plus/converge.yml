@@ -213,7 +213,9 @@
                   name: info
                 leeway: 0s
                 type: nested
-                require: jwt
+                require:
+                  values: jwt
+                  error: 403
               auth_request:
                 uri: false
                 set:
@@ -416,6 +418,7 @@
                             persistent: false
                             match: nginx
                             port: 80
+                            keepalive_time: 0
                       proxy:
                         bind: false
                         buffer_size: 4k

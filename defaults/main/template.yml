@@ -529,7 +529,9 @@ nginx_config_http_template:
         key_request: /path/to/file
         leeway: 0s
         type: signed  # Can be set to 'signed', 'encrypted' or 'nested'
-        require: $valid_jwt_iss  # String or a list of strings
+        require:
+          values: $valid_jwt_iss  # Required -- String or a list of strings
+          error: 401  # Can be set to '401' or '403'
       api:  # Available only in NGINX Plus -- Configure HTTP API
         enable:  # true  # Set to Boolean directly to simply enable the 'api' directive -- Available only in the 'location' context
           write: true  # Boolean
@@ -582,6 +584,7 @@ nginx_config_http_template:
             port: 80
             grpc_service: service
             grpc_status: 12
+            keepalive_time: 0
         match:  # Available only in the 'http' context
           - name: name  # Required
             conditions: []

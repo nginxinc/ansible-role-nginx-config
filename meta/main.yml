@@ -24,6 +24,7 @@ galaxy_info:
       versions:
         - '7'
         - '8'
+        - '9'
     - name: FreeBSD
       versions:
         - '12.1'
@@ -31,7 +32,8 @@ galaxy_info:
       versions:
         - bionic
         - focal
-        - hirsute
+        - impish
+        - jammy
     - name: SLES
       versions:
         - '12'
