@@ -20,7 +20,7 @@
   ansible.builtin.lineinfile:
     path: /etc/nginx/nginx.conf
     insertbefore: BOF
-    line: "load_module {{ item }};"
+    line: load_module {{ item }};
   loop: "{{ nginx_config_modules }}"
   when:
     - nginx_config_modules is defined

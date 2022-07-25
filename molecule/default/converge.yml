@@ -146,7 +146,7 @@
                 directio: false
                 directio_alignment: 512
                 disable_symlinks:
-                  check: 'on'
+                  check: "on"
                   from: $document_root
                 error_page:
                   - code:
@@ -453,7 +453,7 @@
                   always: false
                 expires:
                   modified: true
-                  time: "12h"
+                  time: 12h
               limit_req:
                 limit_reqs:
                   - zone: one
@@ -503,7 +503,7 @@
                   - string: $http_user_agent
                     variable: $isblockaccess_ua
                     content:
-                      - value: "default"
+                      - value: default
                         new_value: 0
                       - value: '"~jndi:ldap"'
                         new_value: 1
@@ -593,7 +593,7 @@
                         alias: /
                         limit_except:
                           method: GET
-                          directive: "allow all"
+                          directive: allow all
                       mirror:
                         uri: /mirror
                       proxy:
@@ -626,7 +626,7 @@
                       - string: server_url
                         replacement: $request_uri
                       - string: remote_addr
-                        replacement: '$remote_addr:$remote_port'
+                        replacement: $remote_addr:$remote_port
                       - string: server_date
                         replacement: $time_local
                       - string: client_browser
@@ -674,7 +674,7 @@
                       - string: server_url
                         replacement: $request_uri
                       - string: remote_addr
-                        replacement: '$remote_addr:$remote_port'
+                        replacement: $remote_addr:$remote_port
                       - string: server_date
                         replacement: $time_local
                       - string: client_browser
