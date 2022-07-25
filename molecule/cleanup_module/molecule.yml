@@ -7,7 +7,6 @@ driver:
   name: docker
 lint: |
   set -e
-  yamllint .
   ansible-lint --force-color
 platforms:
   - name: alpine-3.13
@@ -15,29 +14,29 @@ platforms:
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     volumes:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    command: "/sbin/init"
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    command: /sbin/init
   - name: centos-7
     image: centos:7
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     volumes:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    command: "/usr/sbin/init"
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    command: /usr/sbin/init
   - name: debian-buster
     image: debian:buster-slim
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     volumes:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    command: "/sbin/init"
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    command: /sbin/init
   - name: ubuntu-bionic
     image: ubuntu:bionic
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     volumes:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
-    command: "/sbin/init"
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    command: /sbin/init
 provisioner:
   name: ansible
   playbooks:

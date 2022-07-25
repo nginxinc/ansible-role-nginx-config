@@ -13,6 +13,11 @@ BUG FIXES:
 
 Improve the NGINX main config defaults to bring them closer to the standard NGINX defaults on a fresh NGINX install.
 
+TESTS:
+
+* Remove Yamllint (Ansible Lint now incorporates Yamllint).
+* Skip Ansible Lint line length rule.
+
 ## 0.5.1 (April 6, 2022)
 
 FEATURES:
