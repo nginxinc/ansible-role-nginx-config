@@ -15,6 +15,7 @@ Improve the NGINX main config defaults to bring them closer to the standard NGIN
 
 TESTS:
 
+* Update GitHub actions to only skip \*plus\* scenarios when the NGINX Plus license secrets are not present (it used to only run the NGINX Plus test scenarios during internal PRs).
 * Remove Yamllint (Ansible Lint now incorporates Yamllint).
 * Skip Ansible Lint line length rule.
 
