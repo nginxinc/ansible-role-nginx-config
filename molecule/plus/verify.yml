@@ -20,6 +20,7 @@
       failed_when: (service is changed) or (service is failed)
 
     - name: Functional tests
+      when: ansible_os_family != "Alpine"
       block:
         - name: Check that a page returns a status 200 and fail if the words Hello World are not in the page contents
           ansible.builtin.uri:
@@ -40,7 +41,6 @@
           register: event
           changed_when: false
           failed_when: event.stdout == "0"
-      when: ansible_os_family != "Alpine"
 
     - name: Check default.conf exists
       ansible.builtin.stat:
