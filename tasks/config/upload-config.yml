@@ -1,5 +1,6 @@
 ---
 - name: Upload NGINX config snippets
+  when: nginx_config_upload_enable | bool
   block:
     - name: Ensure NGINX config snippet directories exist
       ansible.builtin.file:
@@ -16,9 +17,9 @@
         mode: 0644
       loop: "{{ nginx_config_upload }}"
       notify: (Handler - NGINX Config) Run NGINX
-  when: nginx_config_upload_enable | bool
 
 - name: Upload HTML files
+  when: nginx_config_upload_html_enable | bool
   block:
     - name: Ensure HTML directory exists
       ansible.builtin.file:
@@ -35,9 +36,9 @@
         mode: 0644
       loop: "{{ nginx_config_upload_html }}"
       notify: (Handler - NGINX Config) Run NGINX
-  when: nginx_config_upload_html_enable | bool
 
 - name: Upload NGINX SSL certificates and keys
+  when: nginx_config_upload_ssl_enable | bool
   block:
     - name: Ensure SSL certificate and key directories exist
       ansible.builtin.file:
@@ -62,4 +63,3 @@
         mode: 0640
       loop: "{{ nginx_config_upload_ssl_key }}"
       no_log: true
-  when: nginx_config_upload_ssl_enable | bool
