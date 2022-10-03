@@ -8,6 +8,7 @@ ENHANCEMENTS:
 * Add support for the latest NGINX Plus R26 directives:
   * `auth_jwt_require` now allows you to optionally set the `error` code you wish to return.
   * `health_check` now lets you set a `keepalive_time`.
+* Add support for the latest NGINX App Protect DoS directives (`app_protect_dos_arb_fqdn`, `app_protect_dos_api`, and `app_protect_dos_accelerated_mitigation`).
 
 BUG FIXES:
 
