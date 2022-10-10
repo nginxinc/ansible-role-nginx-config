@@ -348,6 +348,9 @@ nginx_config_http_template:
           enable: true  # Required
           uri: example.com
           port: 80
+        arb_fqdn: 192.168.1.10  # Available only in the 'http' context
+        api: false  # Available only in the 'location' context
+        accelerated_mitigation: false  # Available only in the 'http' context
       proxy:  # Configure proxy settings
         bind:  # Set to 'false' and remove/comment nested variables to disable proxy_bind
           address: 0.0.0.0  # Required

@@ -161,6 +161,17 @@
                 failure_mode_action: pass
                 cookie_seed: testseed
                 compressed_requests_action: drop
+              app_protect_dos:
+                liveliness:
+                  enable: true
+                  uri: /app_protect_dos_liveliness
+                  port: 8090
+                readiness:
+                  enable: true
+                  uri: /app_protect_dos_readiness
+                  port: 8090
+                arb_fqdn: 192.168.1.10
+                accelerated_mitigation: false
               grpc:
                 bind:
                   address: $remote_addr
@@ -396,6 +407,7 @@
                           path: /etc/app_protect_dos/log-default.json
                           dest: syslog:server=10.1.1.1:514
                         monitor: http://10.1.1.1:5000/monitor
+                        api: true
                       auth_jwt:
                         enable: false
                         leeway: 0s
