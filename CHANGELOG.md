@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.2 (Unreleased)
+## 0.5.2 (October 17, 2022)
 
 ENHANCEMENTS:
 
