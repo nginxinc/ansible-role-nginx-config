@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.3 (Unreleased)
+
+BUG FIXES:
+
+GitHub actions should now correctly skip \*plus\* scenarios only when the NGINX Plus license secrets are not present.
+
 ## 0.5.2 (October 17, 2022)
 
 ENHANCEMENTS:
