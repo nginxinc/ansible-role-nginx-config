@@ -47,7 +47,7 @@
   ansible.builtin.file:
     path: "{{ item.config.core.client_body_temp_path.path }}"
     state: directory
-    owner: "{{ nginx_config_main_template.user | default('nginx') }}"
+    owner: "{{ nginx_config_main_template.config.main.user.username | default('nginx') }}"
     mode: 0755
   loop: "{{ nginx_config_http_template }}"
   loop_control:
@@ -60,7 +60,7 @@
   ansible.builtin.file:
     path: "{{ item.1.path }}"
     state: directory
-    owner: "{{ nginx_config_main_template.user | default('nginx') }}"
+    owner: "{{ nginx_config_main_template.config.main.user.username | default('nginx') }}"
     mode: 0755
   loop: "{{ nginx_config_http_template | subelements('config.proxy.cache_path', skip_missing=True) }}"
   loop_control:
