@@ -6,6 +6,10 @@ BUG FIXES:
 
 GitHub actions should now correctly skip \*plus\* scenarios only when the NGINX Plus license secrets are not present.
 
+TESTS:
+
+Update GitHub actions to run on Ubuntu 22.04 (and thus support `cgroups` v2).
+
 ## 0.5.2 (October 17, 2022)
 
 ENHANCEMENTS:

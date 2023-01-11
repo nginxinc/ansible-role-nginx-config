@@ -14,17 +14,17 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
 
 ### Ansible
 
-* This role is developed and tested with [maintained](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) versions of Ansible core (above `2.11`).
+* This role is developed and tested with [maintained](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) versions of Ansible core (above `2.12`).
 * When using Ansible core, you will also need to install the following collections:
 
     ```yaml
     ---
     collections:
-      - name: community.general
-        version: 5.5.0
       - name: ansible.posix
         version: 1.4.0
-      - name: community.docker  # Only required if you plan to use Molecule (see below)
+      - name: community.general
+        version: 5.5.0
+      - name: community.docker # Only required if you plan to use Molecule (see below)
         version: 3.1.0
     ```
 
@@ -67,20 +67,29 @@ The NGINX config Ansible role supports all platforms supported by [NGINX Open So
 ### NGINX Open Source
 
 ```yaml
+AlmaLinux:
+  - 8
+  - 9
 Alpine:
-  - 3.13
   - 3.14
   - 3.15
   - 3.16
+  - 3.17
 Amazon Linux:
   - 2
 CentOS:
   - 7.4+
 Debian:
-  - buster (10)
   - bullseye (11)
+Oracle Linux:
+  - 7
+  - 8
+  - 9
 Red Hat:
   - 7.4+
+  - 8
+  - 9
+Rocky Linux:
   - 8
   - 9
 SUSE/SLES:
@@ -96,17 +105,20 @@ Ubuntu:
 ### NGINX Plus
 
 ```yaml
+AlmaLinux:
+  - 8
+  - 9
 Alpine:
   - 3.13
   - 3.14
   - 3.15
   - 3.16
+  - 3.17
 Amazon Linux 2:
   - any
 CentOS:
   - 7.4+
 Debian:
-  - buster (10)
   - bullseye (11)
 FreeBSD:
   - 12.1+
@@ -115,6 +127,9 @@ Oracle Linux:
   - 7.4+
 Red Hat:
   - 7.4+
+  - 8
+  - 9
+Rocky Linux:
   - 8
   - 9
 SUSE/SLES:
@@ -157,8 +172,6 @@ You can find the Ansible NGINX Core collection of roles to install and configure
 You can find the Ansible NGINX role to install NGINX OSS and NGINX Plus [here](https://github.com/nginxinc/ansible-role-nginx).
 
 You can find the Ansible NGINX App Protect role to install and configure NGINX App Protect WAF and NGINX App Protect DoS [here](https://github.com/nginxinc/ansible-role-nginx-app-protect).
-
-You can find the Ansible NGINX Controller collection of roles to install and configure NGINX Controller [here](https://github.com/nginxinc/ansible-collection-nginx_controller).
 
 You can find the Ansible NGINX Unit role to install NGINX Unit [here](https://github.com/nginxinc/ansible-role-nginx-unit).
 
