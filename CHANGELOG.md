@@ -12,7 +12,8 @@ GitHub actions should now correctly skip \*plus\* scenarios only when the NGINX 
 
 TESTS:
 
-Update GitHub actions to run on Ubuntu 22.04 (and thus support `cgroups` v2).
+* Update GitHub actions to run on Ubuntu 22.04 (and thus support `cgroups` v2).
+* Explicitly specify `amd64` as the platform used in Molecule tests. This will ensure that tests work as expected when run on different host architectures (e.g. newer Macbooks with `arm` processors).
 
 ## 0.5.2 (October 17, 2022)
 
