@@ -2,9 +2,7 @@
 collections:
   - name: ansible.posix
     version: 1.4.0
-  - name: community.crypto
-    version: 2.5.0
-  - name: community.docker
-    version: 3.1.0
   - name: community.general
-    version: 5.5.0
+    version: 6.2.0
+  - name: community.docker # Only required if you plan to use Molecule
+    version: 3.4.0

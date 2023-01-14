@@ -2,6 +2,10 @@
 
 ## 0.5.3 (Unreleased)
 
+ENHANCEMENTS:
+
+Bump the Ansible `community.general` collection to `6.2.0` and `community.docker` collection to `3.4.0`.
+
 BUG FIXES:
 
 GitHub actions should now correctly skip \*plus\* scenarios only when the NGINX Plus license secrets are not present.
