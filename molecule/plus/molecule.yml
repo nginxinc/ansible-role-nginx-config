@@ -11,6 +11,7 @@ lint: |
 platforms:
   - name: centos-7
     image: centos:7
+    platform: amd64
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     cgroupns_mode: host
@@ -19,6 +20,7 @@ platforms:
     command: /usr/sbin/init
   - name: ubuntu-bionic
     image: ubuntu:bionic
+    platform: amd64
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     cgroupns_mode: host

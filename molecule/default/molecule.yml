@@ -11,6 +11,7 @@ lint: |
 platforms:
   - name: alpine-3.17
     image: alpine:3.17
+    platform: amd64
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     cgroupns_mode: host
@@ -19,6 +20,7 @@ platforms:
     command: /sbin/init
   - name: rhel-9
     image: redhat/ubi9:9.1.0
+    platform: amd64
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     cgroupns_mode: host
@@ -27,6 +29,7 @@ platforms:
     command: /usr/sbin/init
   - name: debian-bullseye
     image: debian:bullseye-slim
+    platform: amd64
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     cgroupns_mode: host
@@ -35,6 +38,7 @@ platforms:
     command: /sbin/init
   - name: ubuntu-jammy
     image: ubuntu:jammy
+    platform: amd64
     dockerfile: ../common/Dockerfile.j2
     privileged: true
     cgroupns_mode: host
