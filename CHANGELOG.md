@@ -4,7 +4,8 @@
 
 ENHANCEMENTS:
 
-Bump the Ansible `community.general` collection to `6.2.0` and `community.docker` collection to `3.4.0`.
+* Support the `include` directive in the main NGINX context.
+* Bump the Ansible `community.general` collection to `6.2.0` and `community.docker` collection to `3.4.0`.
 
 BUG FIXES:
 

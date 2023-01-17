@@ -12,6 +12,11 @@
         nginx_config_selinux_tcp_ports:
           - 80
 
+        nginx_config_upload_enable: true
+        nginx_config_upload:
+          - src: ../common/files/snippets/modules.conf
+            dest: /etc/nginx/modules.conf
+
         nginx_config_upload_ssl_enable: true
         nginx_config_upload_ssl_crt:
           - src: ../common/files/ssl/molecule.crt
@@ -69,6 +74,8 @@
               use: epoll
               worker_aio_requests: 32
               worker_connections: 512
+            include:
+              - /etc/nginx/modules.conf
             http:
               include:
                 - /etc/nginx/conf.d/*.conf

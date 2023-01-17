@@ -64,13 +64,14 @@ nginx_config_main_template:
       # use: epoll
       # worker_aio_requests: 32  # Number
       worker_connections: 1024  # Number
+    # include:  # String or a list of strings
+    #   - /etc/nginx/modules.conf
     http:
       include:  # String or a list of strings
         - /etc/nginx/mime.types
         - /etc/nginx/conf.d/*.conf
     # stream:
-    #   include:  # String or a list of strings
-    #     - /etc/nginx/conf.d/stream/*.conf
+    #   include: /etc/nginx/conf.d/stream/*.conf  # String or a list of strings
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
