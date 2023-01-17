@@ -5,6 +5,14 @@
 {{ main(nginx_config_main_template['config']['main']) }}
 {%- endif %}
 
+{% if nginx_config_main_template['config']['include'] is defined and nginx_config_main_template['config']['include'] is not mapping %}
+{% for file in nginx_config_main_template['config']['include'] if nginx_config_main_template['config']['include'] is not string %}
+include {{ file }};
+{% else %}
+include {{ nginx_config_main_template['config']['include'] }};
+{% endfor %}
+{%- endif %}
+
 events {
 {% if nginx_config_main_template['config']['events'] is defined %}
 {% from 'core.j2' import events with context %}

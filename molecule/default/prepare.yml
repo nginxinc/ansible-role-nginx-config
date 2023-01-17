@@ -8,3 +8,4 @@
       vars:
         nginx_modules:
           - njs
+          - perl
