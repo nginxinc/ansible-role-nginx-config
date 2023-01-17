@@ -691,9 +691,10 @@ nginx_config_http_template:
         last_modified: false  # Boolean
         once: true  # Boolean
         types: text/html  # String or a list of strings
-      custom_directives:  # String or a list of strings. Custom directive for specific use cases not covered by templates. Note: You need to add a semi-colon at the end of each directive.
+      custom_directives:  # String or a list of strings. Custom directive for specific use cases not covered by templates. Note: You need to include each directive in its full form. Make sure you add a semi-colon or closing curly bracket at the end of each directive.
         - fastcgi_split_path_info ^(.+\.php)(/.+)$;
         - fastcgi_pass unix:/run/php/php7.2-fpm.sock;
+        # - if ($request_method = POST) { return 405; }
       servers:  # All previous modules are also available (when allowed) in the 'servers' and 'locations' contexts.
         - core:
           proxy:
@@ -750,7 +751,7 @@ nginx_config_rest_api_dashboard_deny:  # Optional
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
 # the options available for templating. Each dictionary in the top level list/array represents a new configuration file.
 # Unless otherwise noted, all variables are *strings* and *optional* (*required* values inside a dictionary are only required if the top level variable is defined).
-# Most (not all) of these directives can also be used under the 'server' and 'location' contexts, as briefly seen at the end of the below dictionary.
+# Most (not all) of these directives can also be used under the 'server' context, as briefly seen at the end of the below dictionary.
 nginx_config_stream_template_enable: false
 nginx_config_stream_template:
   - template_file: stream/default.conf.j2
@@ -942,8 +943,8 @@ nginx_config_stream_template:
           inactive: 20s
           min_uses: 2  # Number
           valid: 1m
-        custom_directives:  # String or a list of strings. Custom directive for specific use cases not covered by templates. Note: You need to add a semi-colon at the end of each directive.
-          - server {};
-      servers:
+      custom_directives:  # String or a list of strings. Custom directive for specific use cases not covered by templates. Note: You need to include each directive in its full form. Make sure you add a semi-colon or closing curly bracket at the end of each directive.
+        - server {};
+      servers:   # All previous modules are also available (when allowed) in the 'servers' context.
         - core:
           proxy:
