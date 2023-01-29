@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.5.3 (Unreleased)
+## 0.6.0 (Unreleased)
 
 ENHANCEMENTS:
 
+* Standardize code from dot to array notation to keep in with the standards set by the other roles in the Ansible NGINX core collection.
 * Bump the minimum version of Ansible core required to run the role to `2.12` (`2.11` is no longer supported by Ansible).
 * Support the `include` directive in the main NGINX context.
 * Bump the Ansible `community.general` collection to `6.2.0` and `community.docker` collection to `3.4.0`.
@@ -16,7 +17,7 @@ BUG FIXES:
 TESTS:
 
 * Update GitHub actions to run on Ubuntu 22.04 (and thus support `cgroups` v2).
-* Explicitly specify `amd64` as the platform used in Molecule tests. This will ensure that tests work as expected when run on different host architectures (e.g. newer Macbooks with `arm` processors).
+* Explicitly specify `amd64` as the platform used in NGINX Plus Molecule tests. This will ensure that tests involving NGINX App Protect will work as expected when run on different host architectures (e.g. newer Macbooks with `arm` processors).
 
 ## 0.5.2 (October 17, 2022)
 

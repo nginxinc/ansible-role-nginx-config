@@ -1,7 +1,7 @@
 ---
 - name: Ensure HTML directory exists
   ansible.builtin.file:
-    path: "{{ item.deployment_location | default('/usr/share/nginx/html') | dirname }}"
+    path: "{{ item['deployment_location'] | default('/usr/share/nginx/html') | dirname }}"
     state: directory
     mode: 0755
   loop: "{{ nginx_config_html_demo_template }}"
@@ -9,9 +9,9 @@
 
 - name: Dynamically generate HTML files
   ansible.builtin.template:
-    src: "{{ item.template_file | default('www/index.html.j2') }}"
-    dest: "{{ item.deployment_location | default('/usr/share/nginx/html/index.html') }}"
-    backup: "{{ item.backup | default(true) }}"
+    src: "{{ item['template_file'] | default('www/index.html.j2') }}"
+    dest: "{{ item['deployment_location'] | default('/usr/share/nginx/html/index.html') }}"
+    backup: "{{ item['backup'] | default(true) }}"
     mode: 0644
   loop: "{{ nginx_config_html_demo_template }}"
   when: nginx_config_html_demo_template_enable | bool
@@ -29,63 +29,63 @@
 
 - name: Ensure NGINX main directory exists
   ansible.builtin.file:
-    path: "{{ nginx_config_main_template.deployment_location | default('/etc/nginx') | dirname }}"
+    path: "{{ nginx_config_main_template['deployment_location'] | default('/etc/nginx') | dirname }}"
     state: directory
     mode: 0755
   when: nginx_config_main_template_enable | bool
 
 - name: Dynamically generate NGINX main configuration file
   ansible.builtin.template:
-    src: "{{ nginx_config_main_template.template_file | default('nginx.conf.j2') }}"
-    dest: "{{ nginx_config_main_template.deployment_location | default('/etc/nginx/nginx.conf') }}"
-    backup: "{{ nginx_config_main_template.backup | default(true) }}"
+    src: "{{ nginx_config_main_template['template_file'] | default('nginx.conf.j2') }}"
+    dest: "{{ nginx_config_main_template['deployment_location'] | default('/etc/nginx/nginx.conf') }}"
+    backup: "{{ nginx_config_main_template['backup'] | default(true) }}"
     mode: 0644
   when: nginx_config_main_template_enable | bool
   notify: (Handler - NGINX Config) Run NGINX
 
 - name: Ensure NGINX client body cache directories exist
   ansible.builtin.file:
-    path: "{{ item.config.core.client_body_temp_path.path }}"
+    path: "{{ item['config']['core']['client_body_temp_path']['path'] }}"
     state: directory
-    owner: "{{ nginx_config_main_template.config.main.user.username | default('nginx') }}"
+    owner: "{{ nginx_config_main_template['config']['main']['user']['username'] | default('nginx') }}"
     mode: 0755
   loop: "{{ nginx_config_http_template }}"
   loop_control:
-    label: "{{ item.config.core.client_body_temp_path.path | default('config.core.client_body_temp_path.path undefined') }}"
+    label: "{{ item['config']['core']['client_body_temp_path']['path'] | default('config[''core''][''client_body_temp_path''][''path''] undefined') }}" # noqa jinja[spacing]
   when:
     - nginx_config_http_template_enable | bool
-    - item.config.core.client_body_temp_path.path is defined
+    - item['config']['core']['client_body_temp_path']['path'] is defined
 
 - name: Ensure NGINX proxy cache directories exist
   ansible.builtin.file:
-    path: "{{ item.1.path }}"
+    path: "{{ item[1]['path'] }}"
     state: directory
-    owner: "{{ nginx_config_main_template.config.main.user.username | default('nginx') }}"
+    owner: "{{ nginx_config_main_template['config']['main']['user']['username'] | default('nginx') }}"
     mode: 0755
-  loop: "{{ nginx_config_http_template | subelements('config.proxy.cache_path', skip_missing=True) }}"
+  loop: "{{ nginx_config_http_template | subelements(['config', 'proxy', 'cache_path'], skip_missing=True) }}"
   loop_control:
-    label: "{{ item.1.path | default('config.proxy.cache_path.path undefined') }}"
+    label: "{{ item[1]['path'] | default('config[''proxy''][''cache_path''][''path''] undefined') }}" # noqa jinja[spacing]
   when: nginx_config_http_template_enable | bool
 
 - name: Ensure NGINX HTTP directory exists
   ansible.builtin.file:
-    path: "{{ item.deployment_location | default('/etc/nginx/conf.d/') | dirname }}"
+    path: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/') | dirname }}"
     state: directory
     mode: 0755
   loop: "{{ nginx_config_http_template }}"
   loop_control:
-    label: "{{ item.deployment_location | default('/etc/nginx/conf.d/') | dirname }}"
+    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/') | dirname }}"
   when: nginx_config_http_template_enable | bool
 
 - name: Dynamically generate NGINX HTTP config files
   ansible.builtin.template:
-    src: "{{ item.template_file | default('http/default.conf.j2') }}"
-    dest: "{{ item.deployment_location | default('/etc/nginx/conf.d/default.conf') }}"
-    backup: "{{ item.backup | default(true) }}"
+    src: "{{ item['template_file'] | default('http/default.conf.j2') }}"
+    dest: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/default.conf') }}"
+    backup: "{{ item['backup'] | default(true) }}"
     mode: 0644
   loop: "{{ nginx_config_http_template }}"
   loop_control:
-    label: "{{ item.deployment_location | default('/etc/nginx/conf.d/default.conf') }}"
+    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/default.conf') }}"
   when: nginx_config_http_template_enable | bool
   notify: (Handler - NGINX Config) Run NGINX
 
@@ -109,22 +109,22 @@
 
 - name: Ensure NGINX stream directory exists
   ansible.builtin.file:
-    path: "{{ item.deployment_location | default('/etc/nginx/conf.d/') | dirname }}"
+    path: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/') | dirname }}"
     state: directory
     mode: 0755
   loop: "{{ nginx_config_stream_template }}"
   loop_control:
-    label: "{{ item.deployment_location | default('/etc/nginx/conf.d/') | dirname }}"
+    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/') | dirname }}"
   when: nginx_config_stream_template_enable | bool
 
 - name: Dynamically generate NGINX stream config files
   ansible.builtin.template:
-    src: "{{ item.template_file | default('stream/default.conf.j2') }}"
-    dest: "{{ item.deployment_location | default('/etc/nginx/conf.d/stream_default.conf') }}"
+    src: "{{ item['template_file'] | default('stream/default.conf.j2') }}"
+    dest: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream_default.conf') }}"
     backup: true
     mode: 0644
   loop: "{{ nginx_config_stream_template }}"
   loop_control:
-    label: "{{ item.deployment_location | default('/etc/nginx/conf.d/stream_default.conf') }}"
+    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream_default.conf') }}"
   notify: (Handler - NGINX Config) Run NGINX
   when: nginx_config_stream_template_enable | bool

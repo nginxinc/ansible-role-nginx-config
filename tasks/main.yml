@@ -3,7 +3,7 @@
   ansible.builtin.include_tasks: "{{ role_path }}/tasks/prerequisites/setup-selinux.yml"
   when:
     - nginx_config_selinux | bool
-    - "'selinux' in ansible_facts"
+    - ('selinux' in ansible_facts)
     - ansible_facts['selinux']['mode'] is defined
     - ansible_facts['os_family'] in ['RedHat', 'Suse']
   tags: nginx_config_selinux
