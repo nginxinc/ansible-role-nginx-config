@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.3 (Unreleased)
+## 0.6.0 (Unreleased)
 
 ENHANCEMENTS:
 

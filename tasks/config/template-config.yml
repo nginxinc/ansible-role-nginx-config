@@ -62,7 +62,7 @@
     state: directory
     owner: "{{ nginx_config_main_template['config']['main']['user']['username'] | default('nginx') }}"
     mode: 0755
-  loop: "{{ nginx_config_http_template | subelements('config[''proxy''][''cache_path'']', skip_missing=True) }}"
+  loop: "{{ nginx_config_http_template | subelements('config.proxy.cache_path', skip_missing=True) }}"
   loop_control:
     label: "{{ item[1]['path'] | default('config[''proxy''][''cache_path''][''path''] undefined') }}" # noqa jinja[spacing]
   when: nginx_config_http_template_enable | bool
