@@ -4,12 +4,14 @@
 
 ENHANCEMENTS:
 
+* Bump the minimum version of Ansible core required to run the role to `2.12` (`2.11` is no longer supported by Ansible).
 * Support the `include` directive in the main NGINX context.
 * Bump the Ansible `community.general` collection to `6.2.0` and `community.docker` collection to `3.4.0`.
 
 BUG FIXES:
 
-GitHub actions should now correctly skip \*plus\* scenarios only when the NGINX Plus license secrets are not present.
+* GitHub actions should now correctly skip \*plus\* scenarios only when the NGINX Plus license secrets are not present.
+* The `ignore-tags` GitHub actions key does not exist. Replace it with the correct key, `tags-ignore`.
 
 TESTS:
 
