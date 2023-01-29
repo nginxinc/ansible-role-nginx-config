@@ -18,6 +18,7 @@ TESTS:
 
 * Update GitHub actions to run on Ubuntu 22.04 (and thus support `cgroups` v2).
 * Explicitly specify `amd64` as the platform used in NGINX Plus Molecule tests. This will ensure that tests involving NGINX App Protect will work as expected when run on different host architectures (e.g. newer Macbooks with `arm` processors).
+* Update the versions of the Ansible NGINX and NGINX App Protect roles used by Molecule.
 
 ## 0.5.2 (October 17, 2022)
 
