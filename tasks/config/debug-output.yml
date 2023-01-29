@@ -8,5 +8,5 @@
 
 - name: Print NGINX config
   ansible.builtin.debug:
-    var: config_full.stdout_lines
-  when: config_full.stdout_lines is defined
+    var: config_full['stdout_lines']
+  when: config_full['stdout_lines'] is defined

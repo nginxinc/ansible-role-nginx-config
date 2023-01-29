@@ -4,6 +4,7 @@
 
 ENHANCEMENTS:
 
+* Standardize code from dot to array notation to keep in with the standards set by the other roles in the Ansible NGINX core collection.
 * Bump the minimum version of Ansible core required to run the role to `2.12` (`2.11` is no longer supported by Ansible).
 * Support the `include` directive in the main NGINX context.
 * Bump the Ansible `community.general` collection to `6.2.0` and `community.docker` collection to `3.4.0`.
