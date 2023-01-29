@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.0 (Unreleased)
+## 0.6.0 (January 29, 2023)
 
 ENHANCEMENTS:
 
