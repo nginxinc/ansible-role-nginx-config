@@ -11,7 +11,9 @@
   ansible.posix.selinux:
     state: permissive
     policy: targeted
-  when: not (ansible_check_mode and nginx_config_selinux_enforcing)
+  when:
+    - not ansible_check_mode
+    - not nginx_config_selinux_enforcing
 
 - name: Allow SELinux HTTP network connections
   ansible.posix.seboolean:
