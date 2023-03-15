@@ -13,4 +13,4 @@
       ansible.builtin.file:
         path: /etc/nginx/conf.d/mock.conf
         state: touch
-        mode: 0644
+        mode: "0644"
