@@ -6,7 +6,7 @@
       ansible.builtin.file:
         path: "{{ item['dest'] | dirname if item['dest'].endswith('.conf') else item['dest'] | default('/etc/nginx') }}"
         state: directory
-        mode: 0755
+        mode: "0755"
       loop: "{{ nginx_config_upload }}"
 
     - name: Upload NGINX config snippet files
@@ -14,7 +14,7 @@
         src: "{{ item['src'] }}"
         dest: "{{ item['dest'] | default('/etc/nginx/') }}"
         backup: "{{ item['backup'] | default(true) }}"
-        mode: 0644
+        mode: "0644"
       loop: "{{ nginx_config_upload }}"
       notify: (Handler - NGINX Config) Run NGINX
 
@@ -25,7 +25,7 @@
       ansible.builtin.file:
         path: "{{ item['dest'] | dirname if item['dest'].endswith('.html') else item['dest'] | default('/usr/share/nginx/html') }}"
         state: directory
-        mode: 0755
+        mode: "0755"
       loop: "{{ nginx_config_upload_html }}"
 
     - name: Upload HTML files
@@ -33,7 +33,7 @@
         src: "{{ item['src'] }}"
         dest: "{{ item['dest'] | default('/usr/share/nginx/html') }}"
         backup: "{{ item['backup'] | default(true) }}"
-        mode: 0644
+        mode: "0644"
       loop: "{{ nginx_config_upload_html }}"
       notify: (Handler - NGINX Config) Run NGINX
 
@@ -44,7 +44,7 @@
       ansible.builtin.file:
         path: "{{ item['dest'] }}"
         state: directory
-        mode: 0755
+        mode: "0755"
       loop: "{{ nginx_config_upload_ssl_crt + nginx_config_upload_ssl_key }}"
 
     - name: Upload NGINX SSL certificates
@@ -52,7 +52,7 @@
         src: "{{ item['src'] }}"
         dest: "{{ item['dest'] | default('/etc/ssl/certs') }}"
         backup: "{{ item['backup'] | default(true) }}"
-        mode: 0640
+        mode: "0640"
       loop: "{{ nginx_config_upload_ssl_crt }}"
 
     - name: Upload NGINX SSL keys
@@ -60,6 +60,6 @@
         src: "{{ item['src'] }}"
         dest: "{{ item['dest'] | default('/etc/ssl/private') }}"
         backup: "{{ item['backup'] | default(true) }}"
-        mode: 0640
+        mode: "0640"
       loop: "{{ nginx_config_upload_ssl_key }}"
       no_log: true
