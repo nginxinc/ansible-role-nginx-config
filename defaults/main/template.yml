@@ -647,14 +647,14 @@ nginx_config_http_template:
       map:  # Configure maps -- Available only in the 'http' context
         hash_bucket_size: 64
         hash_max_size: 2048
-        mappings:  # Dictionary or list of dictionaries
-          string: $remote_addr  # Required
-          variable: $upstream  # Required
-          hostnames: false  # Boolean
-          volatile: false  # Boolean
-          content:  # Dictionary or list of dictionaries
-            - value: default
-              new_value: 0
+        mappings:  # List of dictionaries
+          - string: $remote_addr  # Required
+            variable: $upstream  # Required
+            hostnames: false  # Boolean
+            volatile: false  # Boolean
+            content:  # Dictionary or list of dictionaries
+              - value: default
+                new_value: 0
       mirror:  # Configure mirrors
         request_body: true  # Boolean
         uri: false  # String or a list of strings -- Can alternatively be set to 'false'
