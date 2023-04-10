@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1 (Unreleased)
+
+BUG FIXES:
+
+* The default template now has a proper example value and comment for the `map.mappings` directive.
+
 ## 0.6.0 (January 29, 2023)
 
 ENHANCEMENTS:
