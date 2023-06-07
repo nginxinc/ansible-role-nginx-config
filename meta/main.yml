@@ -12,7 +12,7 @@ galaxy_info:
   platforms:
     - name: Alpine
       versions: [all]
-    - name: Amazon Linux 2
+    - name: Amazon Linux
       versions: ['2', '2023']
     - name: Debian
       versions: [bullseye]
