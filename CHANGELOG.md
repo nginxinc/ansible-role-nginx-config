@@ -2,13 +2,19 @@
 
 ## 0.6.1 (Unreleased)
 
+ENHANCEMENTS:
+
+- Bump the Ansible `community.general` collection to `7.0.1`, `ansible.posix` collection to `1.5.2`, `community.crypto` collection to `2.13.1`, and `community.docker` collection to `3.4.6`.
+
 BUG FIXES:
 
 - The default template now has a proper example value and comment for the `map.mappings` directive.
 
 CI/CD:
 
+- Split Ansible Lint into its own GH actions job since Molecule no longer runs linters natively.
 - Replace `molecule[docker]` with `molecule` and `molecule-plugins[docker]`.
+- Explicitly set the `ansible-compat` version.
 - Add pre-releases to Release Drafter.
 
 ## 0.6.0 (January 29, 2023)
