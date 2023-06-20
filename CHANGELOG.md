@@ -4,7 +4,7 @@
 
 ENHANCEMENTS:
 
-- Bump the Ansible `community.general` collection to `7.0.1`, `ansible.posix` collection to `1.5.2`, `community.crypto` collection to `2.13.1`, and `community.docker` collection to `3.4.6`.
+- Bump the Ansible `community.general` collection to `7.1.0`, `ansible.posix` collection to `1.5.4`, `community.crypto` collection to `2.14.0`, and `community.docker` collection to `3.4.7`.
 
 BUG FIXES:
 
@@ -12,9 +12,9 @@ BUG FIXES:
 
 CI/CD:
 
-- Split Ansible Lint into its own GH actions job since Molecule no longer runs linters natively.
+- Split Ansible Lint into its own GitHub Actions job since Molecule no longer runs linters natively.
 - Replace `molecule[docker]` with `molecule` and `molecule-plugins[docker]`.
-- Explicitly set the `ansible-compat` version.
+- Explicitly set the `ansible-compat` version (commented out for the time being whilst waiting for a new release of Molecule).
 - Add pre-releases to Release Drafter.
 
 ## 0.6.0 (January 29, 2023)
@@ -28,12 +28,12 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-- GitHub actions should now correctly skip \*plus\* scenarios only when the NGINX Plus license secrets are not present.
-- The `ignore-tags` GitHub actions key does not exist. Replace it with the correct key, `tags-ignore`.
+- GitHub Actions should now correctly skip \*plus\* scenarios only when the NGINX Plus license secrets are not present.
+- The `ignore-tags` GitHub Actions key does not exist. Replace it with the correct key, `tags-ignore`.
 
 TESTS:
 
-- Update GitHub actions to run on Ubuntu 22.04 (and thus support `cgroups` v2).
+- Update GitHub Actions to run on Ubuntu 22.04 (and thus support `cgroups` v2).
 - Explicitly specify `amd64` as the platform used in NGINX Plus Molecule tests. This will ensure that tests involving NGINX App Protect will work as expected when run on different host architectures (e.g. newer Macbooks with `arm` processors).
 - Update the versions of the Ansible NGINX and NGINX App Protect roles used by Molecule.
 
@@ -53,7 +53,7 @@ Improve the NGINX main config defaults to bring them closer to the standard NGIN
 
 TESTS:
 
-- Update GitHub actions to only skip \*plus\* scenarios when the NGINX Plus license secrets are not present (it used to only run the NGINX Plus test scenarios during internal PRs).
+- Update GitHub Actions to only skip \*plus\* scenarios when the NGINX Plus license secrets are not present (it used to only run the NGINX Plus test scenarios during internal PRs).
 - Remove Yamllint (Ansible Lint now incorporates Yamllint).
 - Skip Ansible Lint line length rules. Slightly refactor code to incorporate changes added to Ansible Lint 6.7.0.
 
@@ -69,7 +69,7 @@ ENHANCEMENTS:
 - Add labels to loops in `tasks/config/template-config.yml` to reduce amount of output data.
 - Implement `gunzip`, `map`, `mirror`, `realip` and `split_clients` modules into `http` templates.
 - Streamline configuring SELinux.
-- Update Dependabot to trigger updates at the same time across all NGINX core roles at the same time and to avoid triggering release drafter on GitHub actions dependency updates.
+- Update Dependabot to trigger updates at the same time across all NGINX core roles at the same time and to avoid triggering release drafter on GitHub Actions dependency updates.
 
 BUG FIXES:
 
@@ -339,19 +339,19 @@ FEATURES:
 ENHANCEMENTS:
 
 - Move the `gzip` HTTP config template into the `modules` file. It's a small module and did not warrant being in its own individual file.
-- Update Ansible Lint to `5.1.3`, Molecule to `3.4.0`, yamllint to `1.26.3` and Docker Python SDK to `5.0.2`.
+- Update Ansible Lint to `5.1.3`, Molecule to `3.4.0`, Yamllint to `1.26.3` and Docker Python SDK to `5.0.2`.
 - Consolidate Molecule testing scenarios to address changes introduced in Ansible Lint `5.*`.
-- Specify GitHub actions Ubuntu release.
+- Specify GitHub Actions Ubuntu release.
 - Minor GitHub template tweaks, including the creation of a SECURITY doc.
 - Replace Molecule tests using Debian stretch with Debian buster (stretch has reached its EoL), and update list of supported platforms.
 - Replace Ansible base with Ansible core. Ansible core will be the "core" Ansible release moving forward from Ansible `2.11`.
-- Update GitHub actions to add a workflow dispatch option.
-- Update GitHub actions `if` conditionals to use the `contains` function instead of checking for exact names.
+- Update GitHub Actions to add a workflow dispatch option.
+- Update GitHub Actions `if` conditionals to use the `contains` function instead of checking for exact names.
 - Remove Debian Buster from the `plus` Molecule scenario since it often fails in the GitHub Actions CI/CD pipeline.
 - Replace "yes"/"no" boolean values with "true"/"false" to comply with YAML spec `1.2`.
 - Ensure the default values for the `nginx.conf` template match the default values found on a fresh NGINX installation.
 - Change Dependabot frequency from daily to weekly.
-- Minor touch-up of GitHub actions workflows.
+- Minor touch-up of GitHub Actions workflows.
 
 BUG FIXES:
 
@@ -373,7 +373,7 @@ ENHANCEMENTS:
 - Add support for NGINX GRPC directives.
 - Add support for NGINX GZIP directives.
 - Add support for upstream server `backup` parameter in http and stream template.
-- Only run GitHub actions Galaxy CI/CD workflow when a new release is published.
+- Only run GitHub Actions Galaxy CI/CD workflow when a new release is published.
 - Update list of supported platforms.
 - Update Ansible base to `2.10.5` and Ansible to `2.10.6`.
 
@@ -387,8 +387,8 @@ BUG FIXES:
 
 ENHANCEMENTS:
 
-- The GitHub actions Molecule CI/CD workflow is no longer run on a new release (this is not necessary since it already runs on every push).
-- The GitHub actions Molecule CI/CD workflow should now correctly avoid running 'Plus' related tests on external PRs.
+- The GitHub Actions Molecule CI/CD workflow is no longer run on a new release (this is not necessary since it already runs on every push).
+- The GitHub Actions Molecule CI/CD workflow should now correctly avoid running 'Plus' related tests on external PRs.
 - The `cleanup-config.yml` playbook has been slightly refactored and simplified.
 - Update Ansible base to `2.10.4`, Ansible to `2.10.5`, Molecule to `3.2.2` and Docker Python SDK to `4.4.1`.
 - Update copyright notice.
@@ -398,7 +398,7 @@ ENHANCEMENTS:
 ENHANCEMENTS:
 
 - Update Molecule to `3.2.1` and Docker Python SDK to `4.4.0`.
-- Replace TravisCI with GitHub actions.
+- Replace TravisCI with GitHub Actions.
 
 BUG FIXES:
 
@@ -417,7 +417,7 @@ ENHANCEMENTS:
 
 - Add survey to README.
 - Improve README structure and use tables where relevant.
-- Update Ansible (now Ansible base) to `2.10.3`, Ansible (now Ansible Community Distribution) to `2.10.3`, Ansible Lint to `4.3.7`, Molecule to `3.1.5`, and yamllint to `1.25.0`.
+- Update Ansible (now Ansible base) to `2.10.3`, Ansible (now Ansible Community Distribution) to `2.10.3`, Ansible Lint to `4.3.7`, Molecule to `3.1.5`, and Yamllint to `1.25.0`.
 - Improve templating of stub status and REST API config.
 
 BUG FIXES:
