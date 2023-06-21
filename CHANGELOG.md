@@ -13,6 +13,7 @@ BUG FIXES:
 CI/CD:
 
 - Split Ansible Lint into its own GitHub Actions job since Molecule no longer runs linters natively.
+- Remove the "stable" part of the `stable_push` Molecule scenario since installing the NGINX stable branch is already tested by the core NGINX Ansible role.
 - Replace `molecule[docker]` with `molecule` and `molecule-plugins[docker]`.
 - Explicitly set the `ansible-compat` version (commented out for the time being whilst waiting for a new release of Molecule).
 - Add pre-releases to Release Drafter.
