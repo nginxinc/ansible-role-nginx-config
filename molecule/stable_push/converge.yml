@@ -8,7 +8,6 @@
       vars:
         nginx_config_debug_output: true
 
-        nginx_branch: stable
         nginx_config_upload_enable: true
         nginx_config_upload:
           - src: ../common/files/snippets/location_snippet.conf
