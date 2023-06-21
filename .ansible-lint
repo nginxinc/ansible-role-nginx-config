@@ -1,4 +1,6 @@
 ---
 offline: true
+exclude_paths:
+  - .github/
 skip_list:
   - yaml[line-length]

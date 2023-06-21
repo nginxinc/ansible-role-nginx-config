@@ -4,7 +4,7 @@
   tasks:
     - name: Configure NGINX
       ansible.builtin.include_role:
-        name: ansible-role-nginx-config
+        name: nginxinc.nginx_config
       vars:
         nginx_config_debug_output: true
 
