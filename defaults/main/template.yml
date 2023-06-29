@@ -204,8 +204,6 @@ nginx_config_http_template:
             port: 80
             default_server: true  # Boolean
             ssl: false  # Boolean
-            http2: false  # Boolean
-            spdy: false  # Boolean
             proxy_protocol: false  # Boolean
             fastopen: 12  # Number
             backlog: 511  # Number
@@ -219,6 +217,7 @@ nginx_config_http_template:
               keepidle: 30m
               keepintvl: 5
               keepcnt: 10
+        http2: false  # Boolean
         log_not_found: true  # Boolean
         log_subrequest: false  # Boolean
         max_ranges: 0  # Number
