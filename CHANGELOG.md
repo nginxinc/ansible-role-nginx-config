@@ -2,9 +2,15 @@
 
 ## 0.6.1 (Unreleased)
 
+BREAKING CHANGES:
+
+- `spdy` parameter `listen` is removed
+- `http2` parameter for `listen` is removed
+
 ENHANCEMENTS:
 
 - Bump the Ansible `community.general` collection to `7.1.0`, `ansible.posix` collection to `1.5.4`, `community.crypto` collection to `2.14.0`, and `community.docker` collection to `3.4.7`.
+- Options from `http_v2` module are implemented.
 
 BUG FIXES:
 
