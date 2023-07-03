@@ -345,7 +345,7 @@ http2_body_preread_size {{ http2['body_preread_size'] }};
 http2_max_concurrent_streams {{ http2['max_concurrent_streams'] }};
 {% endif %}
 {% endif %}
-{% if scope == 'http' and http2['recv_buffer_size'] is defined %} {# can only be in 'http' context #}
+{% if scope == 'http' and http2['recv_buffer_size'] is defined %}{# 'recv_buffer_size' directive is only available in the 'http' context #}
 http2_recv_buffer_size {{ http2['recv_buffer_size'] }};
 {% endif %}
 {% if http2['chunk_size'] is defined %} {# can be wherever #}
