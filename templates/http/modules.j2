@@ -348,7 +348,7 @@ http2_max_concurrent_streams {{ http2['max_concurrent_streams'] }};
 {% if scope == 'http' and http2['recv_buffer_size'] is defined %}{# 'recv_buffer_size' directive is only available in the 'http' context #}
 http2_recv_buffer_size {{ http2['recv_buffer_size'] }};
 {% endif %}
-{% if http2['chunk_size'] is defined %} {# can be wherever #}
+{% if http2['chunk_size'] is defined %}
 http2_chunk_size {{ http2['chunk_size'] }};
 {% endif %}
 {% endif %}
