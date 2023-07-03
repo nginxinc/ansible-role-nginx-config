@@ -334,7 +334,7 @@ sub_filter_types {{ sub_filter['types'] if sub_filter['types'] is string else su
 {# NGINX HTTP v2 -- ngx_http_v2_module #}
 {% macro http2(http2, scope='http') %}
 {% if http2 is defined %}
-{% if scope != 'location' %} {# 'http' and 'server' contexts #}
+{% if scope != 'location' %}{# The following scoped directives are not available in the 'location' context #}
 {% if http2['enabled'] is defined and http2['enabled'] is boolean %}
 http2 {{ http2['enabled'] | ternary('on', 'off') }};
 {% endif %}
