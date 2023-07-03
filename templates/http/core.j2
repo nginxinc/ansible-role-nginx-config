@@ -156,9 +156,6 @@ listen {{ listen['address'] if listen['address'] is defined }}{{ ':' if listen['
 {{- (' so_keepalive=' + (listen['so_keepalive']['keepidle'] | string if listen['so_keepalive']['keepidle'] is defined) + ':' + (listen['so_keepalive']['keepintvl'] | string if listen['so_keepalive']['keepintvl'] is defined) + ':' + (listen['so_keepalive']['keepcnt'] | string if listen['so_keepalive']['keepcnt'] is defined)) if listen['so_keepalive'] is defined and listen['so_keepalive'] is mapping }};
 {% endfor %}
 {% endif %}
-{% if core['http2'] is defined and core['http2'] is boolean and core['http2'] | bool %}
-http2;
-{% endif %}
 {% if core['log_not_found'] is defined and core['log_not_found'] is boolean %}
 log_not_found {{ core['log_not_found'] | ternary('on', 'off') }};
 {% endif %}

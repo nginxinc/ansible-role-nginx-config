@@ -330,3 +330,26 @@ sub_filter_types {{ sub_filter['types'] if sub_filter['types'] is string else su
 {% endif %}
 
 {% endmacro %}
+
+{# NGINX HTTP v2 -- ngx_http_v2_module #}
+{% macro http2(http2, scope='http') %}
+{% if http2 is defined %}
+{% if scope != 'location' %} {# 'http' and 'server' contexts #}
+{% if http2['enabled'] is boolean and http2['enabled'] | bool %}
+http2 on;
+{% endif %}
+{% if http2['body_preread_size'] is defined %}
+http2_body_preread_size {{ http2['body_preread_size'] }};
+{% endif %}
+{% if http2['max_concurrent_streams'] is defined %}
+http2_max_concurrent_streams
+{% endif %}
+{% endif %}
+{% if scope == 'http' and http2['recv_buffer_size'] is defined %} {# can only be in 'http' context #}
+http2_recv_buffer_size {{ http2['http2_recv_buffer_size'] }};
+{% endif %}
+{% if http2['body_chunk_size'] %} {# can be wherever #}
+http2_chunk_size {{ http2['body_chunk_size'] }};
+{% endif %}
+{% endif %}
+{% endmacro%}
