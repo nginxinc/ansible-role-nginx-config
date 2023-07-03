@@ -662,7 +662,7 @@
                         index: frontend_index.html
                         root: /usr/share/nginx/html
                       http2:
-                        chunk_size: 8k
+                        chunk_size: 10k
                     - location: /alias
                       core:
                         alias: /usr/share/nginx/html
