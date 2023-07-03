@@ -335,8 +335,8 @@ sub_filter_types {{ sub_filter['types'] if sub_filter['types'] is string else su
 {% macro http2(http2, scope='http') %}
 {% if http2 is defined %}
 {% if scope != 'location' %} {# 'http' and 'server' contexts #}
-{% if http2['enabled'] is boolean and http2['enabled'] | bool %}
-http2 on;
+{% if http2['enabled'] is boolean %}
+http2 {{ http2['enabled'] | ternary('on', 'off') }};
 {% endif %}
 {% if http2['body_preread_size'] is defined %}
 http2_body_preread_size {{ http2['body_preread_size'] }};
