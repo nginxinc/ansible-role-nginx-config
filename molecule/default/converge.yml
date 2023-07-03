@@ -230,7 +230,7 @@
                 variables_hash_bucket_size: 64
                 variables_hash_max_size: 1024
               http2:
-                enable: on
+                enable: true
                 body_preread_size: 128k
                 chunk_size: 8k
                 max_concurrent_streams: 31
@@ -550,7 +550,6 @@
                     aio:
                       threads: default
                     keepalive_timeout: 75s
-                    http2: false
                     listen:
                       - address: 0.0.0.0
                         port: 80
@@ -584,7 +583,7 @@
                       files: $uri
                       uri: /images/default.gif
                   http2:
-                    enable: off
+                    enable: false
                     chunk_size: 8k
                   auth_basic:
                     realm: false
