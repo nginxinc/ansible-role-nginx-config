@@ -229,6 +229,13 @@
                 underscores_in_headers: false
                 variables_hash_bucket_size: 64
                 variables_hash_max_size: 1024
+              http2:
+                enable: true
+                body_preread_size: 128k
+                chunk_size: 8k
+                max_concurrent_streams: 31
+                recv_buffer_size: 128k
+                recv_timeout: 10s
               ssl:
                 buffer_size: 16k
                 certificate: /etc/ssl/certs/molecule.crt
@@ -548,8 +555,6 @@
                         port: 80
                         default_server: true
                         ssl: false
-                        http2: false
-                        spdy: false
                         proxy_protocol: false
                         fastopen: 12
                         backlog: 511
@@ -577,6 +582,9 @@
                     try_files:
                       files: $uri
                       uri: /images/default.gif
+                  http2:
+                    enable: false
+                    chunk_size: 8k
                   auth_basic:
                     realm: false
                   log:
@@ -653,6 +661,8 @@
                       core:
                         index: frontend_index.html
                         root: /usr/share/nginx/html
+                      http2:
+                        chunk_size: 10k
                     - location: /alias
                       core:
                         alias: /usr/share/nginx/html
