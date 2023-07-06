@@ -1,6 +1,7 @@
 [![Ansible Galaxy](https://img.shields.io/badge/galaxy-nginxinc.nginx__config-5bbdbf.svg)](https://galaxy.ansible.com/nginxinc/nginx_config)
 [![Molecule CI/CD](https://github.com/nginxinc/ansible-role-nginx-config/workflows/Molecule%20CI/CD/badge.svg)](https://github.com/nginxinc/ansible-role-nginx-config/actions)
 [![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 # 👾 *Help make the NGINX config Ansible role better by participating in our [survey](https://forms.office.com/Pages/ResponsePage.aspx?id=L_093Ttq0UCb4L-DJ9gcUKLQ7uTJaE1PitM_37KR881UM0NCWkY5UlE5MUYyWU1aTUcxV0NRUllJSC4u)!* 👾
 
@@ -76,84 +77,9 @@ git clone https://github.com/nginxinc/ansible-role-nginx-config.git
 
 ## Platforms
 
-The NGINX config Ansible role supports all platforms supported by [NGINX Open Source](https://nginx.org/en/linux_packages.html#mainline) and [NGINX Plus](https://www.nginx.com/products/technical-specs/):
+The NGINX config Ansible role supports all platforms supported by [NGINX Open Source](https://nginx.org/en/linux_packages.html#mainline) and [NGINX Plus](https://www.nginx.com/products/technical-specs/).
 
-### NGINX Open Source
-
-```yaml
-AlmaLinux:
-  - 8
-  - 9
-Alpine:
-  - 3.14
-  - 3.15
-  - 3.16
-  - 3.17
-Amazon Linux:
-  - 2
-CentOS:
-  - 7.4+
-Debian:
-  - bullseye (11)
-Oracle Linux:
-  - 7
-  - 8
-  - 9
-Red Hat:
-  - 7.4+
-  - 8
-  - 9
-Rocky Linux:
-  - 8
-  - 9
-SUSE/SLES:
-  - 12
-  - 15
-Ubuntu:
-  - bionic (18.04)
-  - focal (20.04)
-  - impish (21.10)
-  - jammy (22.04)
-```
-
-### NGINX Plus
-
-```yaml
-AlmaLinux:
-  - 8
-  - 9
-Alpine:
-  - 3.13
-  - 3.14
-  - 3.15
-  - 3.16
-  - 3.17
-Amazon Linux 2:
-  - any
-CentOS:
-  - 7.4+
-Debian:
-  - bullseye (11)
-FreeBSD:
-  - 12.1+
-  - 13
-Oracle Linux:
-  - 7.4+
-Red Hat:
-  - 7.4+
-  - 8
-  - 9
-Rocky Linux:
-  - 8
-  - 9
-SUSE/SLES:
-  - 12
-  - 15
-Ubuntu:
-  - bionic (18.04)
-  - focal (20.04)
-  - jammy (22.04)
-```
+***Note:** You should be able to use this role to configure any NGINX installation -- wherever/however it's been installed -- at your own risk. Any potential bugs with the role involving unsupported installation methods/platforms will be addressed in a best effort manner and might be outright dismissed.*
 
 ## Role Variables
 

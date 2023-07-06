@@ -1,16 +1,22 @@
 # Changelog
 
-## 0.6.1 (Unreleased)
+## 0.7.0 (July 6, 2023)
 
 BREAKING CHANGES:
 
-- `spdy` parameter `listen` is removed
-- `http2` parameter for `listen` is removed
+- Two parameters have been removed from the `listen` dictionary:
+  - `spdy` -> This parameter is no longer supported.
+  - `http2` -> This parameter has been replaced by the `http2` directive. To enable HTTP2, use the `enable` parameter in the newly implemented `http2` module/dictionary:
+
+    ```yaml
+    http2:
+      enable: true
+    ```
 
 ENHANCEMENTS:
 
+- Initial pass at implementing directives for the `http2` (officially named `http_v2`) module.
 - Bump the Ansible `community.general` collection to `7.1.0`, `ansible.posix` collection to `1.5.4`, `community.crypto` collection to `2.14.0`, and `community.docker` collection to `3.4.7`.
-- Options from `http_v2` module are implemented.
 
 BUG FIXES:
 

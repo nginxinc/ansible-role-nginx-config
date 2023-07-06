@@ -272,12 +272,12 @@ nginx_config_http_template:
         variables_hash_bucket_size: 64  # Available only in the 'http' context
         variables_hash_max_size: 1024  # Available only in the 'http' context
       http2:  # Configure HTTP2
-        enable: false
-        body_preread_size: 64k
+        enable: false  # Boolean -- Not available in the 'location' context
+        body_preread_size: 64k  # Not available in the 'location' context
         chunk_size: 8k
-        max_concurrent_streams: 128
-        recv_buffer_size: 256k
-        recv_timeout: 20s
+        max_concurrent_streams: 128  # Number -- Not available in the 'location' context
+        recv_buffer_size: 256k  # Only available in the 'http' context
+        recv_timeout: 20s  # Not available in the 'location' context
       ssl:  # Configure SSL
         buffer_size: 16k
         certificate: /path/to/file  # String or a list of strings
