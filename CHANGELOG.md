@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.1 (Unreleased)
+
+BUG FIXES:
+
+- Add handler to reload NGINX when SSL cert or key is changed.
+
 ## 0.7.0 (July 6, 2023)
 
 BREAKING CHANGES:
