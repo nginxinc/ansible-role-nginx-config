@@ -26,6 +26,9 @@
           - src: ../common/files/ssl/molecule.key
             dest: /etc/ssl/private
             backup: true
+          - src: ../common/files/ssl/rand.key
+            dest: /etc/ssl/private
+            backup: true
 
         nginx_config_main_template_enable: true
         nginx_config_main_template:
@@ -67,6 +70,8 @@
                   threads: 32
               timer_resolution: 1s
               working_directory: /etc/nginx
+              quic:
+                bpf: false
             events:
               accept_mutex: false
               accept_mutex_delay: 500ms
@@ -236,6 +241,11 @@
                 max_concurrent_streams: 31
                 recv_buffer_size: 128k
                 recv_timeout: 10s
+              http3:
+                enable: true
+                hq: false
+                max_concurrent_streams: 100
+                stream_buffer_size: 32k
               ssl:
                 buffer_size: 16k
                 certificate: /etc/ssl/certs/molecule.crt
@@ -257,6 +267,7 @@
                   - TLSv1
                   - TLSv1.1
                   - TLSv1.2
+                  - TLSv1.3
                 reject_handshake: false
                 session_cache:
                   builtin:
@@ -569,6 +580,8 @@
                         port: 443
                         default_server: true
                         ssl: false
+                        quic: true
+                        reuseport: true
                         so_keepalive:
                           keepidle: 30m
                           keepintvl: 5
@@ -585,6 +598,14 @@
                   http2:
                     enable: false
                     chunk_size: 8k
+                  http3:
+                    enabled: false
+                    hq: true
+                  quic:
+                    active_connection_id_limit: 10
+                    gso: off
+                    retry: off
+                    host_key: /etc/ssl/private/rand.key
                   auth_basic:
                     realm: false
                   log:
