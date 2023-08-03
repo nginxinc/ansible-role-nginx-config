@@ -603,8 +603,8 @@
                     hq: true
                   quic:
                     active_connection_id_limit: 10
-                    gso: off
-                    retry: off
+                    gso: false
+                    retry: false
                     host_key: /etc/ssl/private/rand.key
                   auth_basic:
                     realm: false
