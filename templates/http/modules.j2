@@ -358,7 +358,7 @@ http2_chunk_size {{ http2['chunk_size'] }};
 http3 {{ http3['enabled'] | ternary('on', 'off') }};
 {% endif %}
 {% if http3['hq'] is defined and http3['hq'] is boolean %}
-http3 {{ http3['hq'] | ternary('on', 'off') }};
+http3_hq {{ http3['hq'] | ternary('on', 'off') }};
 {% endif %}
 {% if http3['max_concurrent_streams'] is defined and http3['max_concurrent_streams'] is number %}
 http3_max_concurrent_streams {{ http3['max_concurrent_streams'] }};
