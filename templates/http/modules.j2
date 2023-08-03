@@ -350,5 +350,37 @@ http2_recv_buffer_size {{ http2['recv_buffer_size'] }};
 {% if http2['chunk_size'] is defined %}
 http2_chunk_size {{ http2['chunk_size'] }};
 {% endif %}
+{% endmacro %}
 
+{# NGINX HTTP v3 -- ngx_http_v3_module #}
+{% macro http3(http3) %}
+{% if http3['enabled'] is defined and http3['enabled'] is boolean %}
+http3 {{ http3['enabled'] | ternary('on', 'off') }};
+{% endif %}
+{% if http3['hq'] is defined and http3['hq'] is boolean %}
+http3 {{ http3['hq'] | ternary('on', 'off') }};
+{% endif %}
+{% if http3['max_concurrent_streams'] is defined and http3['max_concurrent_streams'] is number %}
+http3_max_concurrent_streams {{ http3['max_concurrent_streams'] }};
+{% endif %}
+{% if http3['stream_buffer_size'] is defined %}
+http3_stream_buffer_size {{ http3['stream_buffer_size'] }};
+{% endif %}
+
+{% endmacro %}
+
+{# NGINX QUIC -- ngix_http_v3_module #}
+{% macro quic(quic) %}
+{% if quic['active_connection_id_limit'] is defined and quic['active_connection_id_limit'] is number %}
+quic_active_connection_id_limit {{ quic['active_connection_id_limit'] }};
+{% endif %}
+{% if quic['gso'] is defined and quic['gso'] is boolean %}
+quic_gso {{ quic['gso'] | ternary('on','off') }};
+{% endif %}
+{% if quic['host_key'] is defined %}
+quic_host_key {{ quic['host_key'] }};
+{% endif %}
+{% if quic['retry'] is defined and quic['retry'] is boolean %}
+quic_retry {{ quic['retry'] | ternary('on','off') }};
+{% endif %}
 {% endmacro %}
