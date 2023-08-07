@@ -350,6 +350,7 @@ http2_recv_buffer_size {{ http2['recv_buffer_size'] }};
 {% if http2['chunk_size'] is defined %}
 http2_chunk_size {{ http2['chunk_size'] }};
 {% endif %}
+
 {% endmacro %}
 
 {# NGINX HTTP v3 -- ngx_http_v3_module #}
