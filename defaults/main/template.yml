@@ -282,7 +282,7 @@ nginx_config_http_template:
         recv_buffer_size: 256k  # Only available in the 'http' context
         recv_timeout: 20s  # Not available in the 'location' context
       http3:
-        enable: false # Boolean
+        enable: false  # Boolean
         hq: false # Boolean
         max_concurrent_streams: 128
         stream_buffer_size: 64k
