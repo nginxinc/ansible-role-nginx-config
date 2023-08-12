@@ -6,6 +6,10 @@ BUG FIXES:
 
 - Add handler to reload NGINX when SSL cert or key is changed.
 
+CI/CD:
+
+- Uncomment the `ansible-compat` version from the CI/CD pipeline.
+
 ## 0.7.0 (July 6, 2023)
 
 BREAKING CHANGES:
