@@ -290,7 +290,7 @@ nginx_config_http_template:
         active_connection_id_limit: 2
         gso: false # Boolean
         host_key: /path/to/file
-        retry: false # Boolean
+        retry: false  # Boolean
       ssl:  # Configure SSL
         buffer_size: 16k
         certificate: /path/to/file  # String or a list of strings
