@@ -73,7 +73,7 @@ nginx_config_main_template:
     # stream:
     #   include: /etc/nginx/conf.d/stream/*.conf  # String or a list of strings
     # quic:
-    #   bpf: false # Boolean
+    #   bpf: false  # Boolean
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
