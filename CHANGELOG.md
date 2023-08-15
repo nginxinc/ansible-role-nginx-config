@@ -2,6 +2,10 @@
 
 ## 0.7.1 (Unreleased)
 
+ENHANCEMENTS:
+
+- Directives documented for `http_v3` module are implemented. 
+
 BUG FIXES:
 
 - Add handler to reload NGINX when SSL cert or key is changed.
