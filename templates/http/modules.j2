@@ -384,4 +384,5 @@ quic_host_key {{ quic['host_key'] }};
 {% if quic['retry'] is defined and quic['retry'] is boolean %}
 quic_retry {{ quic['retry'] | ternary('on','off') }};
 {% endif %}
+
 {% endmacro %}
