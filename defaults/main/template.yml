@@ -288,7 +288,7 @@ nginx_config_http_template:
         stream_buffer_size: 64k
       quic:
         active_connection_id_limit: 2
-        gso: false # Boolean
+        gso: false  # Boolean
         host_key: /path/to/file
         retry: false  # Boolean
       ssl:  # Configure SSL
