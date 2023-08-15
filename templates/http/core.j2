@@ -141,6 +141,7 @@ lingering_timeout {{ core['lingering_timeout'] }};
 listen {{ listen['address'] if listen['address'] is defined }}{{ ':' if listen['address'] is defined and listen['port'] is defined }}{{ listen['port'] if listen['port'] is defined -}}
 {{- ' default_server' if listen['default_server'] is defined and listen['default_server'] is boolean and listen['default_server'] | bool -}}
 {{- ' ssl' if listen['ssl'] is defined and listen['ssl'] is boolean and listen['ssl'] | bool -}}
+{{- ' quic' if listen['quic'] is defined and listen['quic'] is boolean and listen['quic'] | bool -}}
 {{- ' proxy_protocol' if listen['proxy_protocol'] is defined and listen['proxy_protocol'] is boolean and listen['proxy_protocol'] | bool -}}
 {{- (' setfib=' + listen['setfib'] | string) if listen['setfib'] is defined -}}
 {{- (' fastopen=' + listen['fastopen'] | string) if listen['fastopen'] is defined and listen['fastopen'] is number -}}

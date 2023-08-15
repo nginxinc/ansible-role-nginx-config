@@ -30,3 +30,6 @@
           - src: ../common/files/ssl/molecule.key
             dest: /etc/ssl/private
             backup: true
+          - src: ../common/files/ssl/rand.key
+            dest: /etc/ssl/private
+            backup: true

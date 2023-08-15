@@ -72,6 +72,8 @@ nginx_config_main_template:
         - /etc/nginx/conf.d/*.conf
     # stream:
     #   include: /etc/nginx/conf.d/stream/*.conf  # String or a list of strings
+    # quic:
+    #   bpf: false  # Boolean
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
@@ -204,6 +206,7 @@ nginx_config_http_template:
             port: 80
             default_server: true  # Boolean
             ssl: false  # Boolean
+            quic: false  # Boolean
             proxy_protocol: false  # Boolean
             fastopen: 12  # Number
             backlog: 511  # Number
@@ -278,6 +281,16 @@ nginx_config_http_template:
         max_concurrent_streams: 128  # Number -- Not available in the 'location' context
         recv_buffer_size: 256k  # Only available in the 'http' context
         recv_timeout: 20s  # Not available in the 'location' context
+      http3:
+        enable: false  # Boolean
+        hq: false  # Boolean
+        max_concurrent_streams: 128  # Number
+        stream_buffer_size: 64k
+      quic:
+        active_connection_id_limit: 2
+        gso: false  # Boolean
+        host_key: /path/to/file
+        retry: false  # Boolean
       ssl:  # Configure SSL
         buffer_size: 16k
         certificate: /path/to/file  # String or a list of strings
