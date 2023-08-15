@@ -370,8 +370,13 @@ http3_stream_buffer_size {{ http3['stream_buffer_size'] }};
 
 {% endmacro %}
 
-{# NGINX QUIC -- ngix_http_v3_module #}
-{% macro quic(quic) %}
+{# NGINX QUIC -- ngx_event_quic #} {# exposed for use and documented through ngx_http_v3_module #}
+{% macro quic(quic, scope='http') %}
+{% if scope == 'global' %}
+{% if quic is defined and quic['bpf'] is defined and quic['bpf'] is boolean %}
+quic_bpf {{ quic['bpf'] | ternary('on', 'off') }};
+{% endif %}
+{% else %}
 {% if quic['active_connection_id_limit'] is defined and quic['active_connection_id_limit'] is number %}
 quic_active_connection_id_limit {{ quic['active_connection_id_limit'] }};
 {% endif %}
@@ -383,6 +388,7 @@ quic_host_key {{ quic['host_key'] }};
 {% endif %}
 {% if quic['retry'] is defined and quic['retry'] is boolean %}
 quic_retry {{ quic['retry'] | ternary('on','off') }};
+{% endif %}
 {% endif %}
 
 {% endmacro %}
