@@ -334,8 +334,8 @@ sub_filter_types {{ sub_filter['types'] if sub_filter['types'] is string else su
 {# NGINX HTTP v2 -- ngx_http_v2_module #}
 {% macro http2(http2, scope='http') %}
 {% if scope != 'location' %}{# The following scoped directives are not available in the 'location' context #}
-{% if http2['enabled'] is defined and http2['enabled'] is boolean %}
-http2 {{ http2['enabled'] | ternary('on', 'off') }};
+{% if http2['enable'] is defined and http2['enable'] is boolean %}
+http2 {{ http2['enable'] | ternary('on', 'off') }};
 {% endif %}
 {% if http2['body_preread_size'] is defined %}
 http2_body_preread_size {{ http2['body_preread_size'] }};
