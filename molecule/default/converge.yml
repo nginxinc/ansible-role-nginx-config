@@ -599,7 +599,7 @@
                     enable: false
                     chunk_size: 8k
                   http3:
-                    enabled: false
+                    enable: false
                     hq: true
                   quic:
                     active_connection_id_limit: 10
