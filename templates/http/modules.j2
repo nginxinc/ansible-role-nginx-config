@@ -355,8 +355,8 @@ http2_chunk_size {{ http2['chunk_size'] }};
 
 {# NGINX HTTP v3 -- ngx_http_v3_module #}
 {% macro http3(http3) %}
-{% if http3['enabled'] is defined and http3['enabled'] is boolean %}
-http3 {{ http3['enabled'] | ternary('on', 'off') }};
+{% if http3['enable'] is defined and http3['enable'] is boolean %}
+http3 {{ http3['enable'] | ternary('on', 'off') }};
 {% endif %}
 {% if http3['hq'] is defined and http3['hq'] is boolean %}
 http3_hq {{ http3['hq'] | ternary('on', 'off') }};
