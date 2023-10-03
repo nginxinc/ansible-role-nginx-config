@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.7.1 (Unreleased)
+## 0.7.1 (October 3rd, 2023)
 
 ENHANCEMENTS:
 
-- Directives documented for `http_v3` module are implemented. 
+- Implement directives for the `http_v3` module. 
 
 BUG FIXES:
 
