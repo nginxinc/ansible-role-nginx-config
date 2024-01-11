@@ -102,7 +102,7 @@ Working functional playbook examples can be found in the **[`molecule/`](https:/
 | **[`cleanup_module/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/cleanup_module/converge.yml)** | Cleanup an NGINX config and configure NGINX supported modules |
 | **[`default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml)** | Use the NGINX config templating variables to create an NGINX config |
 | **[`plus/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/plus/converge.yml)** | Use the NGINX config templating variables to create an NGINX Plus config |
-| **[`push/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/stable_push/converge.yml)** | Push a preexisting config from your system to your NGINX instance |
+| **[`push/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/push/converge.yml)** | Push a preexisting config from your system to your NGINX instance |
 
 Do note that if you install this repository via Ansible Galaxy, you will have to replace the role variable in the sample playbooks from `ansible-role-nginx-config` to `nginxinc.nginx_config`.
 
