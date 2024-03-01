@@ -1,10 +1,10 @@
 # Changelog
 
-## 0.7.3 (March 1st, 2024)
+## 0.7.2 (March 1st, 2024)
 
 BUG FIXES:
 
-- Explicitly set `http_version` to string `"1.1"` in the `proxy` template, otherwise it defaults to number.
+- Explicitly set `http_version` to string `"1.1"` in the `proxy` template, otherwise it defaults to a number.
 
 ## 0.7.1 (October 3rd, 2023)
 
