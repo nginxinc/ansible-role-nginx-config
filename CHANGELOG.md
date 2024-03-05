@@ -6,6 +6,11 @@ BUG FIXES:
 
 - Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
 
+CI/CD:
+
+- Update the platforms used in the various Molecule scenarios.
+- Use the local role name (`ansible-role-nginx-config`) instead of the fully qualified role name (`nginxinc.nginx_config`) in Molecule to ensure tests always work as intended in environments where the role has been already installed beforehand.
+
 ## 0.7.1 (October 3rd, 2023)
 
 ENHANCEMENTS:
