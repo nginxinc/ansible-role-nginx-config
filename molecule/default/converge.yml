@@ -582,14 +582,14 @@
                         ssl: false
                         quic: true
                         reuseport: true
-                        so_keepalive:
-                          keepidle: 30m
-                          keepintvl: 5
-                          keepcnt: 10
                       - address: "[::]"
                         port: 80
                         default_server: true
                         ssl: false
+                        so_keepalive:
+                          keepidle: 30m
+                          keepintvl: 5
+                          keepcnt: 10
                     open_file_cache: false
                     server_name: localhost
                     try_files:
