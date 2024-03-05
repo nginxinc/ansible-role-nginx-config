@@ -206,7 +206,7 @@ nginx_config_http_template:
             port: 80
             default_server: true  # Boolean
             ssl: false  # Boolean
-            quic: false  # Boolean
+            quic: false  # Boolean  # Incompatible with the 'so_keepalive' parameter
             proxy_protocol: false  # Boolean
             fastopen: 12  # Number
             backlog: 511  # Number
@@ -217,7 +217,7 @@ nginx_config_http_template:
             http2: false  # Boolean
             ipv6only: false  # Boolean
             reuseport: false  # Boolean
-            so_keepalive:  # false  # Can alternatively be set to a 'boolean'
+            so_keepalive:  # false  # Can alternatively be set to a 'boolean' -- Incompatible with the 'quic' parameter
               keepidle: 30m
               keepintvl: 5
               keepcnt: 10

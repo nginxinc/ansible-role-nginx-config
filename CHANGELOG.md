@@ -1,10 +1,16 @@
 # Changelog
 
+## 0.7.2 (Unreleased)
+
+BUG FIXES:
+
+- Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
+
 ## 0.7.1 (October 3rd, 2023)
 
 ENHANCEMENTS:
 
-- Implement directives for the `http_v3` module. 
+- Implement directives for the `http_v3` module.
 
 BUG FIXES:
 
