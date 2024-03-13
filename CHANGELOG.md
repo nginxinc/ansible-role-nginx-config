@@ -24,6 +24,7 @@ BUG FIXES:
 CI/CD:
 
 - Uncomment the `ansible-compat` version from the CI/CD pipeline.
+- Implement F5 CLA signatures.
 
 ## 0.7.0 (July 6, 2023)
 
