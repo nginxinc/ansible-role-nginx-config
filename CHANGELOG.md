@@ -5,6 +5,7 @@
 BUG FIXES:
 
 - Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
+- Explicitly set `http_version` to string `"1.1"` in the `proxy` template, otherwise it defaults to a number.
 
 CI/CD:
 

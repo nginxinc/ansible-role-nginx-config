@@ -208,7 +208,7 @@
                 comp_level: 1
                 disable:
                   - '"msie6"'
-                http_version: 1.1
+                http_version: "1.1"
                 min_length: 20
                 proxied:
                   - expired
@@ -477,7 +477,7 @@
                         hide_header:
                           - Date
                           - X-Accel-Redirect
-                        http_version: 1.1
+                        http_version: "1.1"
                         ignore_client_abort: false
                         ignore_headers:
                           - X-Accel-Redirect
