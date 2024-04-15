@@ -44,10 +44,15 @@ jobs:
       fail-fast: false
       matrix:
         scenario:
-          - cleanup_module
+          - api
+          - cleanup_config
+          - complete
+          - complete_plus
           - default
-          - plus
-          - push
+          - push_config
+          - reverse_proxy
+          - stub_status
+          - web_server
     needs: ansible-lint
     steps:
       - name: Check out the codebase

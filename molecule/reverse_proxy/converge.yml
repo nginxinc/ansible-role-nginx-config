@@ -1,0 +1,118 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Configure NGINX
+      ansible.builtin.include_role:
+        name: ansible-role-nginx-config
+      vars:
+        nginx_config_debug_output: true
+
+        nginx_config_http_template_enable: true
+        nginx_config_http_template:
+          - template_file: http/default.conf.j2
+            deployment_location: /etc/nginx/conf.d/default.conf
+            config:
+              upstreams:
+                - name: upstr
+                  least_conn: true
+                  servers:
+                    - address: 0.0.0.0:8081
+                    - address: 0.0.0.0:8082
+              servers:
+                - core:
+                    listen:
+                      - port: 80
+                    server_name: localhost
+                  log:
+                    access:
+                      - path: /var/log/nginx/access.log
+                        format: main
+                  locations:
+                    - location: /
+                      proxy:
+                        pass: http://upstr/
+                        set_header:
+                          field: Host
+                          value: $host
+                - core:
+                    listen:
+                      - port: 8081
+                    server_name: localhost
+                  log:
+                    access:
+                      - path: /var/log/nginx/access.log
+                        format: main
+                  locations:
+                    - location: /
+                      core:
+                        root: /usr/share/nginx/html
+                        index: server_one.html
+                  sub_filter:
+                    sub_filters:
+                      - string: server_hostname
+                        replacement: $hostname
+                      - string: server_address
+                        replacement: $server_addr:$server_port
+                      - string: server_url
+                        replacement: $request_uri
+                      - string: remote_addr
+                        replacement: '$remote_addr:$remote_port'
+                      - string: server_date
+                        replacement: $time_local
+                      - string: client_browser
+                        replacement: $http_user_agent
+                      - string: request_id
+                        replacement: $request_id
+                      - string: nginx_version
+                        replacement: $nginx_version
+                      - string: document_root
+                        replacement: $document_root
+                      - string: proxied_for_ip
+                        replacement: $http_x_forwarded_for
+                    once: false
+                - core:
+                    listen:
+                      - port: 8082
+                    server_name: localhost
+                  log:
+                    access:
+                      - path: /var/log/nginx/access.log
+                        format: main
+                  locations:
+                    - location: /
+                      core:
+                        root: /usr/share/nginx/html
+                        index: server_two.html
+                  sub_filter:
+                    sub_filters:
+                      - string: server_hostname
+                        replacement: $hostname
+                      - string: server_address
+                        replacement: $server_addr:$server_port
+                      - string: server_url
+                        replacement: $request_uri
+                      - string: remote_addr
+                        replacement: '$remote_addr:$remote_port'
+                      - string: server_date
+                        replacement: $time_local
+                      - string: client_browser
+                        replacement: $http_user_agent
+                      - string: request_id
+                        replacement: $request_id
+                      - string: nginx_version
+                        replacement: $nginx_version
+                      - string: document_root
+                        replacement: $document_root
+                      - string: proxied_for_ip
+                        replacement: $http_x_forwarded_for
+                    once: false
+
+        nginx_config_html_demo_template_enable: true
+        nginx_config_html_demo_template:
+          - template_file: www/index.html.j2
+            deployment_location: /usr/share/nginx/html/server_one.html
+            web_server_name: Ansible NGINX collection - Server one
+          - template_file: www/index.html.j2
+            deployment_location: /usr/share/nginx/html/server_two.html
+            web_server_name: Ansible NGINX collection - Server two
