@@ -116,4 +116,3 @@
           - template_file: www/index.html.j2
             deployment_location: /usr/share/nginx/html/server_two.html
             web_server_name: Ansible NGINX collection - Server two
-
