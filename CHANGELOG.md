@@ -8,6 +8,7 @@ BUG FIXES:
 
 CI/CD:
 
+- Add Molecule tests covering common NGINX use cases.
 - Update the platforms used in the various Molecule scenarios.
 - Use the local role name (`ansible-role-nginx-config`) instead of the fully qualified role name (`nginxinc.nginx_config`) in Molecule to ensure tests always work as intended in environments where the role has been already installed beforehand.
 

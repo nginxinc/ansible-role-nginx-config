@@ -42,7 +42,7 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
 
 - Molecule is used to test the various functionalities of the role. The recommended version of Molecule to test this role is `4.x`.
 - Instructions on how to install Molecule can be found in the [Molecule website](https://molecule.readthedocs.io/en/latest/installation.html). *You will also need to install the Molecule Docker driver.*
-- To run the NGINX Plus/App Protect config Molecule tests, you must copy your NGINX Plus/App Protect license to the role's [`files/license`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/files/license/) folder.
+- To run the NGINX Plus/App Protect config Molecule tests, you must copy your NGINX Plus/App Protect license to the role's [`files/license`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/files/license/) directory.
 
   You can alternatively add your NGINX Plus/App Protect repository certificate and key to the local environment. Run the following commands to export these files as base64-encoded variables and execute the Molecule tests:
 
@@ -54,6 +54,8 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
 
 ## Installation
 
+This role can be installed via either Ansible Galaxy (the Ansible community marketplace) or by cloning this repo. Once installed, you will need to include the role it in your Ansible playbook using [the `roles` keyword, the `import_role` module, or the `include_role` module](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html#using-roles).
+
 ### Ansible Galaxy
 
 To install the latest stable release of the role on your system, use:
@@ -62,10 +64,18 @@ To install the latest stable release of the role on your system, use:
 ansible-galaxy install nginxinc.nginx_config
 ```
 
-Alternatively, if you have already installed the role, update the role to the latest release:
+Alternatively, if you have already installed the role, you can update the role to the latest release by using:
 
 ```bash
 ansible-galaxy install -f nginxinc.nginx_config
+```
+
+To use the role, include the following task in your playbook:
+
+```yaml
+- name: Configure NGINX
+  ansible.builtin.include_role:
+    name: nginxinc.nginx_config
 ```
 
 ### Git
@@ -76,6 +86,14 @@ To pull the latest edge commit of the role from GitHub, use:
 git clone https://github.com/nginxinc/ansible-role-nginx-config.git
 ```
 
+To use the role, include the following task in your playbook:
+
+```yaml
+- name: Configure NGINX
+  ansible.builtin.include_role:
+    name: <path/to/repo> # e.g. <roles/ansible-role-nginx-config> if you clone the repo inside your project's roles folder
+```
+
 ## Platforms
 
 The NGINX config Ansible role supports all platforms supported by [NGINX Open Source](https://nginx.org/en/linux_packages.html#mainline) and [NGINX Plus](https://www.nginx.com/products/technical-specs/).
@@ -84,7 +102,7 @@ The NGINX config Ansible role supports all platforms supported by [NGINX Open So
 
 ## Role Variables
 
-This role has multiple variables. The descriptions and defaults for all these variables can be found in the **[`defaults/main/`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/)** folder in the following files:
+This role has multiple variables. The descriptions and defaults for all these variables can be found in the **[`defaults/main/`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/)** directory in the following files:
 
 | Name | Description |
 | ---- | ----------- |
@@ -95,16 +113,21 @@ This role has multiple variables. The descriptions and defaults for all these va
 
 ## Example Playbooks
 
-Working functional playbook examples can be found in the **[`molecule/`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/)** folder in the following files:
+Working functional playbook examples can be found in the **[`molecule/`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/)** directory in the following files:
 
 | Name | Description |
 | ---- | ----------- |
-| **[`cleanup_module/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/cleanup_module/converge.yml)** | Cleanup an NGINX config and configure NGINX supported modules |
-| **[`default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml)** | Use the NGINX config templating variables to create an NGINX config |
-| **[`plus/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/plus/converge.yml)** | Use the NGINX config templating variables to create an NGINX Plus config |
-| **[`push/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/push/converge.yml)** | Push a preexisting config from your system to your NGINX instance |
+| **[`api/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/api/converge.yml)** | Configure the NGINX Plus API and live metrics dashboard |
+| **[`cleanup_config/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/cleanup_config/converge.yml)** | Cleanup an NGINX config |
+| **[`complete/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/complete/converge.yml)** | Test all NGINX directives are correctly templated |
+| **[`complete_plus/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/complete_plus/converge.yml)** | Test all NGINX Plus specific directives are correctly templated |
+| **[`default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml)** | Configure NGINX with a config as close as possible to the default config |
+| **[`push_config/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/push_config/converge.yml)** | Push a preexisting NGINX config from your system to your NGINX instance |
+| **[`reverse_proxy/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/reverse_proxy/converge.yml)** | Configure NGINX as a reverse proxy between two web servers |
+| **[`stub_status/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/stub_status/converge.yml)** | Configure the NGINX Open Source stub status metrics |
+| **[`web_server/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/web_server/converge.yml)** | Configure NGINX as a web server |
 
-Do note that if you install this repository via Ansible Galaxy, you will have to replace the role variable in the sample playbooks from `ansible-role-nginx-config` to `nginxinc.nginx_config`.
+**Note:** If you install this repository via Ansible Galaxy, you will need to replace the `include_role` variable in the example playbooks from `ansible-role-nginx-config` to `nginxinc.nginx_config`.
 
 ## Other NGINX Ansible Collections and Roles
 
