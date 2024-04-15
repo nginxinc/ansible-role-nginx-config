@@ -37,7 +37,7 @@
               core:
                 default_type: application/octet-stream
                 send_file: true
-                keepalive_timeout: 65
+                keepalive_timeout: 65s
               log:
                 format:
                   - name: main
