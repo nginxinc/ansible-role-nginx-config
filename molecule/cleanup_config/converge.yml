@@ -4,7 +4,7 @@
   tasks:
     - name: Configure NGINX
       ansible.builtin.include_role:
-        name: nginxinc.nginx_config
+        name: ansible-role-nginx-config
       vars:
         nginx_config_debug_output: true
 
@@ -15,6 +15,3 @@
             recurse: false
         nginx_config_cleanup_files:
           - /etc/nginx/conf.d/default.conf
-
-        nginx_config_modules:
-          - modules/ngx_http_js_module.so

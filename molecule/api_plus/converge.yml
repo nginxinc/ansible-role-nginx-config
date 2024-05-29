@@ -1,0 +1,20 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Configure NGINX
+      ansible.builtin.include_role:
+        name: ansible-role-nginx-config
+      vars:
+        nginx_config_debug_output: true
+
+        nginx_config_rest_api_enable: true
+        nginx_config_rest_api_template_file: http/api.conf.j2
+        nginx_config_rest_api_file_location: /etc/nginx/conf.d/api.conf
+        nginx_config_rest_api_backup: true
+        nginx_config_rest_api_port: 8080
+        nginx_config_rest_api_write: true
+        nginx_config_rest_api_access_log:
+          path: /var/log/nginx/access.log
+          format: main
+        nginx_config_rest_api_dashboard: true

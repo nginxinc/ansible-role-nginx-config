@@ -1,4 +1,4 @@
-ansible-core==2.16.4
-ansible-compat==4.1.11
+ansible-core==2.16.6
+ansible-compat==24.5.1
 yamllint==1.35.1
-ansible-lint==24.2.0
+ansible-lint==24.5.0
