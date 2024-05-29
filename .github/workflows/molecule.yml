@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix:
         scenario:
-          - api
+          - api_plus
           - cleanup_config
           - complete
           - complete_plus
