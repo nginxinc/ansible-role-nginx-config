@@ -436,7 +436,7 @@ nginx_config_http_template:
         headers_hash_bucket_size: 64
         headers_hash_max_size: 512
         hide_header: Date  # String or a list of strings
-        http_version: 1.1  # Can be set to '1.0' or '1.1'
+        http_version: '1.1'  # Can be set to '1.0' or '1.1'
         ignore_client_abort: false  # Boolean
         ignore_headers: X-Accel-Redirect  # String or a list of strings -- Can be set to 'X-Accel-Redirect', 'X-Accel-Expires', 'X-Accel-Limit-Rate', 'X-Accel-Buffering', 'X-Accel-Charset', 'Expires', 'Cache-Control', 'Set-Cookie' or 'Vary'
         intercept_errors: false  # Boolean
