@@ -2,6 +2,10 @@
 
 ## 0.7.2 (Unreleased)
 
+FEATURES:
+
+- Bump the Ansible `community.general` collection to `9.2.0`, `community.crypto` collection to `2.21.1` and `community.docker` collection to `3.11.0`.
+
 BUG FIXES:
 
 - Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
