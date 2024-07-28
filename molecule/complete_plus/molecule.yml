@@ -10,7 +10,7 @@ lint: |
   ansible-lint --force-color
 platforms:
   - name: rhel-8
-    image: redhat/ubi9:9.4
+    image: redhat/ubi8:8.10
     platform: x86_64
     dockerfile: ../common/Dockerfile.j2
     privileged: true
