@@ -6,13 +6,17 @@ BUG FIXES:
 
 - Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
 
-CI/CD:
+TESTS:
 
 - Add Molecule tests covering common NGINX use cases (web server, reverse proxy), enabling the NGINX stub status metrics, and NGINX Plus API and live metrics dashboard.
 - Update the platforms used in the various Molecule scenarios.
 - Use the local role name (`ansible-role-nginx-config`) instead of the fully qualified role name (`nginxinc.nginx_config`) in Molecule to ensure tests always work as intended in environments where the role has been already installed beforehand.
 - Update GitHub Actions to Ubuntu 24.04.
 - Switch GitHub Actions from using tags to release hashes.
+
+MAINTENANCE:
+
+- Remove CentOS 7 related artifacts, tests, and metadata since RHEL 7 related distributions are no longer tested nor supported.
 
 ## 0.7.1 (October 3rd, 2023)
 
