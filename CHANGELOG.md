@@ -12,6 +12,10 @@ TESTS:
 - Update the platforms used in the various Molecule scenarios.
 - Use the local role name (`ansible-role-nginx-config`) instead of the fully qualified role name (`nginxinc.nginx_config`) in Molecule to ensure tests always work as intended in environments where the role has been already installed beforehand.
 
+DOCUMENTATION:
+
+- Update community docs per the latest [NGINX template repository](https://github.com/nginxinc/template-repository) guidelines.
+
 CI/CD:
 
 - Bump the minimum version of Ansible supported on Ansible Galaxy to `2.16`.
