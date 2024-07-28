@@ -16,7 +16,7 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
 
 ### Ansible
 
-- This role is developed and tested with [maintained](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) versions of Ansible core (above `2.12`).
+- This role is developed and tested with [maintained](https://docs.ansible.com/ansible/devel/reference_appendices/release_and_maintenance.html) versions of Ansible core (above `2.16`).
 - When using Ansible core, you will also need to install the following collections:
 
     ```yaml
