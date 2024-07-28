@@ -13,6 +13,8 @@ TESTS:
 - Use the local role name (`ansible-role-nginx-config`) instead of the fully qualified role name (`nginxinc.nginx_config`) in Molecule to ensure tests always work as intended in environments where the role has been already installed beforehand.
 - Bump the minimum version of Ansible supported on Ansible Galaxy to `2.16`.
 - Remove platform metadata from the Ansible Galaxy role metadata since platforms are no longer supported in Ansible Galaxy NG.
+- Update GitHub Actions to Ubuntu 24.04.
+- Switch GitHub Actions from using tags to release hashes.
 
 MAINTENANCE:
 
