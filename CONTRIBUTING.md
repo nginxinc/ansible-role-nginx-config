@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-The following is a set of guidelines for contributing to the NGINX Ansible role. We really appreciate that you are considering contributing!
+The following is a set of guidelines for contributing to the NGINX config Ansible role. We really appreciate that you are considering contributing!
 
 #### Table Of Contents
 
@@ -17,16 +17,16 @@ The following is a set of guidelines for contributing to the NGINX Ansible role.
 
 ## Getting Started
 
-Follow this project's [Installation Guide](/README.md#Installation) to install Ansible, Ansible Lint, and Molecule and get ready to develop and test the NGINX Ansible role.
+Follow this project's [Installation Guide](/README.md#Installation) to install Ansible, Ansible Lint, and Molecule and get ready to develop and test the NGINX config Ansible role.
 
 ### Project Structure
 
-- The NGINX Ansible role is written in `yaml` and supports NGINX Open Source, NGINX Plus, NGINX Agent and NGINX Amplify.
+- The NGINX config Ansible role is written in [`yaml`](https://yaml.org) and supports NGINX Open Source, NGINX Plus, NGINX Agent and NGINX Amplify.
 - The project follows the standard [Ansible role directory structure](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html):
   - The main "codebase" is found in the [`tasks/`](/tasks/) directory.
   - Variables can be found in [`defaults/main/`](/defaults/main/). The filenames in this directory highlight which variables are contained in each file.
   - "Constant/hardcoded" variables can be found in [`vars/main.yml`](/vars/main.yml). Use this file if you want to create a variable that should not be tweaked by users except in exceptional circumstances.
-  - Configuration templates for logrotate, SELinux, and systemd can be found in the [`templates/`](/templates/) directory.
+  - Configuration templates for NGINX can be found in the [`templates/`](/templates/) directory.
   - [Molecule](https://molecule.readthedocs.io/) tests can be found in the [`molecule/`](/molecule/) directory. Tweak or add new scenarios as necessary. Read the [Molecule docs](https://molecule.readthedocs.io/) and check out the [`default`](/molecule/default/) Molecule scenario to get an idea of how Molecule works in action.
   - CI/CD is done via GitHub Actions using the workflow files found in the [`.github/workflows/`](/.github/workflows/) directory. If you create a new Molecule scenario, you will also need to update the [Molecule workflow](/.github/workflows/molecule.yml).
 
