@@ -26,8 +26,6 @@ This role configures NGINX Open Source and NGINX Plus on your target host.
         version: 1.5.4
       - name: community.general
         version: 9.2.0
-      - name: community.crypto # Only required if you plan to install NGINX Plus
-        version: 2.21.1
       - name: community.docker # Only required if you plan to use Molecule (see below)
         version: 3.11.0
     ```
