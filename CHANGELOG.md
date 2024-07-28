@@ -6,6 +6,10 @@ BUG FIXES:
 
 - Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
 
+MAINTENANCE:
+
+- Remove CentOS 7 related artifacts since RHEL 7 related distributions are no longer tested nor supported.
+
 CI/CD:
 
 - Add Molecule tests covering common NGINX use cases (web server, reverse proxy), enabling the NGINX stub status metrics, and NGINX Plus API and live metrics dashboard.
