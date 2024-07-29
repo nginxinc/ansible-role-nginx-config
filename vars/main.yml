@@ -1,1 +1,4 @@
 ---
+# Set the minimum version required for Ansible and Jinja2
+nginx_config_ansible_version: 2.16
+nginx_config_jinja2_version: 3.1
