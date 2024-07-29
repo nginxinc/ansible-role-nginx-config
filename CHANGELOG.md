@@ -28,6 +28,7 @@ CI/CD:
 - Update GitHub Actions to Ubuntu 24.04.
 - Switch GitHub Actions from using tags to release hashes.
 - Remove platform metadata from the Ansible Galaxy role metadata since platforms are no longer supported in Ansible Galaxy NG.
+- Implement OSSF Scorecard.
 
 MAINTENANCE:
 
