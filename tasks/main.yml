@@ -1,4 +1,8 @@
 ---
+- name: Validate Ansible/Jinja2 version and Ansible collections
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate/validate.yml"
+  tags: nginx_config_validate
+
 - name: Set up SELinux
   ansible.builtin.include_tasks: "{{ role_path }}/tasks/prerequisites/setup-selinux.yml"
   when:
