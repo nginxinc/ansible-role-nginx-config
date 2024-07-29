@@ -2,15 +2,36 @@
 
 ## 0.7.2 (Unreleased)
 
+FEATURES:
+
+- Bump the Ansible `community.general` collection to `9.2.0`, `community.crypto` collection to `2.21.1` and `community.docker` collection to `3.11.0`.
+
 BUG FIXES:
 
 - Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
 
-CI/CD:
+TESTS:
 
 - Add Molecule tests covering common NGINX use cases (web server, reverse proxy), enabling the NGINX stub status metrics, and NGINX Plus API and live metrics dashboard.
 - Update the platforms used in the various Molecule scenarios.
 - Use the local role name (`ansible-role-nginx-config`) instead of the fully qualified role name (`nginxinc.nginx_config`) in Molecule to ensure tests always work as intended in environments where the role has been already installed beforehand.
+
+DOCUMENTATION:
+
+- Update community docs per the latest [NGINX template repository](https://github.com/nginxinc/template-repository) guidelines.
+- Update and tweak the README. In order to make the installation instructions easier, some file names used by the various GitHub Actions workflows have been renamed.
+
+CI/CD:
+
+- Bump the minimum version of Ansible supported on Ansible Galaxy to `2.16`.
+- Update GitHub Actions to Ubuntu 24.04.
+- Switch GitHub Actions from using tags to release hashes.
+- Remove platform metadata from the Ansible Galaxy role metadata since platforms are no longer supported in Ansible Galaxy NG.
+- Implement OSSF Scorecard.
+
+MAINTENANCE:
+
+- Remove CentOS 7 related artifacts, tests, and metadata since RHEL 7 related distributions are no longer tested nor supported.
 
 ## 0.7.1 (October 3rd, 2023)
 
@@ -25,7 +46,7 @@ BUG FIXES:
 CI/CD:
 
 - Uncomment the `ansible-compat` version from the CI/CD pipeline.
-- Implement F5 CLA signatures.
+- Implement F5 CLA.
 
 ## 0.7.0 (July 6, 2023)
 
