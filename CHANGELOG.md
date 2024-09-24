@@ -9,6 +9,7 @@ FEATURES:
 
 BUG FIXES:
 
+- Fix path for the default stream template deployment location.
 - Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
 - Correct cleanup error when `nginx_config_cleanup_paths` is not defined.
 
