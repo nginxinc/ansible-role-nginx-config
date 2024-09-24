@@ -109,12 +109,12 @@
 
 - name: Ensure NGINX stream directory exists
   ansible.builtin.file:
-    path: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/') | dirname }}"
+    path: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream') | dirname }}"
     state: directory
     mode: "0755"
   loop: "{{ nginx_config_stream_template }}"
   loop_control:
-    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/') | dirname }}"
+    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream') | dirname }}"
   when: nginx_config_stream_template_enable | bool
 
 - name: Dynamically generate NGINX stream config files
