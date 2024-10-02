@@ -12,6 +12,7 @@ BUG FIXES:
 - Fix the default path for the stream template deployment location.
 - Fix incompatibility when using the `listen` directive and setting both the `quic` and `so_keepalive` parameters.
 - Correct cleanup error when `nginx_config_cleanup_paths` is not defined.
+- Disable check_mode for validation task `jinja2_version`.
 
 TESTS:
 
