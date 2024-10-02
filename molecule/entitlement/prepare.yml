@@ -1,0 +1,31 @@
+---
+- name: Prepare
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create ephemeral license certificate file from b64 decoded env var
+      ansible.builtin.copy:
+        content: "{{ lookup('env', 'NGINX_CRT') | b64decode }}"
+        dest: ../common/files/license/nginx-repo.crt
+        force: false
+        mode: "0444"
+
+    - name: Create ephemeral license key file from b64 decoded env var
+      ansible.builtin.copy:
+        content: "{{ lookup('env', 'NGINX_KEY') | b64decode }}"
+        dest: ../common/files/license/nginx-repo.key
+        force: false
+        mode: "0444"
+
+- name: Install NGINX Plus
+  hosts: all
+  tasks:
+    - name: Install NGINX Plus
+      ansible.builtin.include_role:
+        name: nginxinc.nginx
+      vars:
+        nginx_type: plus
+        nginx_license:
+          certificate: ../common/files/license/nginx-repo.crt
+          key: ../common/files/license/nginx-repo.key
+        nginx_remove_license: false
