@@ -22,6 +22,15 @@ events {
 {% endif %}
 }
 
+{% if nginx_config_main_template['config']['mgmt'] is defined %}
+mgmt {
+{% from 'core.j2' import mgmt with context %}
+{% filter indent(4) %}
+    {{ mgmt(nginx_config_main_template['config']['mgmt']) }}
+{%- endfilter %}
+}
+{% endif %}
+
 {% if nginx_config_main_template['config']['http'] is defined %}
 http {
 {% if nginx_config_main_template['config']['http']['include'] is defined and nginx_config_main_template['config']['http']['include'] is not mapping %}

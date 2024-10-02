@@ -116,3 +116,69 @@ worker_aio_requests {{ events['worker_aio_requests'] }};
 worker_connections {{ events['worker_connections'] }};
 {% endif %}
 {% endmacro %}
+
+{% macro mgmt(mgmt) %}
+{% if mgmt['connect_timeout'] is defined %}
+connect_timeout {{ mgmt['connect_timeout'] }};
+{% endif %}
+{% if mgmt['read_timeout'] is defined %}
+read_timeout {{ mgmt['read_timeout'] }};
+{% endif %}
+{% if mgmt['resolver'] is defined %}
+resolver {{ mgmt['resolver']['address'] if mgmt['resolver']['address'] is string else mgmt['resolver']['address'] | join(' ') -}}
+{{- (' valid=' + mgmt['resolver']['valid'] | string) if mgmt['resolver']['valid'] is defined -}}
+{{- (' ipv4=' + mgmt['resolver']['ipv4'] | ternary('on', 'off')) if mgmt['resolver']['ipv4'] is defined and mgmt['resolver']['ipv4'] is boolean -}}
+{{- (' ipv6=' + mgmt['resolver']['ipv6'] | ternary('on', 'off')) if mgmt['resolver']['ipv6'] is defined and mgmt['resolver']['ipv6'] is boolean -}}
+{{- (' status_zone=' + mgmt['resolver']['status_zone'] | string) if mgmt['resolver']['status_zone'] is defined }};
+{% endif %}
+{% if mgmt['resolver_timeout'] is defined %}
+resolver_timeout {{ mgmt['resolver_timeout'] }};
+{% endif %}
+{% if mgmt['send_timeout'] is defined %}
+send_timeout {{ mgmt['send_timeout'] }};
+{% endif %}
+{% if mgmt['ssl'] is defined and mgmt['ssl'] is boolean %}
+ssl {{ mgmt['ssl'] | ternary('on', 'off') }};
+{% endif %}
+{% if mgmt['ssl_certificate'] is defined %}
+ssl_certificate {{ mgmt['ssl_certificate'] }};
+{% endif %}
+{% if ssl['ssl_certificate_key'] is defined %}
+ssl_certificate_key {{ ssl['ssl_certificate_key'] }};
+{% endif %}
+{% if mgmt['ssl_ciphers'] is defined %}
+ssl_ciphers {{ mgmt['ssl_ciphers'] if mgmt['ssl_ciphers'] is string else mgmt['ssl_ciphers'] | join(' ') }};
+{% endif %}
+{% if mgmt['ssl_crl'] is defined %}
+ssl_crl {{ mgmt['ssl_crl'] }};
+{% endif %}
+{% if mgmt['ssl_name'] is defined %}
+ssl_name {{ mgmt['ssl_name'] }};
+{% endif %}
+{% if mgmt['ssl_password_file'] is defined %}
+ssl_password_file {{ mgmt['ssl_password_file'] }};
+{% endif %}
+{% if mgmt['ssl_protocols'] is defined %}
+ssl_protocols {{ mgmt['ssl_protocols'] if mgmt['ssl_protocols'] is string else mgmt['ssl_protocols'] | join(' ') }};
+{% endif %}
+{% if mgmt['ssl_server_name'] is defined and mgmt['ssl_server_name'] %}
+ssl_server_name {{ mgmt['ssl_server_name'] | ternary('on', 'off') }};
+{% endif %}
+{% if mgmt['ssl_trusted_certificate'] is defined %}
+ssl_trusted_certificate {{ mgmt['ssl_trusted_certificate'] }};
+{% endif %}
+{% if mgmt['ssl_verify'] is defined and mgmt['ssl_verify'] is boolean %}
+ssl_verify {{ mgmt['ssl_verify'] | ternary('on', 'off') }};
+{% endif %}
+{% if mgmt['ssl_verify_depth'] is defined and mgmt['ssl_verify_depth'] is number %}
+ssl_verify_depth {{ mgmt['ssl_verify_depth'] }};
+{% endif %}
+{% if mgmt['usage_report'] is defined %} TODO
+usage_report {{ mgmt['usage_report'] if mgmt['usage_report'] is string else mgmt['usage_report']['endpoint'] if mgmt['usage_report']['endpoint'] is defined }}{{ (' ' + mgmt['usage_report']['interval'] | string) if mgmt['usage_report']['interval'] is defined }};
+{% endif %}
+{% if mgmt['uuid'] is defined %}
+{% endif %}
+{% if mgmt['uuid_file'] is defined %}
+uuid_file {{ mgmt['uuid_file'] }};
+{% endif %}
+{% endmacro %}

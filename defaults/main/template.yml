@@ -66,6 +66,33 @@ nginx_config_main_template:
       worker_connections: 1024  # Number
     # include:  # String or a list of strings
     #   - /etc/nginx/modules.conf
+    mgmt:  # Configure NGINX management directives. Only required when using NGINX Plus >R33.
+      connect_timeout: 15s
+      read_timeout: 60s
+      resolver:
+        address: 127.0.0.1 # Required -- String or a list of strings
+        valid: 30s
+        ipv4: true  # Boolean
+        ipv6: true  # Boolean
+        status_zone: mgmt_mem_zone
+      resolver_timeout: 30s
+      send_timeout: 60s
+      ssl: true  # Boolean
+      ssl_certificate: /path/to/file
+      ssl_certificate_key: /path/to/file
+      ssl_ciphers: DEFAULT # String or a list of strings
+      ssl_crl: /path/to/file
+      ssl_name: $hostname
+      ssl_password_file: /path/to/file
+      ssl_protocols: [TLSv1, TLSv1.1, TLSv1.2, TLSv1.3] # String or a list of strings
+      ssl_server_name: false  # Boolean
+      ssl_trusted_certificate: /path/to/file
+      ssl_verify: false  # Boolean
+      ssl_verify_depth: 1  # Number
+      usage_report:  # 127.0.0.1 # Can alternatively be set to an 'endpoint' string
+        endpoint: 127.0.0.1  # Required
+        interval: 30m
+      uuid_file: /var/lib/nginx/nginx.id
     http:
       include:  # String or a list of strings
         - /etc/nginx/mime.types
