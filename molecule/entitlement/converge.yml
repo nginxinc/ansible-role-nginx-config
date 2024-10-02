@@ -1,0 +1,61 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Configure NGINX
+      ansible.builtin.include_role:
+        name: ansible-role-nginx-config
+      vars:
+        nginx_config_debug_output: true
+
+        nginx_config_main_template_enable: true
+        nginx_config_main_template:
+          template_file: nginx.conf.j2
+          deployment_location: /etc/nginx/nginx.conf
+          config:
+            main:
+              # load_module:
+              #   - modules/ngx_http_app_protect_module.so
+              #   - modules/ngx_http_app_protect_dos_module.so
+              user: nginx
+              worker_processes: auto
+              error_log:
+                - file: /var/log/nginx/error.log
+                  level: notice
+              pid: /var/run/nginx.pid
+              worker_rlimit_nofile: 2048
+            events:
+              worker_connections: 1024
+            mgmt:
+              connect_timeout: 15s
+              read_timeout: 60s
+              resolver:
+                address: 127.0.0.1
+                valid: 30s
+                ipv4: true
+                ipv6: true
+                status_zone: mgmt_mem_zone
+              resolver_timeout: 30s
+              send_timeout: 60s
+              ssl: true
+              # ssl_certificate: /path/to/file
+              # ssl_certificate_key: /path/to/file
+              ssl_ciphers: DEFAULT
+              # ssl_crl: /path/to/file
+              ssl_name: $hostname
+              ssl_password_file: /path/to/file
+              ssl_protocols: [TLSv1, TLSv1.1, TLSv1.2, TLSv1.3]
+              ssl_server_name: false
+              # ssl_trusted_certificate: /path/to/file
+              ssl_verify: false
+              ssl_verify_depth: 1
+              usage_report:
+                endpoint: 127.0.0.1
+                interval: 30m
+              uuid_file: /var/lib/nginx/nginx.id
+            http:
+              include:
+                - /etc/nginx/conf.d/*.conf
+            stream:
+              include:
+                - /etc/nginx/conf.d/stream/*.conf
