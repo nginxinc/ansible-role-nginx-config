@@ -2,20 +2,39 @@
 name: Molecule CI/CD
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
   push:
-    branches:
-      - main
-    tags-ignore:
-      - "**"
+    branches: [main]
+    tags-ignore: ["**"]
   schedule:
     - cron: "0 0 1 * *"
   workflow_dispatch:
+permissions: read-all
 jobs:
+  ansible-lint:
+    name: Ansible Lint
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the codebase
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+
+      - name: Set up Python 3
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
+        with:
+          python-version: 3.x
+
+      - name: Install Ansible core and Ansible Lint
+        run: pip3 install -r .github/workflows/requirements/requirements_ansible_lint.txt
+
+      - name: Install Ansible core collection dependencies
+        run: ansible-galaxy install -r .github/workflows/requirements/requirements_collections.yml
+
+      - name: Run Ansible Lint
+        run: ansible-lint --force-color
+
   molecule:
     name: Molecule
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       NGINX_CRT: ${{ secrets.NGINX_CRT }}
       NGINX_KEY: ${{ secrets.NGINX_KEY }}
@@ -23,28 +42,34 @@ jobs:
       fail-fast: false
       matrix:
         scenario:
-          - cleanup_module
+          - api_plus
+          - cleanup_config
+          - complete
+          - complete_plus
           - default
-          - plus
-          - stable_push
+          - push_config
+          - reverse_proxy
+          - stub_status
+          - web_server
+    needs: ansible-lint
     steps:
       - name: Check out the codebase
         if: ${{ !(contains(matrix.scenario, 'plus')) || (env.NGINX_CRT != 0 && env.NGINX_KEY != 0) }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
 
       - name: Set up Python 3
         if: ${{ !(contains(matrix.scenario, 'plus')) || (env.NGINX_CRT != 0 && env.NGINX_KEY != 0) }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
         with:
           python-version: 3.x
 
-      - name: Install Molecule dependencies
+      - name: Install Ansible core and Molecule
         if: ${{ !(contains(matrix.scenario, 'plus')) || (env.NGINX_CRT != 0 && env.NGINX_KEY != 0) }}
         run: pip3 install -r .github/workflows/requirements/requirements_molecule.txt
 
-      - name: Install Ansible core dependencies
+      - name: Install Ansible core collection dependencies
         if: ${{ !(contains(matrix.scenario, 'plus')) || (env.NGINX_CRT != 0 && env.NGINX_KEY != 0) }}
-        run: ansible-galaxy install -r .github/workflows/requirements/requirements_ansible.yml
+        run: ansible-galaxy install -r .github/workflows/requirements/requirements_collections.yml
 
       - name: Run Molecule tests
         if: ${{ !(contains(matrix.scenario, 'plus')) || (env.NGINX_CRT != 0 && env.NGINX_KEY != 0) }}

@@ -21,7 +21,7 @@ nginx_config_main_template:
       #   - modules/ngx_http_js_module.so
       user:  # nginx  # Can alternatively be set to a 'username' string
         username: nginx  # Required
-        group: nginx
+        # group: nginx
       # worker_cpu_affinity:
       #   auto: true  # Optional boolean
       #   cpumask: 0101 1010  # Optional if 'auto' is set to 'true'
@@ -37,7 +37,7 @@ nginx_config_main_template:
         # - file: /var/log/nginx/error.log  # Required
         #   level: notice
       pid: /var/run/nginx.pid
-      daemon: true  # Boolean
+      # daemon: true  # Boolean
       # debug_points: abort  # Can be set to 'abort' or 'stop'
       # env:  # MALLOC_OPTIONS  # String, a list of strings, a dictionary, or a list of dictionaries. The 'variable' variable is only required when setting a 'value'.
       #   variable: PERL5LIB  # Required
@@ -72,6 +72,8 @@ nginx_config_main_template:
         - /etc/nginx/conf.d/*.conf
     # stream:
     #   include: /etc/nginx/conf.d/stream/*.conf  # String or a list of strings
+    # quic:
+    #   bpf: false  # Boolean
 
 # Enable creating dynamic templated NGINX HTTP configuration files.
 # Defaults will not produce a valid configuration. Instead they are meant to showcase
@@ -204,8 +206,7 @@ nginx_config_http_template:
             port: 80
             default_server: true  # Boolean
             ssl: false  # Boolean
-            http2: false  # Boolean
-            spdy: false  # Boolean
+            quic: false  # Boolean  # Incompatible with the 'so_keepalive' parameter
             proxy_protocol: false  # Boolean
             fastopen: 12  # Number
             backlog: 511  # Number
@@ -215,7 +216,7 @@ nginx_config_http_template:
             bind: false  # Boolean
             ipv6only: false  # Boolean
             reuseport: false  # Boolean
-            so_keepalive:  # false  # Can alternatively be set to a 'boolean'
+            so_keepalive:  # false  # Can alternatively be set to a 'boolean' -- Incompatible with the 'quic' parameter
               keepidle: 30m
               keepintvl: 5
               keepcnt: 10
@@ -273,6 +274,23 @@ nginx_config_http_template:
         underscores_in_headers: false  # Boolean -- Not available in the 'location' context
         variables_hash_bucket_size: 64  # Available only in the 'http' context
         variables_hash_max_size: 1024  # Available only in the 'http' context
+      http2:  # Configure HTTP2
+        enable: false  # Boolean -- Not available in the 'location' context
+        body_preread_size: 64k  # Not available in the 'location' context
+        chunk_size: 8k
+        max_concurrent_streams: 128  # Number -- Not available in the 'location' context
+        recv_buffer_size: 256k  # Only available in the 'http' context
+        recv_timeout: 20s  # Not available in the 'location' context
+      http3:
+        enable: false  # Boolean
+        hq: false  # Boolean
+        max_concurrent_streams: 128  # Number
+        stream_buffer_size: 64k
+      quic:
+        active_connection_id_limit: 2
+        gso: false  # Boolean
+        host_key: /path/to/file
+        retry: false  # Boolean
       ssl:  # Configure SSL
         buffer_size: 16k
         certificate: /path/to/file  # String or a list of strings

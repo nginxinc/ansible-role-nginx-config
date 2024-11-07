@@ -141,7 +141,7 @@ lingering_timeout {{ core['lingering_timeout'] }};
 listen {{ listen['address'] if listen['address'] is defined }}{{ ':' if listen['address'] is defined and listen['port'] is defined }}{{ listen['port'] if listen['port'] is defined -}}
 {{- ' default_server' if listen['default_server'] is defined and listen['default_server'] is boolean and listen['default_server'] | bool -}}
 {{- ' ssl' if listen['ssl'] is defined and listen['ssl'] is boolean and listen['ssl'] | bool -}}
-{{- ' http2' if listen['http2'] is defined and listen['http2'] is boolean and listen['http2'] | bool else ' spdy' if listen['spdy'] is defined and listen['spdy'] is boolean and listen['spdy'] | bool -}}
+{{- ' quic' if listen['quic'] is defined and listen['quic'] is boolean and listen['quic'] | bool -}}
 {{- ' proxy_protocol' if listen['proxy_protocol'] is defined and listen['proxy_protocol'] is boolean and listen['proxy_protocol'] | bool -}}
 {{- (' setfib=' + listen['setfib'] | string) if listen['setfib'] is defined -}}
 {{- (' fastopen=' + listen['fastopen'] | string) if listen['fastopen'] is defined and listen['fastopen'] is number -}}
@@ -153,8 +153,8 @@ listen {{ listen['address'] if listen['address'] is defined }}{{ ':' if listen['
 {{- ' bind' if listen['bind'] is defined and listen['bind'] is boolean and listen['bind'] | bool -}}
 {{- (' ipv6only=' + listen['ipv6only'] | ternary('on', 'off')) if listen['ipv6only'] is defined and listen['ipv6only'] is boolean -}}
 {{- ' reuseport' if (listen['reuseport'] is defined and listen['reuseport'] is boolean and listen['reuseport'] | bool) -}}
-{{- (' so_keepalive=' + listen['so_keepalive'] | ternary('on', 'off')) if listen['so_keepalive'] is defined and listen['so_keepalive'] is boolean -}}
-{{- (' so_keepalive=' + (listen['so_keepalive']['keepidle'] | string if listen['so_keepalive']['keepidle'] is defined) + ':' + (listen['so_keepalive']['keepintvl'] | string if listen['so_keepalive']['keepintvl'] is defined) + ':' + (listen['so_keepalive']['keepcnt'] | string if listen['so_keepalive']['keepcnt'] is defined)) if listen['so_keepalive'] is defined and listen['so_keepalive'] is mapping }};
+{{- (' so_keepalive=' + listen['so_keepalive'] | ternary('on', 'off')) if listen['so_keepalive'] is defined and listen['so_keepalive'] is boolean and listen['quic'] is not defined -}}
+{{- (' so_keepalive=' + (listen['so_keepalive']['keepidle'] | string if listen['so_keepalive']['keepidle'] is defined) + ':' + (listen['so_keepalive']['keepintvl'] | string if listen['so_keepalive']['keepintvl'] is defined) + ':' + (listen['so_keepalive']['keepcnt'] | string if listen['so_keepalive']['keepcnt'] is defined)) if listen['so_keepalive'] is defined and listen['so_keepalive'] is mapping and listen['quic'] is not defined }};
 {% endfor %}
 {% endif %}
 {% if core['log_not_found'] is defined and core['log_not_found'] is boolean %}

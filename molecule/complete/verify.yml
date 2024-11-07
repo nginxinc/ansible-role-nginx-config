@@ -2,9 +2,9 @@
 - name: Verify
   hosts: all
   tasks:
-    - name: Check if NGINX Plus is installed
+    - name: Check if NGINX is installed
       ansible.builtin.package:
-        name: nginx-plus
+        name: nginx
         state: present
       check_mode: true
       register: install
@@ -19,28 +19,26 @@
       register: service
       failed_when: (service is changed) or (service is failed)
 
-    - name: Functional tests
-      when: ansible_facts['os_family'] != 'Alpine'
-      block:
-        - name: Check that a page returns a status 200 and fail if the words Hello World are not in the page contents
-          ansible.builtin.uri:
-            url: http://localhost
-            return_content: true
-          register: this
-          failed_when: "'Hello World' not in this['content']"
+    - name: Check that a page returns a status 200 and fail if the words Hello World are not in the page contents
+      ansible.builtin.uri:
+        url: http://localhost
+        return_content: true
+      register: this
+      failed_when: "'Hello World' not in this['content']"
 
-        - name: Check that a page returns a status 200 and fail if the words Request Rejected are not in the page contents
-          ansible.builtin.uri:
-            url: http://localhost/?v=<script>
-            return_content: true
-          register: this
-          failed_when: "'Request Rejected' not in this['content']"
+    - name: Check client body cache directory exists
+      ansible.builtin.stat:
+        path: /var/cache/nginx/client
+      check_mode: true
+      register: stat_result
+      failed_when: not stat_result['stat']['exists'] | bool
 
-        - name: Ensure /var/log/messages contains block event from above test
-          ansible.builtin.shell: grep -c "Non-browser Client,Abuse of Functionality,Cross Site Scripting (XSS)" /var/log/messages || true
-          register: event
-          changed_when: false
-          failed_when: event['stdout'] == '0'
+    - name: Check proxy cache directory exists
+      ansible.builtin.stat:
+        path: /var/cache/nginx/proxy
+      check_mode: true
+      register: stat_result
+      failed_when: not stat_result['stat']['exists'] | bool
 
     - name: Check default.conf exists
       ansible.builtin.stat:
@@ -58,7 +56,7 @@
 
     - name: Check backend_default.conf exists
       ansible.builtin.stat:
-        path: /etc/nginx/conf.d/backend_default.conf
+        path: /etc/nginx/conf.d/backend/backend_default.conf
       check_mode: true
       register: stat_result
       failed_when: not stat_result['stat']['exists'] | bool
@@ -67,6 +65,15 @@
       ansible.builtin.lineinfile:
         path: /etc/nginx/conf.d/default.conf
         line: "    location / {"
+        state: present
+      check_mode: true
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
+
+    - name: Ensure frontend_default.conf contains 'alias directive'
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/conf.d/frontend_default.conf
+        line: "        alias /usr/share/nginx/html;"
         state: present
       check_mode: true
       register: conf
@@ -81,10 +88,19 @@
       register: conf
       failed_when: (conf is changed) or (conf is failed)
 
-    - name: Ensure default.conf contains 'client_max_body_size 512k;'
+    - name: Ensure default.conf contains 'client_max_body_size 1m;'
       ansible.builtin.lineinfile:
         path: /etc/nginx/conf.d/default.conf
-        line: "    client_max_body_size 512k;"
+        line: client_max_body_size 1m;
+        state: present
+      check_mode: true
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
+
+    - name: Ensure default.conf contains 'rewrite (.*).html(.*) $1$2 last;'
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/conf.d/default.conf
+        line: "    rewrite (.*).html(.*) $1$2 last;"
         state: present
       check_mode: true
       register: conf

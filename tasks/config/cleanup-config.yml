@@ -12,5 +12,6 @@
   ansible.builtin.file:
     path: "{{ item }}"
     state: absent
-  loop: "{{ nginx_config_files['results'] | map(attribute='files') | sum(start=[]) | map(attribute='path') | list + nginx_config_cleanup_files | default('') | list }}"
+  loop: "{{ nginx_config_files['results'] | default('') | map(attribute='files') | sum(start=[]) | map(attribute='path') | list + nginx_config_cleanup_files | default('') | list }}"
   notify: (Handler - NGINX Config) Run NGINX
+  when: nginx_config_cleanup_files is defined or nginx_config_cleanup_paths is defined

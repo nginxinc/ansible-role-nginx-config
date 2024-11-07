@@ -109,22 +109,22 @@
 
 - name: Ensure NGINX stream directory exists
   ansible.builtin.file:
-    path: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/') | dirname }}"
+    path: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream/') | dirname }}"
     state: directory
     mode: "0755"
   loop: "{{ nginx_config_stream_template }}"
   loop_control:
-    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/') | dirname }}"
+    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream/') | dirname }}"
   when: nginx_config_stream_template_enable | bool
 
 - name: Dynamically generate NGINX stream config files
   ansible.builtin.template:
     src: "{{ item['template_file'] | default('stream/default.conf.j2') }}"
-    dest: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream_default.conf') }}"
+    dest: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream/stream_default.conf') }}"
     backup: true
     mode: "0644"
   loop: "{{ nginx_config_stream_template }}"
   loop_control:
-    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream_default.conf') }}"
+    label: "{{ item['deployment_location'] | default('/etc/nginx/conf.d/stream/stream_default.conf') }}"
   notify: (Handler - NGINX Config) Run NGINX
   when: nginx_config_stream_template_enable | bool

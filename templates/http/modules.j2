@@ -330,3 +330,65 @@ sub_filter_types {{ sub_filter['types'] if sub_filter['types'] is string else su
 {% endif %}
 
 {% endmacro %}
+
+{# NGINX HTTP v2 -- ngx_http_v2_module #}
+{% macro http2(http2, scope='http') %}
+{% if scope != 'location' %}{# The following scoped directives are not available in the 'location' context #}
+{% if http2['enable'] is defined and http2['enable'] is boolean %}
+http2 {{ http2['enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if http2['body_preread_size'] is defined %}
+http2_body_preread_size {{ http2['body_preread_size'] }};
+{% endif %}
+{% if http2['max_concurrent_streams'] is defined and http2['max_concurrent_streams'] is number %}
+http2_max_concurrent_streams {{ http2['max_concurrent_streams'] }};
+{% endif %}
+{% endif %}
+{% if scope == 'http' and http2['recv_buffer_size'] is defined %}{# 'recv_buffer_size' directive is only available in the 'http' context #}
+http2_recv_buffer_size {{ http2['recv_buffer_size'] }};
+{% endif %}
+{% if http2['chunk_size'] is defined %}
+http2_chunk_size {{ http2['chunk_size'] }};
+{% endif %}
+
+{% endmacro %}
+
+{# NGINX HTTP v3 -- ngx_http_v3_module #}
+{% macro http3(http3) %}
+{% if http3['enable'] is defined and http3['enable'] is boolean %}
+http3 {{ http3['enable'] | ternary('on', 'off') }};
+{% endif %}
+{% if http3['hq'] is defined and http3['hq'] is boolean %}
+http3_hq {{ http3['hq'] | ternary('on', 'off') }};
+{% endif %}
+{% if http3['max_concurrent_streams'] is defined and http3['max_concurrent_streams'] is number %}
+http3_max_concurrent_streams {{ http3['max_concurrent_streams'] }};
+{% endif %}
+{% if http3['stream_buffer_size'] is defined %}
+http3_stream_buffer_size {{ http3['stream_buffer_size'] }};
+{% endif %}
+
+{% endmacro %}
+
+{# NGINX QUIC -- ngx_event_quic #} {# exposed for use and documented through ngx_http_v3_module #}
+{% macro quic(quic, scope='http') %}
+{% if scope == 'global' %}
+{% if quic is defined and quic['bpf'] is defined and quic['bpf'] is boolean %}
+quic_bpf {{ quic['bpf'] | ternary('on', 'off') }};
+{% endif %}
+{% else %}
+{% if quic['active_connection_id_limit'] is defined and quic['active_connection_id_limit'] is number %}
+quic_active_connection_id_limit {{ quic['active_connection_id_limit'] }};
+{% endif %}
+{% if quic['gso'] is defined and quic['gso'] is boolean %}
+quic_gso {{ quic['gso'] | ternary('on','off') }};
+{% endif %}
+{% if quic['host_key'] is defined %}
+quic_host_key {{ quic['host_key'] }};
+{% endif %}
+{% if quic['retry'] is defined and quic['retry'] is boolean %}
+quic_retry {{ quic['retry'] | ternary('on','off') }};
+{% endif %}
+{% endif %}
+
+{% endmacro %}

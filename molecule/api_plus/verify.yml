@@ -2,9 +2,9 @@
 - name: Verify
   hosts: all
   tasks:
-    - name: Check if NGINX is installed
+    - name: Check if NGINX Plus is installed
       ansible.builtin.package:
-        name: nginx
+        name: nginx-plus
         state: present
       check_mode: true
       register: install

@@ -83,6 +83,10 @@ timer_resolution {{ main['timer_resolution'] }};
 {% if main['working_directory'] is defined %}
 working_directory {{ main['working_directory'] }};
 {% endif %}
+{% if main['quic'] is defined %}
+{% from 'http/modules.j2' import quic with context %}
+{{ quic(main['quic'], 'global') }}
+{% endif %}
 {% endmacro %}
 
 {% macro events(events) %}

@@ -6,6 +6,7 @@
 \#*
 !molecule.crt
 !molecule.key
+!rand.key
 
 # OS Specific #
 ###############

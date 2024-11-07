@@ -1,0 +1,10 @@
+---
+collections:
+  - name: ansible.posix
+    version: 1.5.4
+  - name: community.general
+    version: 9.2.0
+  - name: community.crypto # Only required if you plan to to test the NGINX Plus Molecule scenario
+    version: 2.21.1
+  - name: community.docker # Only required if you plan to use Molecule
+    version: 3.11.0
