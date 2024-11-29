@@ -17,6 +17,13 @@
         force: false
         mode: "0444"
 
+    - name: Create ephemeral license JWT file from b64 encoded env var
+      ansible.builtin.copy:
+        content: "{{ lookup('env', 'NGINX_JWT') }}"
+        dest: ../common/files/license/license.jwt
+        force: false
+        mode: "0444"
+
 - name: Install NGINX Plus
   hosts: all
   tasks:
@@ -28,4 +35,5 @@
         nginx_license:
           certificate: ../common/files/license/nginx-repo.crt
           key: ../common/files/license/nginx-repo.key
+          jwt: ../common/files/license/license.jwt
         nginx_remove_license: false
