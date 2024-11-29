@@ -38,6 +38,7 @@ jobs:
     env:
       NGINX_CRT: ${{ secrets.NGINX_CRT }}
       NGINX_KEY: ${{ secrets.NGINX_KEY }}
+      NGINX_JWT: ${{ secrets.NGINX_JWT }}
     strategy:
       fail-fast: false
       matrix:
