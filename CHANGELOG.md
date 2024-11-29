@@ -20,6 +20,7 @@ TESTS:
 - Update the platforms used in the various Molecule scenarios.
 - Use the local role name (`ansible-role-nginx-config`) instead of the fully qualified role name (`nginxinc.nginx_config`) in Molecule to ensure tests always work as intended in environments where the role has been already installed beforehand.
 - Update RHEL UBI images to UBI 9.4.
+- Update Molecule NGINX Plus tests to work with R33 by introducing the new license JWT.
 
 DOCUMENTATION:
 
