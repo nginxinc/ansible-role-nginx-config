@@ -34,7 +34,7 @@ CI/CD:
 - Switch GitHub Actions from using tags to release hashes.
 - Remove platform metadata from the Ansible Galaxy role metadata since platforms are no longer supported in Ansible Galaxy NG.
 - Implement OSSF Scorecard.
-- Implement Renovate.
+- Implement Renovate and replace Dependabot.
 - Automatically add milestone and project data to Renovate Bot PRs.
 
 MAINTENANCE:
