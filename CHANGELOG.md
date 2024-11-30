@@ -38,6 +38,7 @@ CI/CD:
 MAINTENANCE:
 
 - Remove CentOS 7 related artifacts, tests, and metadata since RHEL 7 related distributions are no longer tested nor supported.
+- Tweak Release Drafter to work better with conventional commits.
 
 ## 0.7.1 (October 3rd, 2023)
 
