@@ -38,13 +38,13 @@
           jwt: ../common/files/license/license.jwt
         nginx_remove_license: false
 
-    # - name: Install NGINX App Protect WAF
-    #   ansible.builtin.include_role:
-    #     name: nginxinc.nginx_app_protect
-    #   vars:
-    #     nginx_app_protect_waf_enable: true
-    #     nginx_app_protect_dos_enable: true
-    #     nginx_app_protect_setup_license: false
-    #     nginx_app_protect_remove_license: false
-    #     nginx_app_protect_install_signatures: false
-    #     nginx_app_protect_install_threat_campaigns: false
+    - name: Install NGINX App Protect WAF
+      ansible.builtin.include_role:
+        name: nginxinc.nginx_app_protect
+      vars:
+        nginx_app_protect_waf_enable: true
+        nginx_app_protect_dos_enable: true
+        nginx_app_protect_setup_license: false
+        nginx_app_protect_remove_license: false
+        nginx_app_protect_install_signatures: false
+        nginx_app_protect_install_threat_campaigns: false
