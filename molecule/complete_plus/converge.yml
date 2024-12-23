@@ -22,9 +22,9 @@
           deployment_location: /etc/nginx/nginx.conf
           config:
             main:
-              # load_module:
-              #   - modules/ngx_http_app_protect_module.so
-              #   - modules/ngx_http_app_protect_dos_module.so
+              load_module:
+                - modules/ngx_http_app_protect_module.so
+                - modules/ngx_http_app_protect_dos_module.so
               user: nginx
               worker_processes: auto
               error_log:
@@ -151,27 +151,27 @@
               core:
                 default_type: application/octet-stream
                 keepalive_timeout: 65s
-              # app_protect_waf:
-              #   physical_memory_util_thresholds:
-              #     high: 100
-              #     low: 100
-              #   cpu_thresholds:
-              #     high: 100
-              #     low: 100
-              #   failure_mode_action: pass
-              #   cookie_seed: testseed
-              #   compressed_requests_action: drop
-              # app_protect_dos:
-              #   liveliness:
-              #     enable: true
-              #     uri: /app_protect_dos_liveliness
-              #     port: 8090
-              #   readiness:
-              #     enable: true
-              #     uri: /app_protect_dos_readiness
-              #     port: 8090
-              #   arb_fqdn: 192.168.1.10
-              #   accelerated_mitigation: false
+              app_protect_waf:
+                physical_memory_util_thresholds:
+                  high: 100
+                  low: 100
+                cpu_thresholds:
+                  high: 100
+                  low: 100
+                failure_mode_action: pass
+                cookie_seed: testseed
+                compressed_requests_action: drop
+              app_protect_dos:
+                liveliness:
+                  enable: true
+                  uri: /app_protect_dos_liveliness
+                  port: 8090
+                readiness:
+                  enable: true
+                  uri: /app_protect_dos_readiness
+                  port: 8090
+                arb_fqdn: 192.168.1.10
+                accelerated_mitigation: false
               grpc:
                 bind:
                   address: $remote_addr
@@ -351,26 +351,26 @@
                         default_server: true
                     server_name: localhost
                     client_max_body_size: 512k
-                  # app_protect_waf:
-                  #   enable: true
-                  #   policy_file: /etc/app_protect/conf/NginxDefaultPolicy.json
-                  #   security_log_enable: true
-                  #   security_log:
-                  #     - path: /etc/app_protect/conf/log_default.json
-                  #       dest: syslog:server=10.1.1.1:514
-                  #     - path: /etc/app_protect/conf/log_default.json
-                  #       dest: syslog:server=10.1.1.2:514
-                  # app_protect_dos:
-                  #   enable: true
-                  #   policy_file: /etc/app_protect/conf/BADOSDefaultPolicy.json
-                  #   security_log_enable: true
-                  #   security_log:
-                  #     path: /etc/app_protect_dos/log-default.json
-                  #     dest: syslog:server=10.1.1.1:514
-                  #   monitor:
-                  #     uri: http://10.1.1.1:5000/monitor
-                  #     protocol: http2
-                  #     timeout: 10
+                  app_protect_waf:
+                    enable: true
+                    policy_file: /etc/app_protect/conf/NginxDefaultPolicy.json
+                    security_log_enable: true
+                    security_log:
+                      - path: /etc/app_protect/conf/log_default.json
+                        dest: syslog:server=10.1.1.1:514
+                      - path: /etc/app_protect/conf/log_default.json
+                        dest: syslog:server=10.1.1.2:514
+                  app_protect_dos:
+                    enable: true
+                    policy_file: /etc/app_protect/conf/BADOSDefaultPolicy.json
+                    security_log_enable: true
+                    security_log:
+                      path: /etc/app_protect_dos/log-default.json
+                      dest: syslog:server=10.1.1.1:514
+                    monitor:
+                      uri: http://10.1.1.1:5000/monitor
+                      protocol: http2
+                      timeout: 10
                   auth_jwt:
                     enable:
                       realm: realm
@@ -390,24 +390,24 @@
                         format: main
                   locations:
                     - location: /
-                      # app_protect_waf:
-                      #   enable: true
-                      #   policy_file: /etc/app_protect/conf/NginxDefaultPolicy.json
-                      #   security_log_enable: true
-                      #   security_log:
-                      #     - path: /etc/app_protect/conf/log_default.json
-                      #       dest: syslog:server=10.1.1.1:514
-                      #     - path: /etc/app_protect/conf/log_default.json
-                      #       dest: syslog:server=10.1.1.2:514
-                      # app_protect_dos:
-                      #   enable: true
-                      #   policy_file: /etc/app_protect/conf/BADOSDefaultPolicy.json
-                      #   security_log_enable: true
-                      #   security_log:
-                      #     path: /etc/app_protect_dos/log-default.json
-                      #     dest: syslog:server=10.1.1.1:514
-                      #   monitor: http://10.1.1.1:5000/monitor
-                      #   api: true
+                      app_protect_waf:
+                        enable: true
+                        policy_file: /etc/app_protect/conf/NginxDefaultPolicy.json
+                        security_log_enable: true
+                        security_log:
+                          - path: /etc/app_protect/conf/log_default.json
+                            dest: syslog:server=10.1.1.1:514
+                          - path: /etc/app_protect/conf/log_default.json
+                            dest: syslog:server=10.1.1.2:514
+                      app_protect_dos:
+                        enable: true
+                        policy_file: /etc/app_protect/conf/BADOSDefaultPolicy.json
+                        security_log_enable: true
+                        security_log:
+                          path: /etc/app_protect_dos/log-default.json
+                          dest: syslog:server=10.1.1.1:514
+                        monitor: http://10.1.1.1:5000/monitor
+                        api: true
                       auth_jwt:
                         enable: false
                         leeway: 0s
