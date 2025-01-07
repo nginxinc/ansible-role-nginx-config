@@ -20,6 +20,7 @@ TESTS:
 - Update the platforms used in the various Molecule scenarios.
 - Use the local role name (`ansible-role-nginx-config`) instead of the fully qualified role name (`nginxinc.nginx_config`) in Molecule to ensure tests always work as intended in environments where the role has been already installed beforehand.
 - Update RHEL UBI images to UBI 9.4.
+- Update Molecule NGINX Plus tests to work with R33 by introducing the new license JWT.
 
 DOCUMENTATION:
 
@@ -33,10 +34,13 @@ CI/CD:
 - Switch GitHub Actions from using tags to release hashes.
 - Remove platform metadata from the Ansible Galaxy role metadata since platforms are no longer supported in Ansible Galaxy NG.
 - Implement OSSF Scorecard.
+- Implement Renovate and replace Dependabot.
+- Automatically add milestone and project data to Renovate Bot PRs.
 
 MAINTENANCE:
 
 - Remove CentOS 7 related artifacts, tests, and metadata since RHEL 7 related distributions are no longer tested nor supported.
+- Tweak Release Drafter to work better with conventional commits.
 
 ## 0.7.1 (October 3rd, 2023)
 

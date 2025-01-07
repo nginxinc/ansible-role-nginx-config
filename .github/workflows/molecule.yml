@@ -6,6 +6,7 @@ on:
   push:
     branches: [main]
     tags-ignore: ["**"]
+  merge_group:
   schedule:
     - cron: "0 0 1 * *"
   workflow_dispatch:
@@ -16,7 +17,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Check out the codebase
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Python 3
         uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
@@ -38,6 +39,7 @@ jobs:
     env:
       NGINX_CRT: ${{ secrets.NGINX_CRT }}
       NGINX_KEY: ${{ secrets.NGINX_KEY }}
+      NGINX_JWT: ${{ secrets.NGINX_JWT }}
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +57,7 @@ jobs:
     steps:
       - name: Check out the codebase
         if: ${{ !(contains(matrix.scenario, 'plus')) || (env.NGINX_CRT != 0 && env.NGINX_KEY != 0) }}
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set up Python 3
         if: ${{ !(contains(matrix.scenario, 'plus')) || (env.NGINX_CRT != 0 && env.NGINX_KEY != 0) }}

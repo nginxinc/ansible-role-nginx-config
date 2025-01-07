@@ -1,28 +1,44 @@
-# Any private crt and keys #
-############################
+########################
+# Any crt/keys/license #
+########################
 *.crt
 *.key
-*~
-\#*
+*.jwt
 !molecule.crt
 !molecule.key
 !rand.key
 
-# OS Specific #
-###############
+##########################
+# Backup/temporary files #
+##########################
+*~
+\#*
+
+##################
+# MacOS specific #
+##################
 Thumbs.db
 .DS_Store
 .vscode
 
+########################
+# Code editor specific #
+########################
+.idea
+.vscode
+
+####################
 # Ansible specific #
 ####################
 .cache
 *.retry
 
+###################
 # Python specific #
 ###################
 __pycache__
 
+########
 # Logs #
 ########
 *.log
