@@ -47,3 +47,5 @@ provisioner:
     prepare: prepare.yml
     converge: converge.yml
     verify: verify.yml
+  env:
+    ANSIBLE_ROLES_PATH: ~/.cache/molecule/ansible-role-nginx-config/${MOLECULE_SCENARIO_NAME}/roles:${MOLECULE_PROJECT_DIRECTORY}/..:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles
