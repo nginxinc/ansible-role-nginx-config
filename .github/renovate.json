@@ -12,29 +12,24 @@
   "schedule": [
     "* 0-7 * * 1"
   ],
-  "separateMultipleMajor": true,
   "packageRules": [
     {
       "groupName": "Ansible collections",
       "matchManagers": [
         "ansible-galaxy",
         "custom.regex"
-      ]
-    }
-  ],
-  "ansible-galaxy": {
-    "fileMatch": [
-      "(^|/)[\\w-]*requirements([_.]\\w+)?\\.ya?ml$"
-    ],
-    "packageRules": [
-      {
-        "automerge": true,
+      ],
+      "automerge": true,
         "matchCurrentVersion": "!/^0/",
         "matchUpdateTypes": [
           "minor",
           "patch"
         ]
-      }
+    }
+  ],
+  "ansible-galaxy": {
+    "fileMatch": [
+      "(^|/)[\\w-]*requirements([_.]\\w+)?\\.ya?ml$"
     ]
   },
   "customManagers": [
@@ -105,6 +100,18 @@
         "matchPackageNames": [
           "ansible-core"
         ],
+        "separateMinorPatch": true,
+        "separateMultipleMinor": true
+      },
+      {
+        "groupName": "Ansible devtools",
+        "matchPackageNames": [
+          "ansible-compat",
+          "ansible-lint",
+          "molecule",
+          "molecule-plugins"
+        ],
+        "separateMajorMinor": false,
         "separateMinorPatch": true
       },
       {
