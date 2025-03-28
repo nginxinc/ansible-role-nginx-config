@@ -24,7 +24,7 @@ TESTS:
 
 DOCUMENTATION:
 
-- Update community docs per the latest [NGINX template repository](https://github.com/nginxinc/template-repository) guidelines.
+- Update community docs & required workflows per the latest [NGINX template repository](https://github.com/nginx/template-repository) guidelines.
 - Update and tweak the README. In order to make the installation instructions easier, some file names used by the various GitHub Actions workflows have been renamed.
 
 CI/CD:
