@@ -165,7 +165,7 @@ BREAKING CHANGES:
         proxy: {}
     ```
 
-  - Check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) and [`molecule/default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml) for examples!
+  - Check [`defaults/main/template.yml`](https://github.com/nginx/ansible-role-nginx-config/blob/main/defaults/main/template.yml) and [`molecule/default/converge.yml`](https://github.com/nginx/ansible-role-nginx-config/blob/main/molecule/default/converge.yml) for examples!
   - These changes follow in the footsteps of the `http` Jinja2 refactor introduced in the `0.4.0` release. If you want more information on how to port your `stream` configurations, the release notes/changelog for `0.4.0` are a good place to start.
 - Replace `conf_file_name` and `conf_file_location` with `deployment_location` inside `nginx_config_stream_template`.
 - Replace `html_file_name` and `html_file_location` with `deployment_location` inside `nginx_config_html_demo_template`.
@@ -184,7 +184,7 @@ BUG FIXES:
 - Fix a bug when using a single `custom_directives` entry and the http template.
 - Fix check mode issue when running with SELinux enabled. Role no longer reports a change in check mode when setting the host to permissive mode.
 - Fix typo in the REST API template.
-- Fix incorrect REST API and status log variable names in [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml).
+- Fix incorrect REST API and status log variable names in [`defaults/main/template.yml`](https://github.com/nginx/ansible-role-nginx-config/blob/main/defaults/main/template.yml).
 - Fix bugged conditional check in the `http/ssl.j2` Jinja2 template.
 
 ## 0.4.2 (October 28, 2021)
@@ -244,7 +244,7 @@ Template engine updates:
             proxy: {}
     ```
 
-  - Check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) and [`molecule/default/converge.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/molecule/default/converge.yml) for examples!
+  - Check [`defaults/main/template.yml`](https://github.com/nginx/ansible-role-nginx-config/blob/main/defaults/main/template.yml) and [`molecule/default/converge.yml`](https://github.com/nginx/ansible-role-nginx-config/blob/main/molecule/default/converge.yml) for examples!
 - Refactor the base config templates to simplify the creation of templates as well as development and maintenance moving forward:
   - Modify `servers`, `servers.listen`, `server.locations`, `upstream` and `upstream.servers` from nested dictionaries in the `http` and `stream` configuration templates to lists.
   - Remove/merge the `web_server` and `reverse_proxy` nested dictionary keys from the HTTP templates. These often lead to confusing and unnecessary code duplication and hard to maintain code. To update your templates, remove both keys and adjust your spacing accordingly.
@@ -295,7 +295,7 @@ Template engine updates:
 - Refactor the `keyval` directives into its own template config that now includes all the `keyval` HTTP module directives:
   - Both `keyval` directives now live within the `keyval` dictionary.
   - The `keyval` dictionary now lives in the HTTP template config instead of the Main template config.
-- Refactor `server.health_check_plus` into its own dictionary that now includes all the `health_check` module directives (check [`defaults/main/template.yml`](https://github.com/nginxinc/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples).
+- Refactor `server.health_check_plus` into its own dictionary that now includes all the `health_check` module directives (check [`defaults/main/template.yml`](https://github.com/nginx/ansible-role-nginx-config/blob/main/defaults/main/template.yml) for examples).
 - Refactor the `limit_req` directive into its own dictionary:
   - The `limit_req` directives now live within the `limit_req` dictionary.
   - The `limit_req` dictionary now lives in the HTTP template config instead of the Main template config.
@@ -533,4 +533,4 @@ An empty `nginx_config_cleanup_files` will no longer cause `nginx_config_cleanup
 
 ## 0.1.0 (August 19, 2020)
 
-Initial release of the NGINX Config role. Contains all NGINX Config related features previously available on the [NGINX Ansible role](https://github.com/nginxinc/ansible-role-nginx).
+Initial release of the NGINX Config role. Contains all NGINX Config related features previously available on the [NGINX Ansible role](https://github.com/nginx/ansible-role-nginx).
