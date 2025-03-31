@@ -1,5 +1,9 @@
+#####################
 # Main global owner #
 #####################
-* @alessfg
-/.github/workflows/
-*.md
+* @nginx/ansible
+
+################################################
+# Enable auto merge on GitHub Action workflows #
+################################################
+/.github/workflows
